@@ -1,0 +1,14 @@
+{
+  "id": "beispiel-node",
+  "name": "Beispiel: erweitertes Plugin in Node.js",
+  "version": "1.0.0",
+  "author": "TouchDeck",
+  "description": "Ein eigenes Node.js-Programm mit vollen Rechten: zählt Tastendrücke und meldet alle 5 Drücke einen Auslöser.",
+  "native": { "command": ["node", "plugin.mjs"] },
+  "actions": [
+    { "id": "drueck", "label": "Druck zählen", "icon": "👆", "fields": [] }
+  ],
+  "triggers": [
+    { "id": "fuenf", "label": "Fünf Drücke erreicht", "icon": "🖐️", "fields": [] }
+  ]
+}
