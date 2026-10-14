@@ -1,0 +1,30 @@
+{
+  "id": "example-python",
+  "name": { "en": "Example: advanced plugin in Python", "de": "Beispiel: erweitertes Plugin in Python" },
+  "version": "1.1.0",
+  "author": "TouchDeck",
+  "license": "MIT",
+  "description": {
+    "en": "An own Python program with full rights: reads system values, runs commands and fires a trigger. Only runs in advanced mode.",
+    "de": "Ein eigenes Python-Programm mit vollen Rechten: liest Systemwerte, führt Befehle aus und meldet einen Auslöser. Läuft nur im erweiterten Modus."
+  },
+  "native": { "command": ["python3", "plugin.py"] },
+  "settings": [
+    { "key": "threshold", "label": { "en": "Load at which the trigger fires", "de": "Auslastung, ab der der Auslöser kommt" }, "type": "number", "default": "4" }
+  ],
+  "actions": [
+    { "id": "load", "label": { "en": "Show system load", "de": "Systemauslastung anzeigen" }, "icon": "📈", "fields": [] },
+    {
+      "id": "command",
+      "label": { "en": "Run command and store output in a value", "de": "Befehl ausführen und Ausgabe in Wert schreiben" },
+      "icon": "🖥️",
+      "fields": [
+        { "key": "command", "label": { "en": "Command", "de": "Befehl" }, "type": "text", "placeholder": "uptime -p" },
+        { "key": "value", "label": { "en": "Value for the output", "de": "Wert für die Ausgabe" }, "type": "dynamic", "source": "variables", "allowNew": true }
+      ]
+    }
+  ],
+  "triggers": [
+    { "id": "high", "label": { "en": "Load is high", "de": "Auslastung ist hoch" }, "icon": "🔥", "fields": [] }
+  ]
+}

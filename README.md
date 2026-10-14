@@ -1,49 +1,70 @@
-# TouchDeck-Plugins
+# TouchDeck plugins
 
-Plugins erweitern [TouchDeck](https://github.com/Marcel1853) – die Makro-Fernbedienung
-für Linux – um neue **Aktionen** und **Auslöser**. Dieses Repo enthält:
+🇩🇪 [Deutsche Version](README.de.md)
 
-| Inhalt | |
+Plugins add new **actions** and **triggers** to [TouchDeck](https://github.com/Marcel1853) –
+the macro remote control for Linux. This repo contains:
+
+| | |
 |---|---|
-| [`plugins.json`](plugins.json) | Die Liste für den **Marktplatz** in TouchDeck (Plugins › Marktplatz) |
-| [`beispiele/`](beispiele/) | Beispiel-Plugins zum Abschauen und Kopieren |
-| [Wiki](../../wiki) | Die Anleitung: Plugins schreiben, testen und veröffentlichen |
+| [`plugins.json`](plugins.json) | The list for the **marketplace** in TouchDeck (Plugins › Marketplace) |
+| [`examples/`](examples/) | Example plugins to learn from and copy |
+| [Wiki](../../wiki) | The guide: writing, testing and publishing plugins |
 
-## Zwei Arten von Plugins
+## Two kinds of plugins
 
-- **Normale Plugins** – JavaScript, laufen abgeschottet in TouchDeck. Sie dürfen nur,
-  was sie in `plugin.json` angeben (bestimmte Internetadressen, Werte,
-  Benachrichtigungen). Der Standard und für die meisten Ideen genug.
-- **Erweiterte Plugins** – eigene Programme (Python, Node.js, …) mit vollen Rechten.
-  Laufen nur, wenn der Nutzer den erweiterten Modus bewusst und auf eigene Gefahr
-  einschaltet.
+- **Regular plugins** – JavaScript, sandboxed inside TouchDeck. They may only do what
+  they declare in `plugin.json` (certain web addresses, values, notifications). The
+  default, and enough for most ideas.
+- **Advanced plugins** – own programs (Python, Node.js, …) with full rights. They only
+  run if the user deliberately enables advanced mode at their own risk.
 
-## Beispiele
+## Examples
 
-| Ordner | Art | Zeigt |
+| Folder | Kind | Shows |
 |---|---|---|
-| [`beispiele/beispiel`](beispiele/beispiel) | normal (JavaScript) | Aktionen, Auslöser, Zeitgeber, Werte, Internet, Einstellungen |
-| [`beispiele/beispiel-erweitert`](beispiele/beispiel-erweitert) | erweitert (Python) | Systemwerte lesen, Befehle ausführen, Auslöser |
-| [`beispiele/beispiel-node`](beispiele/beispiel-node) | erweitert (Node.js) | Zählen, Werte, Auslöser |
+| [`examples/example`](examples/example) | regular (JavaScript) | actions, trigger, timer, values, internet, settings |
+| [`examples/example-python`](examples/example-python) | advanced (Python) | reading system values, running commands, trigger |
+| [`examples/example-node`](examples/example-node) | advanced (Node.js) | counting, values, trigger |
 
-Zum Ausprobieren einen Ordner kopieren und in TouchDeck unter **Plugins › Entwickeln**
-laden.
+To try one, copy the folder and load it in TouchDeck under **Plugins › Develop**.
 
-## Eigenes Plugin in den Marktplatz bringen
+## Getting your plugin into the marketplace
 
-1. Plugin als **öffentliches** GitHub-Repo veröffentlichen (`plugin.json` im Hauptordner),
-   am besten mit einem Release wie `v1.0.0`.
-2. Pull Request an dieses Repo mit einem neuen Eintrag in `plugins.json`:
+1. Publish the plugin as a **public** GitHub repo (`plugin.json` in the root folder),
+   ideally with a release such as `v1.0.0`.
+2. Open a pull request against this repo that adds an entry to `plugins.json`:
 
    ```json
-   { "repo": "dein-name/touchdeck-mein-plugin", "name": "Mein Plugin",
-     "description": "Was es macht", "author": "Dein Name" }
+   {
+     "repo": "your-name/touchdeck-my-plugin",
+     "name": { "en": "My plugin", "de": "Mein Plugin" },
+     "description": { "en": "What it does", "de": "Was es macht" },
+     "author": "Your name",
+     "license": "MIT"
+   }
    ```
 
-Einträge werden vor der Aufnahme angesehen. Trotzdem gilt: TouchDeck zeigt vor jeder
-Installation Quelle und Berechtigungen – installiere nur, was du nachvollziehen kannst.
+   `name` and `description` can be plain text or translations like above.
 
-## Lizenz
+Entries are reviewed before they are added. Still: TouchDeck shows the source,
+license and permissions before every installation – only install what you can follow.
 
-Beispiele und Anleitung stehen unter der [MIT-Lizenz](LICENSE) – kopieren und
-verändern ausdrücklich erwünscht.
+## Public does not mean free
+
+Plugins have to be **public** so that everyone can read the code before installing
+it. That does **not** mean anyone may copy or reuse it. Every plugin may have its own
+license:
+
+- Put a `LICENSE` file into your repo and the license name into `plugin.json`
+  (`"license": "MIT"`) and into your marketplace entry.
+- **Without a license, all rights stay with the author** – others may read the code,
+  but not copy, change or publish it.
+- If you want to allow reuse, pick an open license such as MIT, Apache-2.0 or
+  GPL-3.0. If you don't, write for example `"license": "All rights reserved"`.
+
+## License of this repo
+
+The examples and the guide in this repo are under the [MIT license](LICENSE) – copying
+and changing is explicitly welcome. Plugins listed in `plugins.json` keep their own
+licenses.

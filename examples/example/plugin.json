@@ -1,0 +1,48 @@
+{
+  "id": "example",
+  "name": { "en": "Example plugin", "de": "Beispiel-Plugin" },
+  "version": "1.1.0",
+  "author": "TouchDeck",
+  "license": "MIT",
+  "description": {
+    "en": "Shows how plugins work: own actions, a trigger, a timer, values and settings.",
+    "de": "Zeigt, wie Plugins funktionieren: eigene Aktionen, ein Auslöser, ein Zeitgeber, Werte und Einstellungen."
+  },
+  "main": "plugin.js",
+  "permissions": {
+    "http": ["api.github.com"],
+    "values": true,
+    "notify": false
+  },
+  "settings": [
+    { "key": "greeting", "label": { "en": "Greeting", "de": "Begrüßung" }, "type": "text", "default": "Hello" }
+  ],
+  "actions": [
+    {
+      "id": "greet",
+      "label": { "en": "Greet", "de": "Begrüßen" },
+      "icon": "👋",
+      "fields": [{ "key": "name", "label": { "en": "Name ({Value} works)", "de": "Name ({Wert} möglich)" }, "type": "text" }]
+    },
+    {
+      "id": "count",
+      "label": { "en": "Count up by 1", "de": "Zähler um 1 erhöhen" },
+      "icon": "🔢",
+      "fields": [{ "key": "value", "label": { "en": "Value", "de": "Wert" }, "type": "dynamic", "source": "variables", "allowNew": true }]
+    },
+    {
+      "id": "stars",
+      "label": { "en": "Get GitHub stars", "de": "GitHub-Sterne abfragen" },
+      "icon": "⭐",
+      "fields": [{ "key": "repo", "label": { "en": "Repo (owner/name)", "de": "Repo (besitzer/name)" }, "type": "text" }]
+    }
+  ],
+  "triggers": [
+    {
+      "id": "ten",
+      "label": { "en": "Counter reached a multiple of 10", "de": "Zähler erreicht ein Vielfaches von 10" },
+      "icon": "🎯",
+      "fields": [{ "key": "value", "label": { "en": "Value (empty = any)", "de": "Wert (leer = jeder)" }, "type": "text" }]
+    }
+  ]
+}

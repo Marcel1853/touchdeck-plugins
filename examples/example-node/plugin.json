@@ -1,0 +1,18 @@
+{
+  "id": "example-node",
+  "name": { "en": "Example: advanced plugin in Node.js", "de": "Beispiel: erweitertes Plugin in Node.js" },
+  "version": "1.1.0",
+  "author": "TouchDeck",
+  "license": "MIT",
+  "description": {
+    "en": "An own Node.js program with full rights: counts presses and fires a trigger every 5 presses.",
+    "de": "Ein eigenes Node.js-Programm mit vollen Rechten: zählt Drücke und meldet alle 5 Drücke einen Auslöser."
+  },
+  "native": { "command": ["node", "plugin.mjs"] },
+  "actions": [
+    { "id": "press", "label": { "en": "Count press", "de": "Druck zählen" }, "icon": "👆", "fields": [] }
+  ],
+  "triggers": [
+    { "id": "five", "label": { "en": "Five presses reached", "de": "Fünf Drücke erreicht" }, "icon": "🖐️", "fields": [] }
+  ]
+}

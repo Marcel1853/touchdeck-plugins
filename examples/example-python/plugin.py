@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Beispiel für ein erweitertes TouchDeck-Plugin (volle Rechte, nur im erweiterten Modus).
+"""Example of an advanced TouchDeck plugin (full rights, only in advanced mode).
 
-TouchDeck startet dieses Programm selbst und spricht mit ihm über JSON-Zeilen:
-Nachrichten von TouchDeck kommen auf stdin, Antworten gehen auf stdout (eine Zeile je Nachricht).
-Alles auf stderr erscheint im TouchDeck-Protokoll.
+TouchDeck starts this program itself and talks to it with JSON lines:
+messages from TouchDeck arrive on stdin, answers go to stdout (one line per message).
+Everything written to stderr shows up in the TouchDeck log.
 """
 import json
 import subprocess
@@ -30,31 +30,31 @@ def load_average():
         return float(f.read().split()[0])
 
 
-def action_auslastung(params):
-    return f"Auslastung: {load_average():.2f}"
+def action_load(params):
+    return f"Load: {load_average():.2f}"
 
 
-def action_befehl(params):
-    cmd = params.get("befehl") or "uptime -p"
+def action_command(params):
+    cmd = params.get("command") or "uptime -p"
     out = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=20)
     text = (out.stdout or out.stderr).strip()[:500]
-    if params.get("wert"):
-        send({"type": "setValue", "name": params["wert"], "value": text})
+    if params.get("value"):
+        send({"type": "setValue", "name": params["value"], "value": text})
     return text
 
 
-ACTIONS = {"auslastung": action_auslastung, "befehl": action_befehl}
+ACTIONS = {"load": action_load, "command": action_command}
 
 
 def watch():
-    """Läuft im Hintergrund: schreibt die Auslastung in einen Wert und meldet hohe Last."""
+    """Runs in the background: writes the load into a value and reports high load."""
     was_high = False
     while True:
         load = load_average()
-        send({"type": "setValue", "name": "System.Auslastung", "value": f"{load:.2f}"})
-        high = load >= float(settings.get("grenze") or 4)
+        send({"type": "setValue", "name": "System.Load", "value": f"{load:.2f}"})
+        high = load >= float(settings.get("threshold") or 4)
         if high and not was_high:
-            send({"type": "fire", "trigger": "hoch", "data": {"Auslastung": f"{load:.2f}"}})
+            send({"type": "fire", "trigger": "high", "data": {"Load": f"{load:.2f}"}})
         was_high = high
         time.sleep(10)
 
@@ -65,12 +65,12 @@ for line in sys.stdin:
     if kind == "start":
         settings = msg.get("settings") or {}
         threading.Thread(target=watch, daemon=True).start()
-        log(f"Python-Beispiel gestartet (TouchDeck {msg.get('touchdeck')})")
+        log(f"Python example started (TouchDeck {msg.get('touchdeck')})")
     elif kind == "action":
         try:
             result = ACTIONS[msg["id"]](msg.get("params") or {})
             send({"type": "result", "requestId": msg["requestId"], "ok": True, "message": result})
-        except Exception as err:  # Fehler an TouchDeck melden statt abzustürzen
+        except Exception as err:  # report errors to TouchDeck instead of crashing
             send({"type": "result", "requestId": msg["requestId"], "ok": False, "error": str(err)})
     elif kind == "stop":
         break
