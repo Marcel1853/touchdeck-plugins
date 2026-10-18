@@ -1,18 +1,79 @@
 {
   "id": "example-node",
   "name": { "en": "Example: advanced plugin in Node.js", "de": "Beispiel: erweitertes Plugin in Node.js" },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "TouchDeck",
   "license": "MIT",
   "description": {
-    "en": "An own Node.js program with full rights: counts presses and fires a trigger every 5 presses.",
-    "de": "Ein eigenes Node.js-Programm mit vollen Rechten: zählt Drücke und meldet alle 5 Drücke einen Auslöser."
+    "en": "An own Node.js program with full rights: counts presses, reads values, lights buttons, shows pages, starts timers, reacts to TouchDeck events and shows memory usage as a live display with graph.",
+    "de": "Ein eigenes Node.js-Programm mit vollen Rechten: zählt Drücke, liest Werte, lässt Buttons leuchten, zeigt Seiten, startet Timer, reagiert auf TouchDeck-Ereignisse und zeigt die Speicherauslastung als Live-Anzeige mit Graph."
   },
   "native": { "command": ["node", "plugin.mjs"] },
+  "settings": [
+    { "key": "every", "label": { "en": "Trigger every … presses", "de": "Auslöser alle … Drücke" }, "type": "number", "default": "5" },
+    { "key": "interval", "label": { "en": "Update memory every … seconds", "de": "Speicher alle … Sekunden aktualisieren" }, "type": "number", "default": "3" }
+  ],
   "actions": [
-    { "id": "press", "label": { "en": "Count press", "de": "Druck zählen" }, "icon": "👆", "fields": [] }
+    { "id": "count", "label": { "en": "Count press", "de": "Druck zählen" }, "icon": "👆", "fields": [] },
+    {
+      "id": "read",
+      "label": { "en": "Read value", "de": "Wert lesen" },
+      "icon": "🔎",
+      "fields": [
+        { "key": "value", "label": { "en": "Value", "de": "Wert" }, "type": "dynamic", "source": "variables" }
+      ]
+    },
+    {
+      "id": "light",
+      "label": { "en": "Light this button (on/off)", "de": "Diesen Button leuchten lassen (an/aus)" },
+      "icon": "🔴",
+      "fields": [
+        { "key": "title", "label": { "en": "Title while lit", "de": "Titel beim Leuchten" }, "type": "text", "placeholder": "ON" }
+      ]
+    },
+    {
+      "id": "page",
+      "label": { "en": "Show page on all devices", "de": "Seite auf allen Geräten zeigen" },
+      "icon": "📄",
+      "fields": [
+        { "key": "page", "label": { "en": "Page (ID or name)", "de": "Seite (ID oder Name)" }, "type": "text" }
+      ]
+    },
+    {
+      "id": "timer",
+      "label": { "en": "Control timer", "de": "Timer steuern" },
+      "icon": "⏱️",
+      "fields": [
+        { "key": "name", "label": { "en": "Timer name", "de": "Name des Timers" }, "type": "text", "placeholder": "Node" },
+        {
+          "key": "op",
+          "label": { "en": "What", "de": "Was" },
+          "type": "select",
+          "options": [
+            { "value": "start", "label": { "en": "Start", "de": "Starten" } },
+            { "value": "stop", "label": { "en": "Stop", "de": "Anhalten" } },
+            { "value": "reset", "label": { "en": "Reset", "de": "Zurücksetzen" } },
+            { "value": "toggle", "label": { "en": "Start/stop", "de": "Starten/Anhalten" } }
+          ]
+        },
+        { "key": "seconds", "label": { "en": "Seconds", "de": "Sekunden" }, "type": "number", "placeholder": "60" }
+      ]
+    },
+    { "id": "devices", "label": { "en": "Count connected devices", "de": "Verbundene Geräte zählen" }, "icon": "📱", "fields": [] }
   ],
   "triggers": [
-    { "id": "five", "label": { "en": "Five presses reached", "de": "Fünf Drücke erreicht" }, "icon": "🖐️", "fields": [] }
+    { "id": "reached", "label": { "en": "Number of presses reached", "de": "Anzahl Drücke erreicht" }, "icon": "🖐️", "fields": [] },
+    {
+      "id": "page",
+      "label": { "en": "Page opened (seen by the plugin)", "de": "Seite geöffnet (vom Plugin gesehen)" },
+      "icon": "👀",
+      "fields": [
+        { "key": "Page", "label": { "en": "Page (empty = any)", "de": "Seite (leer = jede)" }, "type": "text" }
+      ]
+    }
+  ],
+  "lives": [
+    { "id": "memory", "label": { "en": "Memory usage", "de": "Speicherauslastung" } },
+    { "id": "presses", "label": { "en": "Presses", "de": "Drücke" } }
   ]
 }

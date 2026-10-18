@@ -35,7 +35,7 @@ Installiert werden sie über den Marktplatz in TouchDeck. Jedes Plugin hat seine
 |---|---|---|
 | [`examples/example`](examples/example) | normal (JavaScript) | Aktionen, Auslöser, Zeitgeber, Werte, Internet, Einstellungen |
 | [`examples/example-python`](examples/example-python) | erweitert (Python) | Systemwerte lesen, Befehle ausführen, Auslöser |
-| [`examples/example-node`](examples/example-node) | erweitert (Node.js) | Zählen, Werte, Auslöser |
+| [`examples/example-node`](examples/example-node) | erweitert (Node.js) | Werte (setzen und lesen), Auslöser, TouchDeck-Ereignisse, Bedienfeld steuern (Seite, Button-Aussehen, Timer), Status, Live-Anzeige mit Graph-Reihen |
 
 Zum Ausprobieren einen Ordner kopieren und in TouchDeck unter **Plugins › Entwickeln**
 laden.

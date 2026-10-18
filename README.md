@@ -34,7 +34,7 @@ Install them from the marketplace in TouchDeck. Each plugin has its own license 
 |---|---|---|
 | [`examples/example`](examples/example) | regular (JavaScript) | actions, trigger, timer, values, internet, settings |
 | [`examples/example-python`](examples/example-python) | advanced (Python) | reading system values, running commands, trigger |
-| [`examples/example-node`](examples/example-node) | advanced (Node.js) | counting, values, trigger |
+| [`examples/example-node`](examples/example-node) | advanced (Node.js) | values (set and read), triggers, TouchDeck events, deck control (page, button look, timer), status, live display with graph series |
 
 To try one, copy the folder and load it in TouchDeck under **Plugins › Develop**.
 
