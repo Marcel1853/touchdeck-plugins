@@ -16,6 +16,7 @@ für Linux – um neue **Aktionen** und **Auslöser**. Dieses Repo enthält:
 | Ordner | Art | Was es macht |
 |---|---|---|
 | [`plugins/clipboard-slots`](plugins/clipboard-slots) | erweitert (Python) | Zwischenablage-Manager: Slots, Verlauf, Zwischenablage ↔ Wert, Bereinigung, fertige Seite (MIT) |
+| [`plugins/factorio`](plugins/factorio) | erweitert (Python) | Factorio live auf den Buttons (Forschung, Strom mit Graphen, Evolution …) und Spielsteuerung; braucht den mitgelieferten Mod „TouchDeck Bridge“, fertige Seiten (MIT) |
 
 Installiert werden sie über den Marktplatz in TouchDeck. Jedes Plugin hat seine eigene Lizenz (siehe sein Ordner).
 

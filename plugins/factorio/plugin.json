@@ -1,0 +1,522 @@
+{
+  "id": "factorio",
+  "name": "Factorio",
+  "version": "0.3.0",
+  "author": "Marcel1853",
+  "license": "MIT",
+  "description": {
+    "en": "Factorio on your buttons: live research, speed, evolution, power (with graphs), planet; pause, speed, save, screenshot, quick chat and research queue. Needs the Factorio mod “TouchDeck Bridge”. No launch options, no network: the mod writes a JSON file, the plugin watches it.",
+    "de": "Factorio auf deinen Buttons: Forschung live, Geschwindigkeit, Evolution, Strom (mit Graphen), Planet; Pause, Tempo, Speichern, Screenshot, Schnell-Chat und Forschungs-Warteschlange. Braucht den Factorio-Mod „TouchDeck Bridge“. Keine Startoptionen, kein Netzwerk: Der Mod schreibt eine JSON-Datei, das Plugin achtet auf Änderungen."
+  },
+  "native": {
+    "command": [
+      "python3",
+      "plugin.py"
+    ]
+  },
+  "settings": [
+    {
+      "key": "folder",
+      "label": {
+        "en": "Folder of the mod files (empty = find automatically)",
+        "de": "Ordner der Mod-Dateien (leer = automatisch suchen)"
+      },
+      "type": "text",
+      "default": ""
+    },
+    {
+      "key": "interval",
+      "label": {
+        "en": "Check files every … ms (100–5000)",
+        "de": "Dateien prüfen alle … ms (100–5000)"
+      },
+      "type": "number",
+      "default": 250
+    },
+    {
+      "key": "timeout",
+      "label": {
+        "en": "No data for … seconds = not connected (2–60)",
+        "de": "Keine Daten seit … Sekunden = nicht verbunden (2–60)"
+      },
+      "type": "number",
+      "default": 5
+    }
+  ],
+  "actions": [
+    {
+      "id": "await",
+      "label": {
+        "en": "Wait for the game's answer",
+        "de": "Auf Antwort des Spiels warten"
+      },
+      "icon": "⏳",
+      "fields": [
+        {
+          "key": "cmd",
+          "label": {
+            "en": "Command (empty = any)",
+            "de": "Befehl (leer = jeder)"
+          },
+          "type": "select",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "Any",
+                "de": "Jeder"
+              }
+            },
+            {
+              "value": "pause",
+              "label": {
+                "en": "Pause (toggle)",
+                "de": "Pause (umschalten)"
+              }
+            },
+            {
+              "value": "speed",
+              "label": {
+                "en": "Speed",
+                "de": "Geschwindigkeit"
+              }
+            },
+            {
+              "value": "save",
+              "label": {
+                "en": "Save game",
+                "de": "Spiel speichern"
+              }
+            },
+            {
+              "value": "screenshot",
+              "label": {
+                "en": "Screenshot",
+                "de": "Screenshot"
+              }
+            },
+            {
+              "value": "chat",
+              "label": {
+                "en": "Chat message",
+                "de": "Chat-Nachricht"
+              }
+            },
+            {
+              "value": "quickchat",
+              "label": {
+                "en": "Quick chat",
+                "de": "Schnell-Chat"
+              }
+            },
+            {
+              "value": "research",
+              "label": {
+                "en": "Queue research",
+                "de": "Forschung einreihen"
+              }
+            },
+            {
+              "value": "cancel",
+              "label": {
+                "en": "Cancel research",
+                "de": "Forschung abbrechen"
+              }
+            },
+            {
+              "value": "center",
+              "label": {
+                "en": "Back to the player",
+                "de": "Zurück zum Spieler"
+              }
+            },
+            {
+              "value": "refresh",
+              "label": {
+                "en": "Write data again",
+                "de": "Daten neu schreiben"
+              }
+            },
+            {
+              "value": "utl",
+              "label": {
+                "en": "UTL manager",
+                "de": "UTL-Manager"
+              }
+            }
+          ]
+        },
+        {
+          "key": "seconds",
+          "label": {
+            "en": "Wait at most … seconds",
+            "de": "Höchstens … Sekunden warten"
+          },
+          "type": "number",
+          "default": 3
+        }
+      ]
+    },
+    {
+      "id": "item",
+      "label": {
+        "en": "Production slot: choose item",
+        "de": "Produktions-Platz: Item wählen"
+      },
+      "icon": "📦",
+      "fields": [
+        {
+          "key": "slot",
+          "label": {
+            "en": "Slot (1–8)",
+            "de": "Platz (1–8)"
+          },
+          "type": "number",
+          "default": 1
+        },
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "next",
+          "options": [
+            {
+              "value": "next",
+              "label": {
+                "en": "Next item",
+                "de": "Nächstes Item"
+              }
+            },
+            {
+              "value": "prev",
+              "label": {
+                "en": "Previous item",
+                "de": "Voriges Item"
+              }
+            },
+            {
+              "value": "auto",
+              "label": {
+                "en": "Automatic (most produced)",
+                "de": "Automatisch (meistproduziert)"
+              }
+            },
+            {
+              "value": "set",
+              "label": {
+                "en": "Choose by name",
+                "de": "Nach Name wählen"
+              }
+            },
+            {
+              "value": "all_auto",
+              "label": {
+                "en": "All slots automatic",
+                "de": "Alle Plätze automatisch"
+              }
+            }
+          ]
+        },
+        {
+          "key": "value",
+          "label": {
+            "en": "Name (in game language or internal)",
+            "de": "Name (Spielsprache oder intern)"
+          },
+          "type": "text",
+          "default": "",
+          "placeholder": {
+            "en": "e.g. Iron plate or iron-plate",
+            "de": "z. B. Eisenplatte oder iron-plate"
+          },
+          "showIf": {
+            "op": [
+              "set"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "triggers": [
+    {
+      "id": "research_finished",
+      "label": {
+        "en": "Research finished",
+        "de": "Forschung abgeschlossen"
+      },
+      "icon": "🔬",
+      "fields": [
+        {
+          "key": "Intern",
+          "label": {
+            "en": "Internal name (empty = any)",
+            "de": "Interner Name (leer = jede)"
+          },
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "research_started",
+      "label": {
+        "en": "Research started",
+        "de": "Forschung gestartet"
+      },
+      "icon": "🧪",
+      "fields": []
+    },
+    {
+      "id": "rocket_launched",
+      "label": {
+        "en": "Rocket launched",
+        "de": "Rakete gestartet"
+      },
+      "icon": "🚀",
+      "fields": []
+    },
+    {
+      "id": "player_died",
+      "label": {
+        "en": "Player died",
+        "de": "Spieler gestorben"
+      },
+      "icon": "💀",
+      "fields": [
+        {
+          "key": "Ich",
+          "label": {
+            "en": "Only me (ja) or others (nein), empty = all",
+            "de": "Nur ich (ja) oder andere (nein), leer = alle"
+          },
+          "type": "select",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "All",
+                "de": "Alle"
+              }
+            },
+            {
+              "value": "ja",
+              "label": {
+                "en": "Me",
+                "de": "Ich"
+              }
+            },
+            {
+              "value": "nein",
+              "label": {
+                "en": "Others",
+                "de": "Andere"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evolution_step",
+      "label": {
+        "en": "Evolution passed a 10 % step",
+        "de": "Evolution hat 10-%-Stufe überschritten"
+      },
+      "icon": "👾",
+      "fields": []
+    },
+    {
+      "id": "command_done",
+      "label": {
+        "en": "Command answered by the game",
+        "de": "Befehl vom Spiel beantwortet"
+      },
+      "icon": "✅",
+      "fields": [
+        {
+          "key": "Ok",
+          "label": {
+            "en": "Result (empty = any)",
+            "de": "Ergebnis (leer = jedes)"
+          },
+          "type": "select",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "Any",
+                "de": "Jedes"
+              }
+            },
+            {
+              "value": "ja",
+              "label": {
+                "en": "Done",
+                "de": "Erledigt"
+              }
+            },
+            {
+              "value": "nein",
+              "label": {
+                "en": "Failed",
+                "de": "Fehlgeschlagen"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "connected",
+      "label": {
+        "en": "Game connected",
+        "de": "Spiel verbunden"
+      },
+      "icon": "🟢",
+      "fields": []
+    },
+    {
+      "id": "disconnected",
+      "label": {
+        "en": "Game disconnected",
+        "de": "Spiel getrennt"
+      },
+      "icon": "🔴",
+      "fields": []
+    },
+    {
+      "id": "utl_alert",
+      "label": {
+        "en": "UTLogistics: new alert",
+        "de": "UTLogistics: neue Warnung"
+      },
+      "icon": "🚂",
+      "fields": []
+    }
+  ],
+  "lives": [
+    {
+      "id": "research",
+      "label": {
+        "en": "Research with progress",
+        "de": "Forschung mit Fortschritt"
+      }
+    },
+    {
+      "id": "status",
+      "label": {
+        "en": "Connection and pause",
+        "de": "Verbindung und Pause"
+      }
+    },
+    {
+      "id": "speed",
+      "label": {
+        "en": "Game speed",
+        "de": "Spielgeschwindigkeit"
+      }
+    },
+    {
+      "id": "evolution",
+      "label": {
+        "en": "Evolution (%, graph)",
+        "de": "Evolution (%, Graph)"
+      }
+    },
+    {
+      "id": "power",
+      "label": {
+        "en": "Power production (MW, graph by source)",
+        "de": "Strom-Erzeugung (MW, Graph nach Quelle)"
+      }
+    },
+    {
+      "id": "consumption",
+      "label": {
+        "en": "Power consumption (MW, graph by consumer)",
+        "de": "Strom-Verbrauch (MW, Graph nach Verbraucher)"
+      }
+    },
+    {
+      "id": "item1",
+      "label": {
+        "en": "Production slot 1 (per minute, graph)",
+        "de": "Produktion Platz 1 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "item2",
+      "label": {
+        "en": "Production slot 2 (per minute, graph)",
+        "de": "Produktion Platz 2 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "item3",
+      "label": {
+        "en": "Production slot 3 (per minute, graph)",
+        "de": "Produktion Platz 3 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "item4",
+      "label": {
+        "en": "Production slot 4 (per minute, graph)",
+        "de": "Produktion Platz 4 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "item5",
+      "label": {
+        "en": "Production slot 5 (per minute, graph)",
+        "de": "Produktion Platz 5 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "item6",
+      "label": {
+        "en": "Production slot 6 (per minute, graph)",
+        "de": "Produktion Platz 6 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "item7",
+      "label": {
+        "en": "Production slot 7 (per minute, graph)",
+        "de": "Produktion Platz 7 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "item8",
+      "label": {
+        "en": "Production slot 8 (per minute, graph)",
+        "de": "Produktion Platz 8 (pro Minute, Graph)"
+      }
+    },
+    {
+      "id": "utl_trains",
+      "label": {
+        "en": "UTLogistics: trains idle / on the way (graph)",
+        "de": "UTLogistics: Züge frei / unterwegs (Graph)"
+      }
+    },
+    {
+      "id": "utl_alerts",
+      "label": {
+        "en": "UTLogistics: alerts (last 10 min)",
+        "de": "UTLogistics: Warnungen (letzte 10 min)"
+      }
+    },
+    {
+      "id": "utl_goods",
+      "label": {
+        "en": "UTLogistics: goods delivered per hour (graph by good)",
+        "de": "UTLogistics: gelieferte Waren pro Stunde (Graph nach Ware)"
+      }
+    }
+  ]
+}
