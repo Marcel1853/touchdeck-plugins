@@ -11,6 +11,14 @@ the macro remote control for Linux. This repo contains:
 | [`examples/`](examples/) | Example plugins to learn from and copy |
 | [Wiki](../../wiki) | The guide: writing, testing and publishing plugins |
 
+## Plugins in this repo
+
+| Folder | Kind | What it does |
+|---|---|---|
+| [`plugins/clipboard-slots`](plugins/clipboard-slots) | advanced (Python) | Clipboard manager: slots, history, clipboard ↔ value, clean-ups, ready-made page (MIT) |
+
+Install them from the marketplace in TouchDeck. Each plugin has its own license (see its folder).
+
 ## Two kinds of plugins
 
 - **Regular plugins** – JavaScript, sandboxed inside TouchDeck. They may only do what
@@ -45,7 +53,8 @@ To try one, copy the folder and load it in TouchDeck under **Plugins › Develop
    }
    ```
 
-   `name` and `description` can be plain text or translations like above.
+   `name` and `description` can be plain text or translations like above. If the plugin
+   lives in a sub-folder of a repo, add `"path": "folder/of/the/plugin"`.
 
 Entries are reviewed before they are added. Still: TouchDeck shows the source,
 license and permissions before every installation – only install what you can follow.

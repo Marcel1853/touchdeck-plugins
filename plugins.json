@@ -1,3 +1,18 @@
 {
-  "plugins": []
+  "plugins": [
+    {
+      "repo": "Marcel1853/touchdeck-plugins",
+      "path": "plugins/clipboard-slots",
+      "name": {
+        "en": "Clipboard Slots",
+        "de": "Zwischenablage-Slots"
+      },
+      "description": {
+        "en": "Clipboard manager for your buttons: save texts into slots, bring them back with one tap, history of recent copies, clipboard to value and back, quick clean-ups. Advanced plugin (Python, needs xclip). Comes with a ready-made page.",
+        "de": "Zwischenablage-Manager für deine Buttons: Texte in Slots speichern, per Fingertipp zurückholen, Verlauf der letzten Kopien, Zwischenablage in Wert und zurück, schnelle Bereinigung. Erweitertes Plugin (Python, braucht xclip). Mit fertiger Seite."
+      },
+      "author": "Marcel1853",
+      "license": "MIT"
+    }
+  ]
 }

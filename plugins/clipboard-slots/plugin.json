@@ -1,0 +1,372 @@
+{
+  "id": "clipboard-slots",
+  "name": {
+    "en": "Clipboard Slots",
+    "de": "Zwischenablage-Slots"
+  },
+  "version": "1.2.0",
+  "author": "Marcel1853",
+  "license": "MIT",
+  "description": {
+    "en": "Clipboard manager for your buttons: save texts into slots, bring them back with one tap, history of recent copies, clipboard to value and back, quick text clean-ups.",
+    "de": "Zwischenablage-Manager für deine Buttons: Texte in Slots speichern, per Fingertipp zurückholen, Verlauf der letzten Kopien, Zwischenablage in Wert und zurück, schnelle Text-Bereinigung."
+  },
+  "native": {
+    "command": [
+      "python3",
+      "plugin.py"
+    ]
+  },
+  "settings": [
+    {
+      "key": "slots",
+      "label": {
+        "en": "Number of slots (1–50)",
+        "de": "Anzahl Slots (1–50)"
+      },
+      "type": "number",
+      "default": 12
+    },
+    {
+      "key": "autoSlots",
+      "label": {
+        "en": "Auto-save uses slots 1 to … (0 = all)",
+        "de": "Auto-Speichern nutzt die Slots 1 bis … (0 = alle)"
+      },
+      "type": "number",
+      "default": 0
+    },
+    {
+      "key": "persist",
+      "label": {
+        "en": "Keep slots after restart (saved as a file)",
+        "de": "Slots nach Neustart behalten (wird als Datei gespeichert)"
+      },
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "history",
+      "label": {
+        "en": "Record history of copied texts (memory only, never written to disk)",
+        "de": "Verlauf kopierter Texte mitschreiben (nur im Arbeitsspeicher, wird nie gespeichert)"
+      },
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "historySize",
+      "label": {
+        "en": "History length (1–100)",
+        "de": "Länge des Verlaufs (1–100)"
+      },
+      "type": "number",
+      "default": 20
+    },
+    {
+      "key": "maxLength",
+      "label": {
+        "en": "Ignore texts longer than … characters",
+        "de": "Texte ignorieren, die länger sind als … Zeichen"
+      },
+      "type": "number",
+      "default": 10000
+    },
+    {
+      "key": "interval",
+      "label": {
+        "en": "Check clipboard every … ms (300–10000)",
+        "de": "Zwischenablage prüfen alle … ms (300–10000)"
+      },
+      "type": "number",
+      "default": 1000
+    }
+  ],
+  "actions": [
+    {
+      "id": "save-slot",
+      "label": {
+        "en": "Save clipboard to slot",
+        "de": "Zwischenablage in Slot speichern"
+      },
+      "icon": "📥",
+      "fields": [
+        {
+          "key": "slot",
+          "label": {
+            "en": "Slot",
+            "de": "Slot"
+          },
+          "type": "text",
+          "default": "1",
+          "placeholder": {
+            "en": "1–50, or a placeholder like {Input.Number}",
+            "de": "1–50 oder Platzhalter wie {Eingabe.Nummer}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "load-slot",
+      "label": {
+        "en": "Put slot into clipboard",
+        "de": "Slot in Zwischenablage legen"
+      },
+      "icon": "📤",
+      "fields": [
+        {
+          "key": "slot",
+          "label": {
+            "en": "Slot",
+            "de": "Slot"
+          },
+          "type": "text",
+          "default": "1",
+          "placeholder": {
+            "en": "1–50, or a placeholder like {Input.Number}",
+            "de": "1–50 oder Platzhalter wie {Eingabe.Nummer}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "copy-history",
+      "label": {
+        "en": "Put history entry into clipboard",
+        "de": "Verlaufseintrag in Zwischenablage legen"
+      },
+      "icon": "🕘",
+      "fields": [
+        {
+          "key": "entry",
+          "label": {
+            "en": "Entry (1 = latest copy, 2 = the one before …)",
+            "de": "Eintrag (1 = zuletzt kopiert, 2 = davor …)"
+          },
+          "type": "text",
+          "default": "2",
+          "placeholder": {
+            "en": "1 = latest, 2 = before … or a placeholder",
+            "de": "1 = zuletzt, 2 = davor … oder Platzhalter"
+          }
+        }
+      ]
+    },
+    {
+      "id": "clip-to-value",
+      "label": {
+        "en": "Clipboard to value",
+        "de": "Zwischenablage in Wert schreiben"
+      },
+      "icon": "🧮",
+      "fields": [
+        {
+          "key": "name",
+          "label": {
+            "en": "Value",
+            "de": "Wert"
+          },
+          "type": "dynamic",
+          "source": "variables",
+          "allowNew": true
+        }
+      ]
+    },
+    {
+      "id": "value-to-clip",
+      "label": {
+        "en": "Value to clipboard",
+        "de": "Wert in Zwischenablage kopieren"
+      },
+      "icon": "📋",
+      "fields": [
+        {
+          "key": "name",
+          "label": {
+            "en": "Value",
+            "de": "Wert"
+          },
+          "type": "dynamic",
+          "source": "variables",
+          "allowNew": true
+        }
+      ]
+    },
+    {
+      "id": "transform",
+      "label": {
+        "en": "Clean up clipboard text",
+        "de": "Text in Zwischenablage umwandeln"
+      },
+      "icon": "✨",
+      "fields": [
+        {
+          "key": "mode",
+          "label": {
+            "en": "What to do",
+            "de": "Was tun"
+          },
+          "type": "select",
+          "default": "trim",
+          "options": [
+            {
+              "value": "trim",
+              "label": {
+                "en": "Remove spaces and blank lines at the edges",
+                "de": "Leerzeichen und Leerzeilen am Rand entfernen"
+              }
+            },
+            {
+              "value": "oneline",
+              "label": {
+                "en": "Make it a single line",
+                "de": "In eine Zeile umwandeln"
+              }
+            },
+            {
+              "value": "upper",
+              "label": {
+                "en": "UPPERCASE",
+                "de": "GROSSBUCHSTABEN"
+              }
+            },
+            {
+              "value": "lower",
+              "label": {
+                "en": "lowercase",
+                "de": "kleinbuchstaben"
+              }
+            },
+            {
+              "value": "clean-url",
+              "label": {
+                "en": "Remove tracking from a link",
+                "de": "Tracking aus einem Link entfernen"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "auto-mode",
+      "label": {
+        "en": "Auto-save into slots",
+        "de": "Auto-Speichern in Slots"
+      },
+      "icon": "🔁",
+      "fields": [
+        {
+          "key": "mode",
+          "label": {
+            "en": "Mode",
+            "de": "Modus"
+          },
+          "type": "select",
+          "default": "toggle",
+          "options": [
+            {
+              "value": "toggle",
+              "label": {
+                "en": "Switch on/off",
+                "de": "Ein-/ausschalten"
+              }
+            },
+            {
+              "value": "on",
+              "label": {
+                "en": "On",
+                "de": "An"
+              }
+            },
+            {
+              "value": "off",
+              "label": {
+                "en": "Off",
+                "de": "Aus"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clear",
+      "label": {
+        "en": "Clear",
+        "de": "Leeren"
+      },
+      "icon": "🧹",
+      "fields": [
+        {
+          "key": "what",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "history",
+          "options": [
+            {
+              "value": "history",
+              "label": {
+                "en": "History",
+                "de": "Verlauf"
+              }
+            },
+            {
+              "value": "clipboard",
+              "label": {
+                "en": "Clipboard",
+                "de": "Zwischenablage"
+              }
+            },
+            {
+              "value": "slot",
+              "label": {
+                "en": "One slot",
+                "de": "Einen Slot"
+              }
+            },
+            {
+              "value": "all-slots",
+              "label": {
+                "en": "All slots",
+                "de": "Alle Slots"
+              }
+            }
+          ]
+        },
+        {
+          "key": "slot",
+          "label": {
+            "en": "Slot",
+            "de": "Slot"
+          },
+          "type": "text",
+          "default": "1",
+          "showIf": {
+            "what": [
+              "slot"
+            ]
+          },
+          "placeholder": {
+            "en": "1–50, or a placeholder like {Input.Number}",
+            "de": "1–50 oder Platzhalter wie {Eingabe.Nummer}"
+          }
+        }
+      ]
+    }
+  ],
+  "triggers": [
+    {
+      "id": "changed",
+      "label": {
+        "en": "Clipboard text changed",
+        "de": "Text in der Zwischenablage hat sich geändert"
+      },
+      "icon": "🔔",
+      "fields": []
+    }
+  ]
+}

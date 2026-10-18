@@ -11,6 +11,14 @@ für Linux – um neue **Aktionen** und **Auslöser**. Dieses Repo enthält:
 | [`examples/`](examples/) | Beispiel-Plugins zum Abschauen und Kopieren |
 | [Wiki](../../wiki) | Die Anleitung: Plugins schreiben, testen und veröffentlichen |
 
+## Plugins in diesem Repo
+
+| Ordner | Art | Was es macht |
+|---|---|---|
+| [`plugins/clipboard-slots`](plugins/clipboard-slots) | erweitert (Python) | Zwischenablage-Manager: Slots, Verlauf, Zwischenablage ↔ Wert, Bereinigung, fertige Seite (MIT) |
+
+Installiert werden sie über den Marktplatz in TouchDeck. Jedes Plugin hat seine eigene Lizenz (siehe sein Ordner).
+
 ## Zwei Arten von Plugins
 
 - **Normale Plugins** – JavaScript, laufen abgeschottet in TouchDeck. Sie dürfen nur,
@@ -47,7 +55,8 @@ laden.
    }
    ```
 
-   `name` und `description` dürfen ein einfacher Text oder Übersetzungen wie oben sein.
+   `name` und `description` dürfen ein einfacher Text oder Übersetzungen wie oben sein. Liegt das
+   Plugin in einem Unterordner eines Repos, kommt `"path": "ordner/des/plugins"` dazu.
 
 Einträge werden vor der Aufnahme angesehen. Trotzdem gilt: TouchDeck zeigt vor jeder
 Installation Quelle, Lizenz und Berechtigungen – installiere nur, was du nachvollziehen
