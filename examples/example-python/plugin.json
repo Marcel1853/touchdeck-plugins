@@ -1,7 +1,7 @@
 {
   "id": "example-python",
   "name": { "en": "Example: advanced plugin in Python", "de": "Beispiel: erweitertes Plugin in Python" },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "TouchDeck",
   "license": "MIT",
   "description": {
@@ -21,6 +21,17 @@
       "fields": [
         { "key": "command", "label": { "en": "Command", "de": "Befehl" }, "type": "text", "placeholder": "uptime -p" },
         { "key": "value", "label": { "en": "Value for the output", "de": "Wert für die Ausgabe" }, "type": "dynamic", "source": "variables", "allowNew": true }
+      ]
+    },
+    {
+      "id": "system",
+      "label": { "en": "System numbers (as data)", "de": "Systemzahlen (als Daten)" },
+      "icon": "📊",
+      "fields": [],
+      "returns": [
+        { "key": "load", "label": { "en": "Load (1 min)", "de": "Last (1 Min.)" }, "unit": "number" },
+        { "key": "uptime", "label": { "en": "Uptime", "de": "Laufzeit" }, "unit": "seconds" },
+        { "key": "free", "label": { "en": "Free memory", "de": "Freier Speicher" }, "unit": "kb" }
       ]
     }
   ],

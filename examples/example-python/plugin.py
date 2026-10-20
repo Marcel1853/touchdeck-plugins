@@ -43,7 +43,20 @@ def action_command(params):
     return text
 
 
-ACTIONS = {"load": action_load, "command": action_command}
+def action_system(params):
+    """Returns data instead of a text (see "returns" in plugin.json): TouchDeck shows the values and
+    passes them on to the following actions as {Result.load}, {Result.uptime}, {Result.free}."""
+    with open("/proc/uptime", encoding="utf-8") as f:
+        uptime = float(f.read().split()[0])
+    free = 0
+    with open("/proc/meminfo", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("MemAvailable:"):
+                free = int(line.split()[1])
+    return {"data": {"load": load_average(), "uptime": round(uptime), "free": free}}
+
+
+ACTIONS = {"load": action_load, "command": action_command, "system": action_system}
 
 
 def watch():
@@ -69,7 +82,11 @@ for line in sys.stdin:
     elif kind == "action":
         try:
             result = ACTIONS[msg["id"]](msg.get("params") or {})
-            send({"type": "result", "requestId": msg["requestId"], "ok": True, "message": result})
+            # {"data": {...}} = return as data, anything else = message text.
+            if isinstance(result, dict) and "data" in result:
+                send({"type": "result", "requestId": msg["requestId"], "ok": True, "data": result["data"]})
+            else:
+                send({"type": "result", "requestId": msg["requestId"], "ok": True, "message": result})
         except Exception as err:  # report errors to TouchDeck instead of crashing
             send({"type": "result", "requestId": msg["requestId"], "ok": False, "error": str(err)})
     elif kind == "stop":

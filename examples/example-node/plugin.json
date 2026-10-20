@@ -1,7 +1,7 @@
 {
   "id": "example-node",
   "name": { "en": "Example: advanced plugin in Node.js", "de": "Beispiel: erweitertes Plugin in Node.js" },
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "TouchDeck",
   "license": "MIT",
   "description": {
@@ -59,7 +59,18 @@
         { "key": "seconds", "label": { "en": "Seconds", "de": "Sekunden" }, "type": "number", "placeholder": "60" }
       ]
     },
-    { "id": "devices", "label": { "en": "Count connected devices", "de": "Verbundene Geräte zählen" }, "icon": "📱", "fields": [] }
+    { "id": "devices", "label": { "en": "Count connected devices", "de": "Verbundene Geräte zählen" }, "icon": "📱", "fields": [] },
+    {
+      "id": "system",
+      "label": { "en": "System numbers (as data)", "de": "Systemzahlen (als Daten)" },
+      "icon": "📊",
+      "fields": [],
+      "returns": [
+        { "key": "free", "label": { "en": "Free memory", "de": "Freier Speicher" }, "unit": "bytes" },
+        { "key": "uptime", "label": { "en": "Uptime", "de": "Laufzeit" }, "unit": "seconds" },
+        { "key": "load", "label": { "en": "Load", "de": "Auslastung" }, "unit": "percent" }
+      ]
+    }
   ],
   "triggers": [
     { "id": "reached", "label": { "en": "Number of presses reached", "de": "Anzahl Drücke erreicht" }, "icon": "🖐️", "fields": [] },

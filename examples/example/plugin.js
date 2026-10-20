@@ -23,6 +23,15 @@ td.action('stars', (params) => {
   return `${params.repo}: ${res.json().stargazers_count} ⭐`;
 });
 
+// Action with data: return an object instead of a text. TouchDeck shows the values (names and units from
+// "returns" in plugin.json) and passes them on to the following actions as {Result.stars} etc.
+td.action('repo', (params) => {
+  const res = td.http({ url: `https://api.github.com/repos/${params.repo}`, headers: { 'User-Agent': 'TouchDeck-Plugin' } });
+  if (!res.ok) throw new Error(`GitHub answered with ${res.status}`);
+  const r = res.json();
+  return { stars: r.stargazers_count, forks: r.forks_count, issues: r.open_issues_count, size: r.size };
+});
+
 // Timer: write the current time into a value every 60 seconds.
 td.every(60000, () => {
   const now = new Date();

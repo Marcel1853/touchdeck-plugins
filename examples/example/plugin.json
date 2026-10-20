@@ -1,7 +1,7 @@
 {
   "id": "example",
   "name": { "en": "Example plugin", "de": "Beispiel-Plugin" },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "TouchDeck",
   "license": "MIT",
   "description": {
@@ -35,6 +35,20 @@
       "label": { "en": "Get GitHub stars", "de": "GitHub-Sterne abfragen" },
       "icon": "⭐",
       "fields": [{ "key": "repo", "label": { "en": "Repo (owner/name)", "de": "Repo (besitzer/name)" }, "type": "text" }]
+    },
+    {
+      "id": "repo",
+      "label": { "en": "Repo numbers (as data)", "de": "Repo-Zahlen (als Daten)" },
+      "icon": "📊",
+      "fields": [
+        { "key": "repo", "label": { "en": "Repo (owner/name)", "de": "Repo (besitzer/name)" }, "type": "text" }
+      ],
+      "returns": [
+        { "key": "stars", "label": { "en": "Stars", "de": "Sterne" }, "unit": "number" },
+        { "key": "forks", "label": "Forks", "unit": "number" },
+        { "key": "issues", "label": { "en": "Open issues", "de": "Offene Issues" }, "unit": "number" },
+        { "key": "size", "label": { "en": "Size", "de": "Größe" }, "unit": "kb" }
+      ]
     }
   ],
   "triggers": [

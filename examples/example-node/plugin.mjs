@@ -79,6 +79,12 @@ const actions = {
     return `${params.name || 'Node'}: ${params.op || 'start'}`;
   },
 
+  // Returns data instead of a text: TouchDeck shows it (names and units from "returns" in plugin.json)
+  // and passes it on to the following actions as {Result.free}, {Result.uptime}, {Result.load}.
+  async system() {
+    return { data: { free: os.freemem(), uptime: Math.round(os.uptime()), load: Math.round((os.loadavg()[0] / os.cpus().length) * 100) } };
+  },
+
   // Asks TouchDeck which devices are connected.
   async devices() {
     const status = await call('status');
@@ -123,8 +129,10 @@ readline.createInterface({ input: process.stdin }).on('line', async (line) => {
       break;
     case 'action':
       try {
-        const message = await actions[msg.id](msg.params ?? {}, msg.info ?? {});
-        send({ type: 'result', requestId: msg.requestId, ok: true, message: String(message) });
+        const out = await actions[msg.id](msg.params ?? {}, msg.info ?? {});
+        // { data: {…} } = return as data, anything else = message text.
+        if (out?.data) send({ type: 'result', requestId: msg.requestId, ok: true, data: out.data });
+        else send({ type: 'result', requestId: msg.requestId, ok: true, message: String(out) });
       } catch (err) {
         send({ type: 'result', requestId: msg.requestId, ok: false, error: err.message });
       }
