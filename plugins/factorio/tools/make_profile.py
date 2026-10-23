@@ -327,10 +327,13 @@ UTL_VALUES = {
     "FUtlUnterwegs": "UTLogistics: laufende Lieferungen",
     "FUtlStationen": "UTLogistics: Stationen (dein Team)",
     "FUtlNetze": "UTLogistics: Netze auf deiner Fläche",
-    "FUtlLieferungen": "UTLogistics: Lieferungen gesamt (Statistik)",
+    "FUtlLieferungen": "UTLogistics: abgeschlossene Lieferungen, seit touchdeck-bridge mitzählt",
+    "FUtlLieferungenStunde": "UTLogistics: abgeschlossene Lieferungen der letzten Stunde",
+    "FUtlOhneZug": "UTLogistics: Anfragen, die ohne Zug warten",
+    "FUtlOhneZugText": "UTLogistics: älteste Anfrage ohne Zug (Ware, Netz, Wartezeit)",
     "FUtlAuslastung": "UTLogistics: mittlere Auslastung der Züge",
     "FUtlWarnungen": "UTLogistics: Warnungen der letzten 10 Minuten",
-    "FUtlWarnung": "UTLogistics: letzte Warnung",
+    "FUtlWarnung": "UTLogistics: letzte Warnung (voller Text in Spielsprache)",
     "FUtlWare1": "UTLogistics: meistgelieferte Ware pro Stunde",
     "FUtlWare2": "UTLogistics: zweitmeist gelieferte Ware pro Stunde",
     "FUtlWare3": "UTLogistics: drittmeist gelieferte Ware pro Stunde",
@@ -339,24 +342,31 @@ GRAPH_UTL_TRAINS = {"graph": "line", "graphPoints": 90, "graphInterval": 10, "gr
 GRAPH_UTL_GOODS = {"graph": "stack", "graphPoints": 60, "graphInterval": 60, "graphMin": 0, "graphAlign": "left"}
 
 
+GRAPH_UTL_RATE = {"graph": "bars", "graphPoints": 60, "graphInterval": 60, "graphMin": 0,
+                  "graphColor": "#2f9e6b", "graphAlign": "left"}   # letzte Stunde, ein Balken je Minute
+
+
 def utl_page():
     return page(PAGE_UTL, "UTLogistics", [
         button(0, 0, "{FUtlStatus}", [], icon="🚂", font=11, color=COLOR_UTL),
         button(0, 1, "Züge", [], span=2, live=plugin_live("utl_trains", graph=GRAPH_UTL_TRAINS),
                color=COLOR_LIVE, color_on="#2f4f6f"),
         button(0, 3, "Warnungen", key("utl_alerts"), icon="⚠️", live=plugin_live("utl_alerts"),
-               color=COLOR_UTL, color_on="#c0392b"),
+               color=COLOR_UTL, color_on="#c0392b", font=10),
         button(0, 4, "Manager\nöffnen", key("utl"), icon="📋", color=COLOR_GAME),
         button(1, 0, "Frei im Depot\n{FUtlZuegeFrei}", [], icon="🅿️", font=12),
         button(1, 1, "Unterwegs\n{FUtlUnterwegs}", [], icon="🚆", font=12),
         button(1, 2, "Stationen\n{FUtlStationen}", [], icon="🚉", font=12),
         button(1, 3, "Netze\n{FUtlNetze}", [], icon="🕸️", font=12),
-        button(1, 4, "{FUtlWarnung}", [], icon="🔔", font=10),
+        button(1, 4, "Auslastung\n{FUtlAuslastung}", [], icon="📈", font=12),
         button(2, 0, "Gelieferte Waren pro Stunde", [], span=3,
                live=plugin_live("utl_goods", graph=GRAPH_UTL_GOODS), color=COLOR_LIVE, color_on="#2f4f6f"),
-        button(2, 3, "Lieferungen\n{FUtlLieferungen}", [], icon="📦", font=12),
-        button(2, 4, "Auslastung\n{FUtlAuslastung}", [], icon="📈", font=12),
-    ])
+        button(2, 3, "Lieferungen", [], span=2, live=plugin_live("utl_rate", graph=GRAPH_UTL_RATE),
+               color=COLOR_LIVE, color_on="#1f3a2f"),
+        button(3, 0, "{FUtlWarnung}", [], icon="🔔", span=3, font=10, color=COLOR_UTL),
+        button(3, 3, "{FUtlOhneZugText}", key("utl"), icon="⏳", span=2, font=10,
+               live=plugin_live("utl_unserved"), color=COLOR_UTL, color_on="#9e6b2f"),
+    ], rows=4)
 
 
 def build_utl():

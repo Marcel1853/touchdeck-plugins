@@ -7,7 +7,7 @@ Geschwindigkeit, Evolution, Strom, Planet und mehr live auf deinen Buttons, Stro
 auch als Graph. Steuert das Spiel: Pause, Tempo, Speichern, Screenshot, Schnell-Chat,
 Forschungs-Warteschlange.
 
-Dazu gehört der Factorio-Mod **TouchDeck Bridge** (`touchdeck-bridge`, ab Version 0.3.0).
+Dazu gehört der Factorio-Mod **TouchDeck Bridge** (`touchdeck-bridge`, ab Version 0.4.0).
 
 ## So funktioniert es
 
@@ -27,7 +27,7 @@ TouchDeck-Button ──Tastenkürzel Strg+Alt+Umschalt+…──▶ Factorio-Fen
 
 ## Einrichtung in vier Schritten
 
-1. **Mod installieren:** `touchdeck-bridge_0.3.0.zip` nach `~/.factorio/mods/` legen (oder den
+1. **Mod installieren:** `touchdeck-bridge_0.4.0.zip` nach `~/.factorio/mods/` legen (oder den
    Ordner `touchdeck-bridge`). Factorio starten, der Mod ist automatisch an.
 2. **Plugin laden:** In TouchDeck den erweiterten Modus einschalten (Plugins › Erweitert), dann
    Plugins › Marktplatz › **Factorio** installieren (oder Plugins › Entwickeln › diesen Ordner
@@ -94,22 +94,29 @@ im Spiel siehst du es ja ohnehin.
 
 ## UTLogistics (optional, eigenes Profil)
 
-Hast du den Mod **UTLogistics** aktiv, liest der Mod alle 10 Sekunden über dessen Schnittstelle
-(nur lesend): freie Züge im Depot, laufende Lieferungen, Stationen, Netze, Lieferungen gesamt,
-mittlere Auslastung, Warnungen und die meistgelieferten Waren pro Stunde. Ohne UTLogistics passiert
-nichts, die Seite zeigt „UTLogistics nicht aktiv“.
+Hast du den Mod **UTLogistics** aktiv, liest touchdeck-bridge dessen Daten – nur lesend und so, wie
+es das UTL-Wiki („Für Mod-Autoren“, Seite „Leistung“) empfiehlt: billige Zähler bei jeder
+Aktualisierung, Listen und Statistik nur selten, alles andere aus UTLs Ereignissen. Es ist **kein
+UTL-Add-on** (keine eigenen Rollen, Fahrten oder Fenster). Ohne UTLogistics passiert nichts, die
+Seite zeigt „UTLogistics nicht aktiv“.
 
-Dafür gibt es ein **eigenes Profil** `UTLogistics.tdprofile` mit der Seite „UTLogistics“: Graph der
-Züge (frei/unterwegs), gestapelter Graph der Waren pro Stunde, Zahlen, letzte Warnung, Buttons
-„Manager öffnen“ (Strg+Alt+Umschalt+G) und „Warnungen“ (öffnet den Manager im Reiter Warnungen,
-Strg+Alt+Umschalt+A). Die letzte Warnung steht auf der Seite (`{FUtlWarnung}`), keine Popups am PC.
-Wer doch eine Reaktion will: Auslöser „UTLogistics: neue Warnung“ in einem eigenen Event nutzen.
+Dafür gibt es ein **eigenes Profil** `UTLogistics.tdprofile` mit der Seite „UTLogistics“:
+
+- Züge frei/unterwegs (Graph), Stationen, Netze, Auslastung
+- gelieferte Waren pro Stunde (gestapelter Graph) und Lieferungen pro Minute der letzten Stunde (Balken)
+- **letzte Warnung mit vollem Text** in deiner Sprache, z. B. „UTL: Zug 5 steckt seit 3 Minuten fest …“
+  (ab UTLogistics 0.0.20; ältere Versionen: kurzer Text je Art)
+- **Anfragen ohne Zug**: Anzahl und die älteste, z. B. „Kupferplatte · Eisen · seit 7 min“ (ab 0.0.20)
+- Buttons „Manager öffnen“ (Strg+Alt+Umschalt+G) und „Warnungen“ (Manager im Reiter Warnungen,
+  Strg+Alt+Umschalt+A); die Anfrage-Anzeige öffnet ebenfalls den Manager
+
+Keine Popups am PC. Wer doch reagieren will: Auslöser „UTLogistics: neue Warnung“ (`{Event.Warnung}`)
+und „UTLogistics: Anfrage wartet ohne Zug“ (`{Event.Anzahl}`, `{Event.Text}`) in eigenen Events.
 
 Werte: `FUtlStatus`, `FUtlZuegeFrei`, `FUtlUnterwegs`, `FUtlStationen`, `FUtlNetze`,
-`FUtlLieferungen`, `FUtlAuslastung`, `FUtlWarnungen`, `FUtlWarnung`, `FUtlWare1`–`3`.
-Auslöser: „UTLogistics: neue Warnung“ mit `{Event.Warnung}`, `{Event.Anzahl}`.
-Die Warnung ist ein kurzer eigener Text je Art (z. B. „Kein freier Zug“); den vollen Text mit Zug
-und Station gibt die Schnittstelle nicht her. Warnungen und Lieferungen zählen über alle Teams.
+`FUtlLieferungen` (seit touchdeck-bridge mitzählt), `FUtlLieferungenStunde`, `FUtlAuslastung`,
+`FUtlWarnungen`, `FUtlWarnung`, `FUtlOhneZug`, `FUtlOhneZugText`, `FUtlWare1`–`3`.
+Zähler und Warnungen kommen von UTL über alle Teams zusammen.
 
 ## Aktionen
 
@@ -197,7 +204,7 @@ Kante die Gesamterzeugung. Akkus zählen nur beim Entladen (Laden ist Verbrauch)
 ## Datenschutz
 
 Alles bleibt auf deinem Rechner. Das Plugin liest nur die Dateien des Mods (`state.json`,
-`names.txt`, `items.json`, `labels.txt`) und
+`names.txt`, `items.json`, `labels.txt`, `utl.json`, `utl-alerts.txt`) und
 `/proc/*/comm` (um zu sehen, ob Factorio läuft). Es öffnet keine Netzwerkverbindung und schreibt
 nichts auf die Platte; die Auswahl der Plätze liegt in TouchDeck-Werten.
 

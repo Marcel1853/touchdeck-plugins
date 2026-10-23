@@ -60,6 +60,10 @@ class FakeMod:
         with open(os.path.join(self.folder, "items.json"), "w", encoding="utf-8") as f:
             json.dump({"v": 1, "tick": 600, "surface": "nauvis", "items": items}, f)
 
+    def utl_alerts(self, lines):
+        with open(os.path.join(self.folder, "utl-alerts.txt"), "w", encoding="utf-8") as f:
+            f.write("".join(f"{tick}\t{text}\n" for tick, text in lines))
+
     def utl(self, data):
         with open(os.path.join(self.folder, "utl.json"), "w", encoding="utf-8") as f:
             json.dump(dict(data, v=1), f)
@@ -265,19 +269,28 @@ def main():
         ok = plug.wait(lambda: plug.values.get("FUtlStatus") == "UTLogistics nicht aktiv")
         check("UTL nicht aktiv", ok and plug.values.get("FUtlZuegeFrei") == "–", plug.values.get("FUtlStatus"))
         time.sleep(0.15)
-        UTL = {"active": True, "version": "0.0.19", "idle": 4, "idle_here": 4, "deliveries": 7, "stations": 23,
-               "networks": 2, "total": 12345, "utilization": 0.625, "alerts": 3, "alerts_recent": 2,
-               "last_alert": {"icon": "no_train", "group": "no_train", "count": 2, "tick": 5000},
+        UTL = {"active": True, "version": "0.0.20", "api": 1, "idle": 4, "deliveries": 7, "stations": 23,
+               "networks": 2, "total": 12345, "hour": 34, "utilization": 0.625, "alerts_recent": 2,
+               "last_alert": {"icon": "no_train", "group": "no_train", "tick": 5000},
+               "unserved": [{"k": "item", "n": "copper-plate", "network": "Eisen", "since": 0,
+                             "reason": "no-free-train"}],
                "goods": [{"k": "item", "n": "iron-plate", "hour": 4000, "ten": 700},
                          {"k": "item", "n": "copper-plate", "hour": 2500, "ten": 400}]}
         n_before = len(plug.fired)
+        mod.write(tick=7 * 3600 + 100)   # Spiel steht bei Tick 25.300 → Anfrage seit Tick 0 = 7 min
+        plug.wait(lambda: plug.values.get("FTick") == str(7 * 3600 + 100))
         mod.utl(UTL)
         ok = plug.wait(lambda: plug.values.get("FUtlZuegeFrei") == "4")
         v = plug.values
-        check("UTL Werte", ok and v.get("FUtlStatus") == "UTLogistics 0.0.19" and v.get("FUtlUnterwegs") == "7"
+        check("UTL Werte", ok and v.get("FUtlStatus") == "UTLogistics 0.0.20" and v.get("FUtlUnterwegs") == "7"
               and v.get("FUtlStationen") == "23" and v.get("FUtlLieferungen") == "12.345"
               and v.get("FUtlAuslastung") == "62 %", {k: v.get(k) for k in v if k.startswith("FUtl")})
-        check("UTL letzte Warnung übersetzt", v.get("FUtlWarnung") == "Kein freier Zug", v.get("FUtlWarnung"))
+        check("UTL letzte Warnung (Kurztext ohne utl-alerts.txt)", v.get("FUtlWarnung") == "Kein freier Zug",
+              v.get("FUtlWarnung"))
+        check("UTL Lieferungen pro Stunde", v.get("FUtlLieferungenStunde") == "34"
+              and (plug.lives.get("utl_rate") or {}).get("number") == 34, v.get("FUtlLieferungenStunde"))
+        check("UTL Anfrage ohne Zug", v.get("FUtlOhneZug") == "1"
+              and v.get("FUtlOhneZugText") == "Kupferplatte · Eisen · seit 7 min", v.get("FUtlOhneZugText"))
         check("UTL Ware mit Spielname", v.get("FUtlWare1") == "Eisenplatte: 4.000/h", v.get("FUtlWare1"))
         tr = plug.lives.get("utl_trains") or {}
         check("UTL Live Züge mit Reihen", tr.get("series") == {"Frei": 4, "Unterwegs": 7} and tr.get("number") == 7, tr)
@@ -285,10 +298,17 @@ def main():
         check("UTL Live Waren nach Ware", gd.get("series") == {"Eisenplatte": 4000, "Kupferplatte": 2500}, gd)
         check("UTL alte Warnung löst nicht aus", not any(f[0] == "utl_alert" for f in plug.fired[n_before:]))
         time.sleep(0.15)
-        mod.utl(dict(UTL, last_alert={"icon": "stuck", "group": "train", "count": 1, "tick": 6000}))
+        mod.utl_alerts([(6000, "UTL: Zug 5 steckt seit 3 Minuten fest (Ziel: Eisenmine)")])
+        mod.utl(dict(UTL, last_alert={"icon": "stuck", "group": "train", "tick": 6000},
+                     unserved=UTL["unserved"] + [{"k": "item", "n": "iron-plate", "network": "Eisen", "since": 500}]))
         ok = plug.wait(lambda: any(f[0] == "utl_alert" for f in plug.fired[n_before:]))
         data = next((f[1] for f in plug.fired[n_before:] if f[0] == "utl_alert"), {})
-        check("UTL neue Warnung löst aus", ok and data.get("Warnung") == "Zug steckt fest", data)
+        check("UTL neue Warnung löst aus, voller Text", ok and
+              data.get("Warnung") == "UTL: Zug 5 steckt seit 3 Minuten fest (Ziel: Eisenmine)", data)
+        check("UTL voller Text im Wert", plug.values.get("FUtlWarnung", "").startswith("UTL: Zug 5"),
+              plug.values.get("FUtlWarnung"))
+        check("UTL neue Anfrage ohne Zug löst aus", any(f[0] == "utl_unserved" and f[1].get("Anzahl") == 2
+                                                       for f in plug.fired[n_before:]))
 
         mod.write(power={})
         check("kein Stromnetz → –", plug.wait(lambda: plug.values.get("FStromErzeugung") == "–"))

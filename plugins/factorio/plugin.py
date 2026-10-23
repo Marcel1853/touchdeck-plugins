@@ -78,6 +78,9 @@ TEXTS = {
     "alert_fuel": ("Treibstoff/Tanken", "Fuel problem"),
     "alert_canceled": ("Lieferung abgebrochen", "Delivery canceled"),
     "alert_stuck": ("Zug steckt fest", "Train stuck"),
+    "utl_rate": ("{n} Lieferungen/h", "{n} deliveries/h"),
+    "utl_waiting": ("{n} Anfragen ohne Zug", "{n} requests without a train"),
+    "utl_waiting_one": ("{name} · {network} · seit {minutes} min", "{name} · {network} · for {minutes} min"),
     "no_grid": ("kein Netz", "no grid"),
     "platform": ("Plattform {name}", "Platform {name}"),
     # Antworten des Mods (Codes aus scripts/commands.lua)
@@ -135,10 +138,11 @@ ALL_VALUES = ["FSpielzeit", "FTick", "FGeschwindigkeit", "FPause", "FForschung",
 ITEM_SLOTS = 8
 ALL_VALUES += [f"FItem{i}" for i in range(1, ITEM_SLOTS + 1)]
 UTL_VALUES = ["FUtlZuegeFrei", "FUtlUnterwegs", "FUtlStationen", "FUtlNetze", "FUtlLieferungen", "FUtlAuslastung",
+              "FUtlLieferungenStunde", "FUtlOhneZug", "FUtlOhneZugText",
               "FUtlWarnungen", "FUtlWarnung", "FUtlWare1", "FUtlWare2", "FUtlWare3"]
 ALL_VALUES += UTL_VALUES + ["FUtlStatus"]
 LIVES = (["research", "speed", "evolution", "power", "consumption"] + [f"item{i}" for i in range(1, ITEM_SLOTS + 1)]
-         + ["utl_trains", "utl_alerts", "utl_goods"])
+         + ["utl_trains", "utl_alerts", "utl_goods", "utl_rate", "utl_unserved"])
 
 
 class UserError(Exception):
@@ -294,6 +298,9 @@ class Plugin:
         self.utl = None             # letzter Inhalt von utl.json
         self.utl_mtime = 0.0
         self.utl_alert_tick = None  # Tick der zuletzt gemeldeten UTL-Warnung (None = Grundlinie)
+        self.utl_alerts = []        # [(Tick, voller Text)] aus utl-alerts.txt, neueste zuerst
+        self.utl_alerts_mtime = 0.0
+        self.utl_waiting = None     # Anzahl Anfragen ohne Zug beim letzten Stand (None = Grundlinie)
         self.pending = {}           # requestId → {"evt", "value"} für getValue
         self.req_counter = 0
 
@@ -484,6 +491,23 @@ class Plugin:
                     self.apply_state(self.state)   # Verbraucher-Namen im Strom-Graphen
 
     def check_utl(self):
+        path = os.path.join(self.folder, "utl-alerts.txt")
+        try:
+            m = os.path.getmtime(path)
+        except OSError:
+            m = None
+        if m is not None and m != self.utl_alerts_mtime:
+            text = read_small(path)
+            if text is not None:
+                self.utl_alerts_mtime = m
+                alerts = []
+                for line in text.splitlines():
+                    tick, sep, message = line.partition("\t")
+                    if sep and tick.strip().isdigit():
+                        alerts.append((int(tick), message.strip()))
+                self.utl_alerts = alerts
+                if self.utl and self.state_seen:
+                    self.publish_utl()
         path = os.path.join(self.folder, "utl.json")
         try:
             m = os.path.getmtime(path)
@@ -504,8 +528,16 @@ class Plugin:
             self.publish_utl()
 
     def alert_text(self, alert):
+        """Voller Text aus utl-alerts.txt (gleicher Tick), sonst kurzer eigener Text je Art."""
+        tick = alert.get("tick")
+        for t_tick, message in self.utl_alerts:
+            if t_tick == tick and message:
+                return message
         icon = str(alert.get("icon") or "")
         return t("alert_" + icon) if ("alert_" + icon) in TEXTS else str(alert.get("group") or icon or "?")
+
+    def good_name(self, entry):
+        return self.labels.get(f"{entry.get('k')}.{entry.get('n')}") or str(entry.get("n") or "?")
 
     def publish_utl(self):
         d = self.utl or {}
@@ -513,50 +545,73 @@ class Plugin:
             self.set_value("FUtlStatus", t("utl_off"))
             for name in UTL_VALUES:
                 self.set_value(name, t("none"))
-            for lid in ("utl_trains", "utl_alerts", "utl_goods"):
+            for lid in ("utl_trains", "utl_alerts", "utl_goods", "utl_rate", "utl_unserved"):
                 self.set_live(lid, t("utl_off"), None, False)
             return
         num = lambda k: to_number(d.get(k), 0, 0, 1e12)
-        idle, busy = int(num("idle")), int(num("deliveries"))
+        idle, busy, hour = int(num("idle")), int(num("deliveries")), int(num("hour"))
         self.set_value("FUtlStatus", t("utl_on", version=d.get("version") or ""))
         self.set_value("FUtlZuegeFrei", idle)
         self.set_value("FUtlUnterwegs", busy)
         self.set_value("FUtlStationen", int(num("stations")))
-        self.set_value("FUtlNetze", int(num("networks")))
+        self.set_value("FUtlNetze", int(num("networks")) if d.get("networks") is not None else t("none"))
         self.set_value("FUtlLieferungen", fmt_int(num("total")))
+        self.set_value("FUtlLieferungenStunde", hour)
         util = d.get("utilization")
         util_pct = to_number(util, 0, 0, 1) * 100 if isinstance(util, (int, float)) else None
         self.set_value("FUtlAuslastung", f"{fmt_number(util_pct, 0)} %" if util_pct is not None else t("none"))
+
         recent = int(num("alerts_recent"))
-        self.set_value("FUtlWarnungen", recent)
         last = d.get("last_alert") if isinstance(d.get("last_alert"), dict) else None
-        self.set_value("FUtlWarnung", self.alert_text(last) if last else t("none"))
+        last_text = self.alert_text(last) if last else t("none")
+        self.set_value("FUtlWarnungen", recent)
+        self.set_value("FUtlWarnung", last_text)
+
         goods = [g for g in as_list(d.get("goods")) if isinstance(g, dict) and g.get("n")]
         series = {}
+        for g in goods:
+            name = self.good_name(g)[:40]
+            series[name] = round(series.get(name, 0) + to_number(g.get("hour"), 0, 0, 1e12), 1)
         for i in range(3):
             if i < len(goods):
-                g = goods[i]
-                name = self.labels.get(f"{g.get('k')}.{g['n']}") or str(g["n"])
-                self.set_value(f"FUtlWare{i + 1}", f"{name}: {fmt_int(to_number(g.get('hour'), 0, 0, 1e12))}/h")
+                self.set_value(f"FUtlWare{i + 1}",
+                               f"{self.good_name(goods[i])}: {fmt_int(to_number(goods[i].get('hour'), 0, 0, 1e12))}/h")
             else:
                 self.set_value(f"FUtlWare{i + 1}", t("none"))
-        for g in goods:
-            name = (self.labels.get(f"{g.get('k')}.{g['n']}") or str(g["n"]))[:40]
-            series[name] = round(series.get(name, 0) + to_number(g.get("hour"), 0, 0, 1e12), 1)
+
+        # Anfragen ohne Zug (älteste zuerst); Minuten aus dem Tick des Spiels
+        waiting = [u for u in as_list(d.get("unserved")) if isinstance(u, dict)]
+        tick_now = to_number((self.state or {}).get("tick"), 0, 0, 1e15)
+        if waiting:
+            u = waiting[0]
+            minutes = max(0, int((tick_now - to_number(u.get("since"), tick_now, 0, 1e15)) // 3600))
+            self.set_value("FUtlOhneZugText", t("utl_waiting_one", name=self.good_name(u),
+                                                 network=u.get("network") or "–", minutes=minutes))
+        else:
+            self.set_value("FUtlOhneZugText", t("none"))
+        self.set_value("FUtlOhneZug", len(waiting))
+
         self.set_live("utl_trains", t("utl_trains", idle=idle, busy=busy), None, busy > 0, busy,
                       {t("utl_free"): idle, t("utl_busy"): busy})
-        self.set_live("utl_alerts", t("utl_alerts", n=recent), None, recent > 0, recent)
-        top = next(iter(series), None)
-        self.set_live("utl_goods", f"{top}: {fmt_int(series[top])}/h" if top else t("none"), None, bool(series),
+        self.set_live("utl_alerts", last_text if recent else t("utl_alerts", n=0), None, recent > 0, recent)
+        top = next(iter(sorted(series.items(), key=lambda kv: -kv[1])), None)
+        self.set_live("utl_goods", f"{top[0]}: {fmt_int(top[1])}/h" if top else t("none"), None, bool(series),
                       round(sum(series.values()), 1), series)
-        # Auslöser bei neuer Warnung (nicht beim ersten Lesen und nicht bei altem Stand)
+        self.set_live("utl_rate", t("utl_rate", n=hour), None, hour > 0, hour)
+        self.set_live("utl_unserved", t("utl_waiting", n=len(waiting)), None, bool(waiting), len(waiting))
+
+        # Auslöser: neue Warnung (voller Text) und neu hinzugekommene Anfragen ohne Zug
         tick = last.get("tick") if last else None
         if isinstance(tick, (int, float)):
             if self.utl_alert_tick is not None and tick > self.utl_alert_tick:
                 send({"type": "fire", "trigger": "utl_alert",
-                      "data": {"Warnung": self.alert_text(last), "Alert": self.alert_text(last),
-                               "Anzahl": last.get("count", 1), "Count": last.get("count", 1)}})
+                      "data": {"Warnung": last_text, "Alert": last_text}})
             self.utl_alert_tick = tick
+        if self.utl_waiting is not None and len(waiting) > self.utl_waiting:
+            text = self.values.get("FUtlOhneZugText", "")
+            send({"type": "fire", "trigger": "utl_unserved",
+                  "data": {"Anzahl": len(waiting), "Count": len(waiting), "Text": text}})
+        self.utl_waiting = len(waiting)
 
     def publish_items(self):
         made, used = t("made"), t("used")
@@ -743,6 +798,7 @@ class Plugin:
             # Plugin-Start oder anderer Spielstand: nur merken, nichts Altes auslösen.
             if session != self.session:
                 self.utl_alert_tick = None
+                self.utl_waiting = None
             self.session, self.last_seq = session, seq
             return
         events = [e for e in as_list(s.get("events")) if isinstance(e, dict)]

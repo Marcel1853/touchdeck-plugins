@@ -1,7 +1,7 @@
 {
   "id": "factorio",
   "name": "Factorio",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Marcel1853",
   "license": "MIT",
   "description": {
@@ -391,10 +391,19 @@
     {
       "id": "utl_alert",
       "label": {
-        "en": "UTLogistics: new alert",
-        "de": "UTLogistics: neue Warnung"
+        "en": "UTLogistics: new alert (full text)",
+        "de": "UTLogistics: neue Warnung (voller Text)"
       },
       "icon": "🚂",
+      "fields": []
+    },
+    {
+      "id": "utl_unserved",
+      "label": {
+        "en": "UTLogistics: request waiting without a train",
+        "de": "UTLogistics: Anfrage wartet ohne Zug"
+      },
+      "icon": "⏳",
       "fields": []
     }
   ],
@@ -516,6 +525,20 @@
       "label": {
         "en": "UTLogistics: goods delivered per hour (graph by good)",
         "de": "UTLogistics: gelieferte Waren pro Stunde (Graph nach Ware)"
+      }
+    },
+    {
+      "id": "utl_rate",
+      "label": {
+        "en": "UTLogistics: deliveries per hour (graph)",
+        "de": "UTLogistics: Lieferungen pro Stunde (Graph)"
+      }
+    },
+    {
+      "id": "utl_unserved",
+      "label": {
+        "en": "UTLogistics: requests without a train",
+        "de": "UTLogistics: Anfragen ohne Zug"
       }
     }
   ]
