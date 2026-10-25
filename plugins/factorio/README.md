@@ -7,7 +7,7 @@ Geschwindigkeit, Evolution, Strom, Planet und mehr live auf deinen Buttons, Stro
 auch als Graph. Steuert das Spiel: Pause, Tempo, Speichern, Screenshot, Schnell-Chat,
 Forschungs-Warteschlange.
 
-Dazu gehört der Factorio-Mod **TouchDeck Bridge** (`touchdeck-bridge`, ab Version 0.4.0).
+Dazu gehört der Factorio-Mod **TouchDeck Bridge** (`touchdeck-bridge`, ab Version 0.6.0).
 
 ## So funktioniert es
 
@@ -27,7 +27,7 @@ TouchDeck-Button ──Tastenkürzel Strg+Alt+Umschalt+…──▶ Factorio-Fen
 
 ## Einrichtung in vier Schritten
 
-1. **Mod installieren:** `touchdeck-bridge_0.4.0.zip` nach `~/.factorio/mods/` legen (oder den
+1. **Mod installieren:** `touchdeck-bridge_0.6.0.zip` nach `~/.factorio/mods/` legen (oder den
    Ordner `touchdeck-bridge`). Factorio starten, der Mod ist automatisch an.
 2. **Plugin laden:** In TouchDeck den erweiterten Modus einschalten (Plugins › Erweitert), dann
    Plugins › Marktplatz › **Factorio** installieren (oder Plugins › Entwickeln › diesen Ordner
@@ -37,12 +37,14 @@ TouchDeck-Button ──Tastenkürzel Strg+Alt+Umschalt+…──▶ Factorio-Fen
    Der Import fügt nur hinzu: Seiten einer älteren Version vorher löschen.
 4. **Spiel laden** – fertig. `{FStatus}` auf der Seite zeigt „läuft“.
 
-Voraussetzungen: TouchDeck 0.10 (Graphen mit mehreren Reihen, Button-Art „Anzeige“), Linux mit X11, Python 3.8 oder neuer.
+Voraussetzungen: TouchDeck 0.12 (Graphen mit mehreren Reihen, Button-Art „Anzeige“, Sicherheitsabfrage,
+Bildschirmschoner; ältere Versionen ignorieren, was sie nicht kennen), Linux mit X11, Python 3.8 oder neuer.
 Keine Pflicht-Einstellungen.
 
 ## Die fertige Seite
 
-Hauptseite **Factorio** mit Live-Anzeigen, Strom- und Evolutions-Graph und sechs Ordnern (je eine
+Hauptseite **Factorio** (4 × 6) mit Live-Anzeigen, großen Strom- und Evolutions-Graphen, einem
+Button **UTLogistics** und sechs Ordnern (je eine
 eigene Seite mit Zurück-Button oben links): **Zeit**, **Forschung**, **Chat**, **Spiel**,
 **Produktion** und **Strom** (über den Strom-Graphen der Hauptseite). Kommt
 Factorio in den Vordergrund, wechselt TouchDeck auf allen Geräten zur Seite „Factorio“.
@@ -53,7 +55,7 @@ Factorio in den Vordergrund, wechselt TouchDeck auf allen Geräten zur Seite „
 | Pause | Pause an/aus (leuchtet rot bei Pause, aus `{FPause}`) | – | – | – |
 | Halten = 4× (Zeit) | – | – | 4× | wieder 1× |
 | Langsamer / Schneller (Zeit) | halbe / doppelte Geschwindigkeit | – | – | – |
-| Abbrechen (Forschung) | – | – | Forschung abbrechen (Halten schützt vor Versehen) | – |
+| Abbrechen (Forschung) | Forschung abbrechen – erst beim **zweiten** Druck (Sicherheitsabfrage) | – | – | – |
 | #1 / #2 / #3 (Forschung) | günstigste verfügbare Forschung einreihen, Name steht auf dem Button | – | – | – |
 | Chat-Buttons | Schnell-Chat 1–6 | – | – | – |
 | Strom (Hauptseite) | öffnet den Ordner Spiel; Erzeugung nach Quelle gestapelt (Dampf, Solar, Akkus …), letzte 2 Minuten | – | – | – |
@@ -64,6 +66,11 @@ sind von der Art „Anzeige“: kein Antippen, keine Drück-Animation.
 
 Der Pause-Zustand kommt aus dem Spiel (Wert `{FPause}`), nicht aus einem frei laufenden Umschalter.
 Er stimmt also auch, wenn du am Rechner pausierst.
+
+**UTLogistics-Button (Startseite):** Ist UTLogistics im Spiel aktiv (Wert `FUtlAktiv` = ja), öffnet
+er die Seite „UTLogistics“ aus dem eigenen Profil `UTLogistics.tdprofile` (gesucht über den Namen,
+weil der Import Seiten neue IDs gibt; die Seite erscheint dann auf allen Geräten). Sonst öffnet er die
+Mod-Seite im Portal. Wer UTL nicht nutzt, löscht den Button einfach.
 
 **Strom:** Erzeugung nach Quelle (Dampf, Turbinen, Solar, Akkus …) und Verbrauch nach Gebäude
 (die sechs größten Verbraucher, Rest „Sonstige“) als große gestapelte Graphen der letzten
@@ -88,7 +95,10 @@ Danke!. Die Texte sind übersetzt, jeder Mitspieler liest sie in seiner Sprache.
 setzt du in Factorio unter Einstellungen › Mod-Einstellungen › Spieler › Schnell-Chat 1–6 (dann
 auch die Beschriftung des Buttons ändern).
 
-**Events:** Factorio im Vordergrund → Seite Factorio · Forschung fertig und „Ich bin gestorben“ →
+**Bildschirmschoner (TouchDeck 0.12):** Unter der Uhr erscheint eine Karte „Factorio“ mit Status,
+Forschung, Strom, Planet, Tempo und Evolution. Sie verschwindet, wenn Factorio beendet ist.
+
+**Events:** Factorio im Vordergrund (nur beim ersten Mal) → Seite Factorio · Forschung fertig und „Ich bin gestorben“ →
 Meldung auf dem Deck (Wert `{FMeldung}`, unten rechts auf der Hauptseite). Keine Popups am PC –
 im Spiel siehst du es ja ohnehin.
 
@@ -100,7 +110,27 @@ Aktualisierung, Listen und Statistik nur selten, alles andere aus UTLs Ereigniss
 UTL-Add-on** (keine eigenen Rollen, Fahrten oder Fenster). Ohne UTLogistics passiert nichts, die
 Seite zeigt „UTLogistics nicht aktiv“.
 
-Dafür gibt es ein **eigenes Profil** `UTLogistics.tdprofile` mit der Seite „UTLogistics“:
+**Als UTL-Add-on (nur Fenster, ab UTLogistics 0.0.20):** Im **Stationsfenster** jeder UTL-Station gibt
+es den Abschnitt **„TouchDeck“**: Häkchen „Auf dem TouchDeck zeigen“ und einen Platz 1–8 wählen.
+Gespeichert wird das als UTL-Stationsdaten – es reist mit Blaupausen und beim Einstellungen-Kopieren
+mit. Im **UTL-Manager** zeigt der Reiter **„TouchDeck“** alle angehefteten Stationen mit „Lösen“.
+
+Dafür gibt es ein **eigenes Profil** `UTLogistics.tdprofile` mit vier Seiten im Ordner „Factorio“:
+**UTLogistics** (Übersicht) und die Unterseiten **Stationen**, **Netze** und **Warnungen**.
+
+- **Stationen:** die 8 im Spiel angehefteten Stationen – Züge da und unterwegs (Graph), Angebot (+)
+  und Bedarf (−).
+- **Netze:** 8 Plätze für die Netze des gezeigten Planeten (freie Züge, Lieferungen, Stationen, Graph).
+  Am Platz: antippen = nächstes Netz, halten = voriges, doppelt = automatisch (meiste Stationen).
+- **Warnungen:** die letzten 5 Warnungen im Volltext und bis zu 5 Anfragen ohne Zug.
+
+Übersicht:
+
+- **Planet** (Button oben links): Mit Space Age zählt alles **je Planet**. Zuerst steht er auf
+  **automatisch** und zeigt den Planeten, auf dem du gerade bist. Auf einer Raumplattform (dort gibt
+  es keine Schienen) bleibt der zuletzt gezeigte Planet stehen. **Antippen** = nächster Planet,
+  **halten** = alle Planeten zusammen, **doppelt tippen** = wieder automatisch. Die Wahl bleibt nach
+  einem Neustart erhalten (`FUtlFlaecheWahl`).
 
 - Züge frei/unterwegs (Graph), Stationen, Netze, Auslastung
 - gelieferte Waren pro Stunde (gestapelter Graph) und Lieferungen pro Minute der letzten Stunde (Balken)
@@ -113,16 +143,21 @@ Dafür gibt es ein **eigenes Profil** `UTLogistics.tdprofile` mit der Seite „U
 Keine Popups am PC. Wer doch reagieren will: Auslöser „UTLogistics: neue Warnung“ (`{Event.Warnung}`)
 und „UTLogistics: Anfrage wartet ohne Zug“ (`{Event.Anzahl}`, `{Event.Text}`) in eigenen Events.
 
-Werte: `FUtlStatus`, `FUtlZuegeFrei`, `FUtlUnterwegs`, `FUtlStationen`, `FUtlNetze`,
+Werte: `FUtlStation1`–`8`, `FUtlStationInfo1`–`8`, `FUtlNetz1`–`8` (gewählt in `FUtlNetzWahl1`–`8`),
+`FUtlWarnung1`–`5`, `FUtlOhneZug1`–`5`, `FUtlStatus`, `FUtlFlaeche` (angezeigter Planet), `FUtlZuegeFrei`, `FUtlUnterwegs`, `FUtlStationen`, `FUtlNetze`,
 `FUtlLieferungen` (seit touchdeck-bridge mitzählt), `FUtlLieferungenStunde`, `FUtlAuslastung`,
 `FUtlWarnungen`, `FUtlWarnung`, `FUtlOhneZug`, `FUtlOhneZugText`, `FUtlWare1`–`3`.
-Zähler und Warnungen kommen von UTL über alle Teams zusammen.
+Alles gilt für dein Team und den gewählten Planeten; nur die Auslastung der Züge gibt UTL lediglich
+für alle Planeten zusammen her. Aktion „UTLogistics: Planet wählen“ (nächster, voriger, automatisch, alle).
 
 ## Aktionen
 
 | Aktion | Was sie macht |
 | --- | --- |
 | Auf Antwort des Spiels warten | nach einem Tastenkürzel: wartet bis zu 3 s auf die Bestätigung des Mods |
+| UTLogistics: Seite öffnen | öffnet die Seite „UTLogistics“ (über den Namen); fehlt sie, kommt der Hinweis, das Profil zu importieren |
+| UTLogistics: Planet wählen | nächster, voriger, automatisch, alle |
+| UTLogistics: Netz-Platz wählen | Platz 1–8: nächstes, voriges, automatisch, alle automatisch |
 | Produktions-Platz: Item wählen | Platz 1–8: nächstes, voriges, automatisch, nach Name (Spielsprache oder intern, z. B. „Eisenplatte“) oder alle automatisch |
 
 ## Eigene Buttons
@@ -198,7 +233,8 @@ Kante die Gesamterzeugung. Akkus zählen nur beim Entladen (Laden ist Verbrauch)
 | Einstellung | Standard |
 | --- | --- |
 | Ordner der Mod-Dateien | leer = `~/.factorio/script-output/touchdeck-bridge` oder die Flatpak-Steam-Variante |
-| Dateien prüfen alle … ms | 250 |
+| Dateien prüfen alle … ms | 250 (solange Factorio läuft oder vor Kurzem Daten kamen) |
+| Ohne Factorio nur alle … ms prüfen | 3000 (`/proc` dann nur alle 5 s) |
 | Keine Daten seit … Sekunden = nicht verbunden | 5 |
 
 ## Datenschutz
@@ -249,7 +285,7 @@ Lizenz: MIT.
 **Advanced TouchDeck plugin** for Factorio 2.1 (with or without Space Age). Shows research,
 speed, evolution, power, planet and more live on your buttons, power and evolution also as graphs,
 and controls the game: pause, speed, save, screenshot, quick chat, research queue. Needs the
-Factorio mod **TouchDeck Bridge** (`touchdeck-bridge`, 0.2.0 or newer).
+Factorio mod **TouchDeck Bridge** (`touchdeck-bridge`, 0.6.0 or newer).
 
 - No launch option, no RCON, no network: the mod writes
   `~/.factorio/script-output/touchdeck-bridge/state.json`, the plugin watches it.

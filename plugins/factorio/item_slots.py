@@ -1,4 +1,4 @@
-"""Plätze für die Produktions-Seite: welches Item (oder welche Flüssigkeit) ein Platz zeigt.
+"""Plätze zum Auswählen: welches Item/welche Flüssigkeit (Produktion) oder welches Netz (UTL) ein Platz zeigt.
 
 Ein Platz ist entweder fest gewählt („item.iron-plate“) oder automatisch (leer): Dann zeigt er das
 nächstmeistproduzierte Item, das kein anderer Platz zeigt. Geblättert wird alphabetisch nach dem
@@ -9,7 +9,7 @@ nächstmeistproduzierte Item, das kein anderer Platz zeigt. Geblättert wird alp
 class ItemSlots:
     def __init__(self, count):
         self.count = count
-        self.picks = [""] * count     # Schlüssel „item.<name>“ / „fluid.<name>“ oder "" = automatisch
+        self.picks = [""] * count     # Schlüssel „<Art>.<Name>“ (item, fluid, net) oder "" = automatisch
         self.rates = {}               # Schlüssel → (Produktion/min, Verbrauch/min)
         self.order = []               # Schlüssel nach Produktion absteigend (wie vom Mod)
         self.labels = {}              # Schlüssel → übersetzter Name
@@ -20,7 +20,7 @@ class ItemSlots:
         """items: Liste aus items.json ({n, k, p, c}); labels: Schlüssel → Name aus labels.txt."""
         self.rates, self.order = {}, []
         for e in items:
-            if not isinstance(e, dict) or e.get("k") not in ("item", "fluid") or not e.get("n"):
+            if not isinstance(e, dict) or not e.get("k") or not e.get("n"):
                 continue
             key = f"{e['k']}.{e['n']}"
             if key in self.rates:

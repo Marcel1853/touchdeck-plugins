@@ -78,6 +78,29 @@ TEXTS = {
     "alert_fuel": ("Treibstoff/Tanken", "Fuel problem"),
     "alert_canceled": ("Lieferung abgebrochen", "Delivery canceled"),
     "alert_stuck": ("Zug steckt fest", "Train stuck"),
+    "utl_page_missing": ("Seite „UTLogistics“ nicht gefunden – bitte UTLogistics.tdprofile importieren.",
+                         "Page “UTLogistics” not found – please import UTLogistics.tdprofile."),
+    "utl_page_open": ("UTLogistics-Seite geöffnet", "UTLogistics page opened"),
+    "utl_station": ("{name}: {here} da · {coming} kommen", "{name}: {here} here · {coming} on the way"),
+    "utl_here": ("Da", "Here"),
+    "utl_coming": ("Kommen", "On the way"),
+    "utl_net": ("{name}: {idle} frei · {busy} unterwegs · {stations} Stationen",
+                "{name}: {idle} idle · {busy} on the way · {stations} stations"),
+    "utl_net_short": ("{name}: {idle} frei · {busy} unterwegs", "{name}: {idle} idle · {busy} on the way"),
+    "utl_no_nets": ("Auf diesem Planeten gibt es noch keine UTL-Netze.", "No UTL networks on this planet yet."),
+    "net_set": ("Netz-Platz {n}: {name}", "Network slot {n}: {name}"),
+    "net_auto": ("Netz-Platz {n}: automatisch ({name})", "Network slot {n}: automatic ({name})"),
+    "nets_auto": ("Alle Netz-Plätze automatisch", "All network slots automatic"),
+    "saver_status": ("Status", "Status"),
+    "saver_research": ("Forschung", "Research"),
+    "saver_power": ("Strom", "Power"),
+    "saver_planet": ("Planet", "Planet"),
+    "saver_speed": ("Tempo", "Speed"),
+    "saver_evolution": ("Evolution", "Evolution"),
+    "utl_all": ("Alle Planeten", "All planets"),
+    "utl_auto": ("{name} (automatisch)", "{name} (automatic)"),
+    "utl_surface_set": ("UTL: {name}", "UTL: {name}"),
+    "utl_no_surfaces": ("UTLogistics hat noch keine Stationen.", "UTLogistics has no stations yet."),
     "utl_rate": ("{n} Lieferungen/h", "{n} deliveries/h"),
     "utl_waiting": ("{n} Anfragen ohne Zug", "{n} requests without a train"),
     "utl_waiting_one": ("{name} · {network} · seit {minutes} min", "{name} · {network} · for {minutes} min"),
@@ -137,12 +160,19 @@ ALL_VALUES = ["FSpielzeit", "FTick", "FGeschwindigkeit", "FPause", "FForschung",
               "FVorschlag2", "FVorschlag3", "FStromErzeugung", "FStromVerbrauch"]
 ITEM_SLOTS = 8
 ALL_VALUES += [f"FItem{i}" for i in range(1, ITEM_SLOTS + 1)]
-UTL_VALUES = ["FUtlZuegeFrei", "FUtlUnterwegs", "FUtlStationen", "FUtlNetze", "FUtlLieferungen", "FUtlAuslastung",
+UTL_SLOTS = 8
+UTL_LISTS = ([f"FUtlStation{i}" for i in range(1, UTL_SLOTS + 1)] + [f"FUtlStationInfo{i}" for i in range(1, UTL_SLOTS + 1)]
+             + [f"FUtlNetz{i}" for i in range(1, UTL_SLOTS + 1)] + [f"FUtlWarnung{i}" for i in range(1, 6)]
+             + [f"FUtlOhneZug{i}" for i in range(1, 6)])
+UTL_VALUES = ["FUtlFlaeche", "FUtlZuegeFrei", "FUtlUnterwegs", "FUtlStationen", "FUtlNetze", "FUtlLieferungen", "FUtlAuslastung",
               "FUtlLieferungenStunde", "FUtlOhneZug", "FUtlOhneZugText",
               "FUtlWarnungen", "FUtlWarnung", "FUtlWare1", "FUtlWare2", "FUtlWare3"]
 ALL_VALUES += UTL_VALUES + ["FUtlStatus"]
 LIVES = (["research", "speed", "evolution", "power", "consumption"] + [f"item{i}" for i in range(1, ITEM_SLOTS + 1)]
-         + ["utl_trains", "utl_alerts", "utl_goods", "utl_rate", "utl_unserved"])
+         + ["utl_trains", "utl_alerts", "utl_goods", "utl_rate", "utl_unserved"]
+         + [f"utlst{i}" for i in range(1, UTL_SLOTS + 1)] + [f"utlnet{i}" for i in range(1, UTL_SLOTS + 1)])
+UTL_VALUES += UTL_LISTS
+ALL_VALUES += UTL_LISTS
 
 
 class UserError(Exception):
@@ -291,6 +321,8 @@ class Plugin:
         self.connected = None
         self.status = None
         self.running_cache = (0.0, False)
+        self.idle_interval = 3.0    # ohne laufendes Factorio seltener prüfen
+        self.saver_card = None      # zuletzt gesendete Bildschirmschoner-Karte (None = keine)
         self.slots = ItemSlots(ITEM_SLOTS)
         self.items_mtime = 0.0
         self.labels = {}
@@ -301,6 +333,10 @@ class Plugin:
         self.utl_alerts = []        # [(Tick, voller Text)] aus utl-alerts.txt, neueste zuerst
         self.utl_alerts_mtime = 0.0
         self.utl_waiting = None     # Anzahl Anfragen ohne Zug beim letzten Stand (None = Grundlinie)
+        self.utl_pick = ""          # gewählte Fläche: "" automatisch, "*" alle, sonst Name (in FUtlFlaecheWahl)
+        self.utl_auto_last = ""     # zuletzt automatisch gezeigte Fläche (für Raumplattformen ohne Schienen)
+        self.utl_surface_index = None
+        self.net_slots = ItemSlots(UTL_SLOTS)   # Netz-Plätze: Schlüssel „net.<Name>“, "" = automatisch
         self.pending = {}           # requestId → {"evt", "value"} für getValue
         self.req_counter = 0
 
@@ -314,6 +350,7 @@ class Plugin:
         self.folder_setting = str(s.get("folder") or "").strip()
         self.interval = to_number(s.get("interval"), 250, 100, 5000) / 1000.0
         self.timeout = to_number(s.get("timeout"), 5, 2, 60)
+        self.idle_interval = to_number(s.get("idleInterval"), 3000, 500, 30000) / 1000.0
         with self.lock:
             self.set_connected(False, t("st_off"), fire=False)
             self.reset_values()
@@ -385,18 +422,54 @@ class Plugin:
     def is_running(self):
         now = time.monotonic()
         stamp, running = self.running_cache
-        if now - stamp > 2.0:
+        # /proc nur alle 2 s, solange das Spiel läuft, sonst alle 5 s
+        if now - stamp > (2.0 if running else 5.0):
             running = factorio_running()
             self.running_cache = (now, running)
         return running
 
+    def busy(self):
+        """Schnell prüfen, solange Factorio läuft oder vor Kurzem Daten kamen; sonst gemütlich."""
+        recent = self.state_seen and time.monotonic() - self.state_seen < 30
+        return bool(recent) or self.is_running()
+
     def watch_loop(self):
         self.load_picks()
-        while not self.stop_evt.wait(self.interval):
+        self.load_utl_pick()
+        while not self.stop_evt.wait(self.interval if self.busy() else self.idle_interval):
             try:
                 self.poll()
+                self.update_saver()
             except Exception:
                 log(traceback.format_exc(), "error")
+
+    # ---------------- Bildschirmschoner (TouchDeck 0.12: Karte unter der Uhr) ----------------
+
+    def update_saver(self):
+        """Karte nur senden, wenn sich etwas ändert; leeren, wenn Factorio aus ist."""
+        with self.lock:
+            if self.connected:
+                v = self.values
+                items = [{"label": label, "text": str(v.get(name) or "–")[:60]}
+                         for label, name in ((t("saver_status"), "FStatus"), (t("saver_research"), "FForschung"),
+                                             (t("saver_power"), "FStromErzeugung"), (t("saver_planet"), "FPlanet"))]
+                research = v.get("FForschung")
+                if research and research != t("none"):
+                    items[1]["text"] = f"{research} · {v.get('FForschungProzent', '0')} %"[:60]
+                items.append({"label": t("saver_speed"), "text": f"{v.get('FGeschwindigkeit', '1')}×"})
+                evo = v.get("FEvolution")
+                if evo and evo != t("none"):
+                    items.append({"label": t("saver_evolution"), "text": f"{evo} %"})
+                card = {"title": "Factorio", "color": "#e6b45a", "items": items[:6]}
+            else:
+                card = None
+            if card == self.saver_card:
+                return
+            self.saver_card = card
+        if card:
+            send({"type": "call", "requestId": f"saver_{time.monotonic_ns()}", "op": "saver.set", "args": {"card": card}})
+        else:
+            send({"type": "call", "requestId": f"saver_{time.monotonic_ns()}", "op": "saver.clear", "args": {}})
 
     def poll(self):
         with self.lock:
@@ -539,8 +612,159 @@ class Plugin:
     def good_name(self, entry):
         return self.labels.get(f"{entry.get('k')}.{entry.get('n')}") or str(entry.get("n") or "?")
 
+    def surface_label(self, block):
+        return self.labels.get(f"surface.{block.get('index')}") or str(block.get("name") or "?")
+
+    def utl_surfaces(self):
+        d = self.utl or {}
+        return [b for b in as_list(d.get("surfaces")) if isinstance(b, dict) and b.get("name")]
+
+    def utl_selection(self):
+        """(Datenblock, Beschriftung) für die gewählte Fläche – automatisch, alle oder ein Planet."""
+        d = self.utl or {}
+        if not isinstance(d.get("all"), dict):
+            return d, ""                      # Mod vor 0.5.0: nur Summen
+        surfaces = self.utl_surfaces()
+        if self.utl_pick == "*":
+            return d["all"], t("utl_all")
+        if self.utl_pick:
+            for b in surfaces:
+                if b["name"] == self.utl_pick:
+                    return b, self.surface_label(b)
+            return {}, self.utl_pick          # gewählter Planet hat gerade keine UTL-Stationen
+        here = ((self.state or {}).get("surface") or {}).get("index")
+        for b in surfaces:
+            if b.get("index") == here:
+                self.utl_auto_last = b["name"]
+                return b, t("utl_auto", name=self.surface_label(b))
+        # z. B. auf einer Raumplattform: der zuletzt gezeigte Planet, sonst der einzige, sonst alle
+        for b in surfaces:
+            if b["name"] == self.utl_auto_last:
+                return b, t("utl_auto", name=self.surface_label(b))
+        if len(surfaces) == 1:
+            return surfaces[0], t("utl_auto", name=self.surface_label(surfaces[0]))
+        return d["all"], t("utl_auto", name=t("utl_all"))
+
+    def amounts_text(self, provide, request):
+        parts = [f"+{self.good_name(g)} {fmt_int(to_number(g.get('amount'), 0, 0, 1e15))}"
+                 for g in as_list(provide) if isinstance(g, dict)]
+        parts += [f"−{self.good_name(g)} {fmt_int(to_number(g.get('amount'), 0, 0, 1e15))}"
+                  for g in as_list(request) if isinstance(g, dict)]
+        return " · ".join(parts) if parts else t("none")
+
+    def publish_utl_lists(self, block, waiting, tick_now):
+        """Stationen (angeheftet im Spiel), Netze (Plätze, am Deck gewählt), Warnungen, Anfragen ohne Zug."""
+        d = self.utl or {}
+        pins = {int(to_number(p.get("slot"), 0, 0, 99)): p for p in as_list(d.get("pins")) if isinstance(p, dict)}
+        here_t, coming_t = t("utl_here"), t("utl_coming")
+        for i in range(1, UTL_SLOTS + 1):
+            p = pins.get(i)
+            if not p:
+                self.set_value(f"FUtlStation{i}", t("none"))
+                self.set_value(f"FUtlStationInfo{i}", t("none"))
+                self.set_live(f"utlst{i}", t("none"), None, False)
+                continue
+            here, coming = int(to_number(p.get("here"), 0, 0, 1e6)), int(to_number(p.get("coming"), 0, 0, 1e6))
+            planet = self.labels.get(f"surface.{p.get('surface')}") or ""
+            name = str(p.get("name") or "?")
+            text = t("utl_station", name=name, here=here, coming=coming)
+            self.set_value(f"FUtlStation{i}", text + (f" · {planet}" if planet else ""))
+            self.set_value(f"FUtlStationInfo{i}", self.amounts_text(p.get("provide"), p.get("request")))
+            self.set_live(f"utlst{i}", text, None, here > 0, here + coming, {here_t: here, coming_t: coming})
+
+        # Netze des gezeigten Planeten (bei „alle“: keine Netzliste)
+        nets = [n for n in as_list(block.get("nets")) if isinstance(n, dict) and n.get("name")]
+        by_key = {f"net.{n['name']}": n for n in nets}
+        self.net_slots.update([{"k": "net", "n": n["name"], "p": n.get("stations", 0), "c": 0} for n in nets],
+                              {k: k[4:] for k in by_key})
+        free_t, busy_t = t("utl_free"), t("utl_busy")
+        for i, (key, auto) in enumerate(self.net_slots.resolve(), start=1):
+            n = by_key.get(key)
+            if not key:
+                self.set_value(f"FUtlNetz{i}", t("none"))
+                self.set_live(f"utlnet{i}", t("none"), None, False)
+                continue
+            idle = int(to_number((n or {}).get("idle"), 0, 0, 1e6))
+            busy = int(to_number((n or {}).get("deliveries"), 0, 0, 1e6))
+            stations = int(to_number((n or {}).get("stations"), 0, 0, 1e6))
+            name = key[4:]
+            self.set_value(f"FUtlNetz{i}", t("utl_net", name=name, idle=idle, busy=busy, stations=stations))
+            self.set_live(f"utlnet{i}", t("utl_net_short", name=name, idle=idle, busy=busy), None, not auto, busy,
+                          {free_t: idle, busy_t: busy})
+
+        # die letzten 5 Warnungen (voller Text) und Anfragen ohne Zug des gezeigten Planeten
+        for i in range(1, 6):
+            text = self.utl_alerts[i - 1][1] if i - 1 < len(self.utl_alerts) else t("none")
+            self.set_value(f"FUtlWarnung{i}", text)
+            if i - 1 < len(waiting):
+                u = waiting[i - 1]
+                minutes = max(0, int((tick_now - to_number(u.get("since"), tick_now, 0, 1e15)) // 3600))
+                self.set_value(f"FUtlOhneZug{i}", t("utl_waiting_one", name=self.good_name(u),
+                                                     network=u.get("network") or "–", minutes=minutes))
+            else:
+                self.set_value(f"FUtlOhneZug{i}", t("none"))
+
+    def utl_net_action(self, p):
+        op = str(p.get("op") or "next")
+        with self.lock:
+            if op == "all_auto":
+                self.net_slots.all_auto()
+                for i in range(UTL_SLOTS):
+                    self.set_value(f"FUtlNetzWahl{i + 1}", "")
+                if self.utl and self.state_seen:
+                    self.publish_utl()
+                return t("nets_auto")
+            if not self.net_slots.order:
+                raise UserError(t("utl_no_nets"))
+            n = int(to_number(p.get("slot"), 1, -1e6, 1e6))
+            if not 1 <= n <= UTL_SLOTS:
+                raise UserError(t("slot_range", n=n, m=UTL_SLOTS))
+            i = n - 1
+            if op in ("next", "prev"):
+                self.net_slots.step(i, 1 if op == "next" else -1)
+            elif op == "auto":
+                self.net_slots.auto(i)
+            else:
+                raise UserError(t("unknown", id=f"utl_net/{op}"))
+            self.set_value(f"FUtlNetzWahl{n}", self.net_slots.picks[i])
+            if self.utl and self.state_seen:
+                self.publish_utl()
+            key, auto = self.net_slots.resolve()[i]
+            name = key[4:] if key else t("none")
+            return t("net_auto", n=n, name=name) if auto else t("net_set", n=n, name=name)
+
+    def utl_surface_action(self, p):
+        op = str(p.get("op") or "next")
+        with self.lock:
+            surfaces = self.utl_surfaces()
+            if op == "auto":
+                self.utl_pick = ""
+            elif op == "all":
+                self.utl_pick = "*"
+            elif op in ("next", "prev"):
+                if not surfaces:
+                    raise UserError(t("utl_no_surfaces"))
+                names = [b["name"] for b in surfaces]
+                current = self.utl_pick if self.utl_pick in names else None
+                if current is None:
+                    block, _ = self.utl_selection()
+                    current = block.get("name") if block.get("name") in names else None
+                if current is None:
+                    i = 0 if op == "next" else len(names) - 1
+                else:
+                    i = (names.index(current) + (1 if op == "next" else -1)) % len(names)
+                self.utl_pick = names[i]
+            else:
+                raise UserError(t("unknown", id=f"utl_surface/{op}"))
+            self.set_value("FUtlFlaecheWahl", self.utl_pick)
+            if self.utl and self.state_seen:
+                self.publish_utl()
+            return t("utl_surface_set", name=self.values.get("FUtlFlaeche", ""))
+
     def publish_utl(self):
         d = self.utl or {}
+        # fester Wert (nicht übersetzt): die Bedingung des Startseiten-Buttons prüft auf „ja“
+        self.set_value("FUtlAktiv", "ja" if d.get("active") else "nein")
         if not d.get("active"):
             self.set_value("FUtlStatus", t("utl_off"))
             for name in UTL_VALUES:
@@ -548,6 +772,9 @@ class Plugin:
             for lid in ("utl_trains", "utl_alerts", "utl_goods", "utl_rate", "utl_unserved"):
                 self.set_live(lid, t("utl_off"), None, False)
             return
+        block, where = self.utl_selection()
+        d = dict(block, total=d.get("total"), utilization=d.get("utilization"), version=d.get("version"))
+        self.set_value("FUtlFlaeche", where)
         num = lambda k: to_number(d.get(k), 0, 0, 1e12)
         idle, busy, hour = int(num("idle")), int(num("deliveries")), int(num("hour"))
         self.set_value("FUtlStatus", t("utl_on", version=d.get("version") or ""))
@@ -600,6 +827,8 @@ class Plugin:
         self.set_live("utl_rate", t("utl_rate", n=hour), None, hour > 0, hour)
         self.set_live("utl_unserved", t("utl_waiting", n=len(waiting)), None, bool(waiting), len(waiting))
 
+        self.publish_utl_lists(d, waiting, tick_now)
+
         # Auslöser: neue Warnung (voller Text) und neu hinzugekommene Anfragen ohne Zug
         tick = last.get("tick") if last else None
         if isinstance(tick, (int, float)):
@@ -641,11 +870,49 @@ class Plugin:
             self.pending.pop(rid, None)
         return slot["value"], ok
 
+    def call(self, op, args, timeout=3.0):
+        """TouchDeck-Funktion aufrufen (z. B. deck.showPage) und auf die Antwort warten: (ok, Ergebnis/Fehler)."""
+        with self.lock:
+            self.req_counter += 1
+            rid = f"fc_{self.req_counter}"
+            slot = {"evt": threading.Event(), "value": None}
+            self.pending[rid] = slot
+        send({"type": "call", "requestId": rid, "op": op, "args": args})
+        got = slot["evt"].wait(timeout)
+        with self.lock:
+            self.pending.pop(rid, None)
+        reply = slot["value"] if got and isinstance(slot["value"], dict) else {}
+        return bool(reply.get("ok")), reply.get("result") if reply.get("ok") else reply.get("error")
+
+    def on_reply(self, msg):
+        slot = self.pending.get(msg.get("requestId"))
+        if slot:
+            slot["value"] = msg
+            slot["evt"].set()
+
+    def utl_open(self):
+        ok, _ = self.call("deck.showPage", {"page": "UTLogistics"})
+        if not ok:
+            raise UserError(t("utl_page_missing"))
+        return t("utl_page_open")
+
     def on_value(self, msg):
         slot = self.pending.get(msg.get("requestId"))
         if slot:
             slot["value"] = msg.get("value")
             slot["evt"].set()
+
+    def load_utl_pick(self):
+        v, ok = self.get_value("FUtlFlaecheWahl")
+        if not ok:
+            return
+        self.utl_pick = str(v or "")
+        for i in range(UTL_SLOTS):
+            v, ok = self.get_value(f"FUtlNetzWahl{i + 1}")
+            if not ok:
+                return
+            v = str(v or "")
+            self.net_slots.picks[i] = v if v.startswith("net.") else ""
 
     def load_picks(self):
         for i in range(ITEM_SLOTS):
@@ -720,6 +987,12 @@ class Plugin:
         return name or internal
 
     def apply_state(self, s):
+        index = (s.get("surface") or {}).get("index") if isinstance(s.get("surface"), dict) else None
+        if index != self.utl_surface_index:
+            self.utl_surface_index = index
+            if self.utl and self.state_seen and not self.utl_pick:
+                self.state = s
+                self.publish_utl()
         speed = to_number(s.get("speed"), 1, 0, 1000)
         paused = bool(s.get("paused"))
         research = str(s.get("research") or "")
@@ -870,6 +1143,12 @@ class Plugin:
         if action == "await":
             cmd = str(p.get("cmd") or "")
             return self.await_ack(cmd, to_number(p.get("seconds"), 3, 0.5, 30))
+        if action == "utl_net":
+            return self.utl_net_action(p)
+        if action == "utl_open":
+            return self.utl_open()
+        if action == "utl_surface":
+            return self.utl_surface_action(p)
         if action == "item":
             return self.item_action(p)
         raise UserError(t("unknown", id=action))
@@ -926,6 +1205,8 @@ def main():
             pool.submit(plugin.run_action, msg)
         elif kind == "value":
             plugin.on_value(msg)
+        elif kind == "reply":
+            plugin.on_reply(msg)
         elif kind == "stop":
             break
     plugin.shutdown()

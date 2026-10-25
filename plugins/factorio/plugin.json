@@ -1,7 +1,7 @@
 {
   "id": "factorio",
   "name": "Factorio",
-  "version": "0.4.0",
+  "version": "0.7.0",
   "author": "Marcel1853",
   "license": "MIT",
   "description": {
@@ -41,6 +41,15 @@
       },
       "type": "number",
       "default": 5
+    },
+    {
+      "key": "idleInterval",
+      "label": {
+        "en": "Without Factorio, check only every … ms (500–30000)",
+        "de": "Ohne Factorio nur alle … ms prüfen (500–30000)"
+      },
+      "type": "number",
+      "default": 3000
     }
   ],
   "actions": [
@@ -238,6 +247,122 @@
               "set"
             ]
           }
+        }
+      ]
+    },
+    {
+      "id": "utl_surface",
+      "label": {
+        "en": "UTLogistics: choose planet",
+        "de": "UTLogistics: Planet wählen"
+      },
+      "icon": "🪐",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "next",
+          "options": [
+            {
+              "value": "next",
+              "label": {
+                "en": "Next planet",
+                "de": "Nächster Planet"
+              }
+            },
+            {
+              "value": "prev",
+              "label": {
+                "en": "Previous planet",
+                "de": "Voriger Planet"
+              }
+            },
+            {
+              "value": "auto",
+              "label": {
+                "en": "Automatic (where I am)",
+                "de": "Automatisch (wo ich bin)"
+              }
+            },
+            {
+              "value": "all",
+              "label": {
+                "en": "All planets",
+                "de": "Alle Planeten"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utl_open",
+      "label": {
+        "en": "UTLogistics: open its page",
+        "de": "UTLogistics: Seite öffnen"
+      },
+      "icon": "🚂",
+      "fields": []
+    },
+    {
+      "id": "utl_net",
+      "label": {
+        "en": "UTLogistics: choose network slot",
+        "de": "UTLogistics: Netz-Platz wählen"
+      },
+      "icon": "🕸️",
+      "fields": [
+        {
+          "key": "slot",
+          "label": {
+            "en": "Slot (1–8)",
+            "de": "Platz (1–8)"
+          },
+          "type": "number",
+          "default": 1
+        },
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "next",
+          "options": [
+            {
+              "value": "next",
+              "label": {
+                "en": "Next network",
+                "de": "Nächstes Netz"
+              }
+            },
+            {
+              "value": "prev",
+              "label": {
+                "en": "Previous network",
+                "de": "Voriges Netz"
+              }
+            },
+            {
+              "value": "auto",
+              "label": {
+                "en": "Automatic (most stations)",
+                "de": "Automatisch (meiste Stationen)"
+              }
+            },
+            {
+              "value": "all_auto",
+              "label": {
+                "en": "All slots automatic",
+                "de": "Alle Plätze automatisch"
+              }
+            }
+          ]
         }
       ]
     }
@@ -539,6 +664,118 @@
       "label": {
         "en": "UTLogistics: requests without a train",
         "de": "UTLogistics: Anfragen ohne Zug"
+      }
+    },
+    {
+      "id": "utlst1",
+      "label": {
+        "en": "UTLogistics: pinned station 1 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 1 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlst2",
+      "label": {
+        "en": "UTLogistics: pinned station 2 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 2 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlst3",
+      "label": {
+        "en": "UTLogistics: pinned station 3 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 3 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlst4",
+      "label": {
+        "en": "UTLogistics: pinned station 4 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 4 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlst5",
+      "label": {
+        "en": "UTLogistics: pinned station 5 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 5 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlst6",
+      "label": {
+        "en": "UTLogistics: pinned station 6 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 6 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlst7",
+      "label": {
+        "en": "UTLogistics: pinned station 7 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 7 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlst8",
+      "label": {
+        "en": "UTLogistics: pinned station 8 (trains, graph)",
+        "de": "UTLogistics: angeheftete Station 8 (Züge, Graph)"
+      }
+    },
+    {
+      "id": "utlnet1",
+      "label": {
+        "en": "UTLogistics: network slot 1 (graph)",
+        "de": "UTLogistics: Netz-Platz 1 (Graph)"
+      }
+    },
+    {
+      "id": "utlnet2",
+      "label": {
+        "en": "UTLogistics: network slot 2 (graph)",
+        "de": "UTLogistics: Netz-Platz 2 (Graph)"
+      }
+    },
+    {
+      "id": "utlnet3",
+      "label": {
+        "en": "UTLogistics: network slot 3 (graph)",
+        "de": "UTLogistics: Netz-Platz 3 (Graph)"
+      }
+    },
+    {
+      "id": "utlnet4",
+      "label": {
+        "en": "UTLogistics: network slot 4 (graph)",
+        "de": "UTLogistics: Netz-Platz 4 (Graph)"
+      }
+    },
+    {
+      "id": "utlnet5",
+      "label": {
+        "en": "UTLogistics: network slot 5 (graph)",
+        "de": "UTLogistics: Netz-Platz 5 (Graph)"
+      }
+    },
+    {
+      "id": "utlnet6",
+      "label": {
+        "en": "UTLogistics: network slot 6 (graph)",
+        "de": "UTLogistics: Netz-Platz 6 (Graph)"
+      }
+    },
+    {
+      "id": "utlnet7",
+      "label": {
+        "en": "UTLogistics: network slot 7 (graph)",
+        "de": "UTLogistics: Netz-Platz 7 (Graph)"
+      }
+    },
+    {
+      "id": "utlnet8",
+      "label": {
+        "en": "UTLogistics: network slot 8 (graph)",
+        "de": "UTLogistics: Netz-Platz 8 (Graph)"
       }
     }
   ]

@@ -83,6 +83,8 @@ class PluginProcess:
         self.q = queue.Queue()
         self.values = {}
         self.td_values = dict(td_values or {})   # Wertespeicher von TouchDeck (für getValue)
+        self.td_pages = {"UTLogistics"}           # Seiten, die deck.showPage findet
+        self.saver = "nie gesetzt"                # Bildschirmschoner-Karte (saver.set / saver.clear)
         self.fired = []
         self.results = {}
         self.lives = {}
@@ -110,6 +112,14 @@ class PluginProcess:
                 self.results[msg["requestId"]] = msg
             elif kind == "call" and msg.get("op") == "live.set":
                 self.lives[msg["args"]["id"]] = msg["args"]["value"]
+            elif kind == "call" and msg.get("op") == "saver.set":
+                self.saver = msg["args"].get("card")
+            elif kind == "call" and msg.get("op") == "saver.clear":
+                self.saver = None
+            elif kind == "call" and msg.get("op") == "deck.showPage":
+                found = msg["args"].get("page") in self.td_pages
+                self.send({"type": "reply", "requestId": msg["requestId"], "ok": found,
+                           **({"result": "p_utl"} if found else {"error": "Zielseite gibt es nicht mehr"})})
             elif kind == "log" and msg.get("level") == "error":
                 self.errors.append(msg["message"])
 
@@ -154,7 +164,7 @@ def main():
     tmp = tempfile.mkdtemp(prefix="td-factorio-test-")
     folder = os.path.join(tmp, "script-output", "touchdeck-bridge")
     os.makedirs(folder)
-    settings = {"folder": folder, "interval": 100, "timeout": 2}
+    settings = {"folder": folder, "interval": 100, "timeout": 2, "idleInterval": 500}
     game = None
     try:
         # 1) Alte Datei aus einer früheren Sitzung: nicht verbunden, keine alten Ereignisse auslösen
@@ -188,6 +198,11 @@ def main():
               (v.get("FVorschlag1"), v.get("FVorschlag2")))
         check("FVorschlag3 leer", v.get("FVorschlag3") == "–", v.get("FVorschlag3"))
         check("FGeschwindigkeit", v.get("FGeschwindigkeit") == "1", v.get("FGeschwindigkeit"))
+        ok = plug.wait(lambda: isinstance(plug.saver, dict))
+        card = plug.saver if isinstance(plug.saver, dict) else {}
+        texts = {i["label"]: i["text"] for i in card.get("items", [])}
+        check("Bildschirmschoner-Karte", ok and card.get("title") == "Factorio"
+              and texts.get("Forschung") == "Automatisierung · 42 %" and texts.get("Strom") == "35,2 MW", card)
         r = plug.lives.get("research") or {}
         check("Live Forschung mit Balken", r.get("value") == 42 and r.get("on") is True, r)
 
@@ -268,6 +283,7 @@ def main():
         mod.utl({"active": False})
         ok = plug.wait(lambda: plug.values.get("FUtlStatus") == "UTLogistics nicht aktiv")
         check("UTL nicht aktiv", ok and plug.values.get("FUtlZuegeFrei") == "–", plug.values.get("FUtlStatus"))
+        check("FUtlAktiv = nein", plug.values.get("FUtlAktiv") == "nein", plug.values.get("FUtlAktiv"))
         time.sleep(0.15)
         UTL = {"active": True, "version": "0.0.20", "api": 1, "idle": 4, "deliveries": 7, "stations": 23,
                "networks": 2, "total": 12345, "hour": 34, "utilization": 0.625, "alerts_recent": 2,
@@ -292,6 +308,13 @@ def main():
         check("UTL Anfrage ohne Zug", v.get("FUtlOhneZug") == "1"
               and v.get("FUtlOhneZugText") == "Kupferplatte · Eisen · seit 7 min", v.get("FUtlOhneZugText"))
         check("UTL Ware mit Spielname", v.get("FUtlWare1") == "Eisenplatte: 4.000/h", v.get("FUtlWare1"))
+        check("FUtlAktiv = ja", plug.values.get("FUtlAktiv") == "ja", plug.values.get("FUtlAktiv"))
+        res = plug.action("o1", "utl_open", {})
+        check("UTL-Seite öffnen", res and res["ok"], res)
+        plug.td_pages = set()
+        res = plug.action("o2", "utl_open", {})
+        check("UTL-Seite fehlt → Hinweis aufs Profil", res and not res["ok"]
+              and "UTLogistics.tdprofile" in res.get("error", ""), res)
         tr = plug.lives.get("utl_trains") or {}
         check("UTL Live Züge mit Reihen", tr.get("series") == {"Frei": 4, "Unterwegs": 7} and tr.get("number") == 7, tr)
         gd = plug.lives.get("utl_goods") or {}
@@ -309,6 +332,67 @@ def main():
               plug.values.get("FUtlWarnung"))
         check("UTL neue Anfrage ohne Zug löst aus", any(f[0] == "utl_unserved" and f[1].get("Anzahl") == 2
                                                        for f in plug.fired[n_before:]))
+
+        # UTL je Planet (Mod ab 0.5.0): automatisch nach dem Planeten des Spielers, blättern, alle
+        def blk(index, name, stations, idle, busy):
+            return {"index": index, "name": name, "stations": stations, "idle": idle, "deliveries": busy,
+                    "networks": 1, "hour": 0, "goods": [], "alerts_recent": 0, "unserved": []}
+        nauvis = blk(1, "nauvis", 20, 4, 7)
+        nauvis["nets"] = [{"name": "Eisen", "stations": 12, "idle": 3, "deliveries": 5, "hour": 20},
+                          {"name": "Kupfer", "stations": 8, "idle": 1, "deliveries": 2, "hour": 10}]
+        UTL2 = {"active": True, "version": "0.0.21", "total": 5, "utilization": 0.5,
+                "all": dict(blk(0, "", 30, 6, 9), networks=3),
+                "surfaces": [nauvis, blk(3, "vulcanus", 10, 2, 2)],
+                "pins": [{"slot": 2, "unit": 28, "name": "Eisenmine", "surface": 1, "network": "Eisen",
+                          "roles": ["provider"], "here": 1, "coming": 2,
+                          "provide": [{"k": "item", "n": "iron-plate", "amount": 4000}],
+                          "request": [{"k": "item", "n": "copper-plate", "amount": 200}]}]}
+        mod.items(ITEMS, LABELS + "surface.1=Nauvis\nsurface.3=Vulcanus\n")
+        time.sleep(0.15)
+        mod.utl(UTL2)
+        ok = plug.wait(lambda: plug.values.get("FUtlFlaeche") == "Nauvis (automatisch)")
+        check("UTL Planet automatisch = wo ich bin", ok and plug.values.get("FUtlZuegeFrei") == "4",
+              (plug.values.get("FUtlFlaeche"), plug.values.get("FUtlZuegeFrei")))
+        v = plug.values
+        check("UTL angeheftete Station auf Platz 2", v.get("FUtlStation2") == "Eisenmine: 1 da · 2 kommen · Nauvis"
+              and v.get("FUtlStation1") == "–", v.get("FUtlStation2"))
+        check("UTL Station Angebot/Bedarf", v.get("FUtlStationInfo2") == "+Eisenplatte 4.000 · −Kupferplatte 200",
+              v.get("FUtlStationInfo2"))
+        st = plug.lives.get("utlst2") or {}
+        check("UTL Live Station mit Reihen", st.get("series") == {"Da": 1, "Kommen": 2} and st.get("on") is True, st)
+        check("UTL Netz-Plätze automatisch (meiste Stationen)", v.get("FUtlNetz1") == "Eisen: 3 frei · 5 unterwegs · 12 Stationen"
+              and v.get("FUtlNetz2", "").startswith("Kupfer:") and v.get("FUtlNetz3") == "–", (v.get("FUtlNetz1"), v.get("FUtlNetz2")))
+        res = plug.action("n1", "utl_net", {"slot": 1, "op": "next"})
+        check("UTL Netz-Platz 1 nächstes", res and res["ok"] and v.get("FUtlNetz1", "").startswith("Kupfer:")
+              and v.get("FUtlNetzWahl1") == "net.Kupfer" and (plug.lives.get("utlnet1") or {}).get("on") is True,
+              (res, v.get("FUtlNetz1")))
+        check("UTL Netz automatisch rückt nach", v.get("FUtlNetz2", "").startswith("Eisen:"), v.get("FUtlNetz2"))
+        res = plug.action("n2", "utl_net", {"slot": 1, "op": "all_auto"})
+        check("UTL Netz-Plätze alle automatisch", res and res["ok"] and v.get("FUtlNetz1", "").startswith("Eisen:")
+              and plug.td_values.get("FUtlNetzWahl1") == "", v.get("FUtlNetz1"))
+        check("UTL Warnungsliste voller Text", v.get("FUtlWarnung1", "").startswith("UTL: Zug 5"), v.get("FUtlWarnung1"))
+        res = plug.action("u1", "utl_surface", {"op": "next"})
+        check("UTL nächster Planet", res and res["ok"] and plug.values.get("FUtlFlaeche") == "Vulcanus"
+              and plug.values.get("FUtlZuegeFrei") == "2" and plug.values.get("FUtlFlaecheWahl") == "vulcanus",
+              (res, plug.values.get("FUtlFlaeche")))
+        plug.action("u2", "utl_surface", {"op": "next"})
+        check("UTL blättert im Kreis", plug.values.get("FUtlFlaeche") == "Nauvis", plug.values.get("FUtlFlaeche"))
+        plug.action("u3", "utl_surface", {"op": "all"})
+        check("UTL alle Planeten", plug.values.get("FUtlFlaeche") == "Alle Planeten"
+              and plug.values.get("FUtlZuegeFrei") == "6" and plug.values.get("FUtlNetze") == "3")
+        plug.action("u4", "utl_surface", {"op": "auto"})
+        check("UTL zurück auf automatisch", plug.values.get("FUtlFlaeche") == "Nauvis (automatisch)"
+              and plug.values.get("FUtlFlaecheWahl") == "", plug.values.get("FUtlFlaeche"))
+        mod.write(surface={"index": 3, "name": "vulcanus", "kind": "planet", "planet": "vulcanus"})
+        ok = plug.wait(lambda: plug.values.get("FUtlFlaeche") == "Vulcanus (automatisch)")
+        check("UTL folgt dem Spieler auf einen anderen Planeten", ok and plug.values.get("FUtlZuegeFrei") == "2",
+              plug.values.get("FUtlFlaeche"))
+        mod.write(surface={"index": 5, "name": "platform-1", "kind": "platform", "platform": "Erzfrachter"})
+        time.sleep(0.6)
+        check("UTL auf Raumplattform: letzter Planet bleibt", plug.values.get("FUtlFlaeche") == "Vulcanus (automatisch)",
+              plug.values.get("FUtlFlaeche"))
+        mod.write(surface={"index": 1, "name": "nauvis", "kind": "planet", "planet": "nauvis"})
+        plug.wait(lambda: plug.values.get("FUtlFlaeche") == "Nauvis (automatisch)")
 
         mod.write(power={})
         check("kein Stromnetz → –", plug.wait(lambda: plug.values.get("FStromErzeugung") == "–"))
@@ -360,6 +444,7 @@ def main():
         check("Herzschlag-Ausfall → getrennt", ok)
         check("Auslöser disconnected", any(f[0] == "disconnected" for f in plug.fired))
         check("Werte zurückgesetzt", plug.values.get("FForschungProzent") == "–", plug.values.get("FForschungProzent"))
+        check("Bildschirmschoner geleert, wenn Factorio aus", plug.wait(lambda: plug.saver is None, 3), plug.saver)
         res = plug.action("r10", "await", {"cmd": "chat", "seconds": 1})
         check("await ohne Verbindung → verständlicher Fehler",
               res and not res["ok"] and ("läuft nicht" in res.get("error", "") or "Menü" in res.get("error", "")), res)

@@ -71,7 +71,7 @@ def key(name):
 
 
 def button(row, col, title, actions=None, *, icon="", color=COLOR, span=1, rows=1, live=None, mode="press",
-           color_on=None, hold=None, release=None, double=None, font=13, pos="bottom"):
+           color_on=None, hold=None, release=None, double=None, font=13, pos="bottom", confirm=False):
     _ids["n"] += 1
     if mode == "press" and not (actions or hold or release or double):
         mode = "display"   # reine Anzeige: kein Antippen, keine Drück-Animation (TouchDeck 0.10)
@@ -91,6 +91,8 @@ def button(row, col, title, actions=None, *, icon="", color=COLOR, span=1, rows=
     }
     if color_on:
         b["colorOn"] = color_on
+    if confirm:
+        b["confirm"] = True   # Sicherheitsabfrage: erst beim zweiten Druck auslösen (TouchDeck 0.11)
     if live:
         b["live"] = live
     return b
@@ -121,9 +123,9 @@ GRAPH_EVOLUTION = {"graph": "area", "graphPoints": 120, "graphInterval": 30, "gr
                    "graphMax": 100, "graphColor": "#c0392b", "graphAlign": "left"}   # letzte Stunde
 
 
-def page(pid, name, buttons, rows=ROWS):
+def page(pid, name, buttons, rows=ROWS, cols=COLS):
     # Ordner in der Seitenliste (TouchDeck 0.10); ältere Versionen ignorieren das Feld
-    return {"id": pid, "name": name, "rows": rows, "cols": COLS, "layout": "grid", "folder": "Factorio",
+    return {"id": pid, "name": name, "rows": rows, "cols": cols, "layout": "grid", "folder": "Factorio",
             "background": "#14161b", "buttons": buttons, "events": []}
 
 
@@ -141,7 +143,24 @@ def pause_button(row, col):
                   color_on="#c0392b")
 
 
+UTL_PORTAL = "https://mods.factorio.com/mod/UTLogistics"
+
+
+def utl_button(row, col):
+    """UTLogistics: mit dem Mod (FUtlAktiv = ja) die Seite „UTLogistics“ öffnen (eigenes Profil, gesucht über
+    den Namen), sonst die Mod-Seite im Portal. Darf gelöscht werden, wenn man UTL nicht nutzt."""
+    return button(row, col, "UTLogistics", [
+        comment("Mit UTLogistics: Seite „UTLogistics“ (aus UTLogistics.tdprofile), sonst die Mod-Seite im Portal."),
+        action("if", name="FUtlAktiv", op="eq", value="ja"),
+        action(f"{PLUGIN}:utl_open"),
+        action("else"),
+        action("open_url", url=UTL_PORTAL),
+        action("end"),
+    ], icon="🚂", color=COLOR_FOLDER)
+
+
 def main_page():
+    # 4 × 6: oben Steuerung, darunter die Ordner, unten Strom und Evolution als große Graphen
     return page(PAGE_MAIN, "Factorio", [
         button(0, 0, "{FStatus}", [], icon="🏭", live=plugin_live("status"), color=COLOR_LIVE,
                color_on="#2f9e6b", font=11),
@@ -150,17 +169,22 @@ def main_page():
         button(0, 3, "Tempo", key("speed1"), icon="⏩", live=plugin_live("speed"), color=COLOR_GAME,
                color_on="#9e6b2f", double=key("speed2"), hold=[press("speed4")], release=[press("speed1")]),
         pause_button(0, 4),
+        button(0, 5, "Speichern", key("save"), icon="💾", color=COLOR_GAME),
         folder(1, 0, "Zeit", "⏱️", PAGES["zeit"]),
         folder(1, 1, "Forschung", "🧪", PAGES["forschung"]),
         folder(1, 2, "Chat", "💬", PAGES["chat"]),
         folder(1, 3, "Spiel", "🎮", PAGES["spiel"]),
         folder(1, 4, "Produktion", "📦", PAGES["produktion"]),
-        button(2, 0, "Strom", [action("go_page", page=PAGES["strom"])], span=2,
+        utl_button(1, 5),
+        button(2, 0, "Strom", [action("go_page", page=PAGES["strom"])], span=2, rows=2,
                live=plugin_live("power", graph=GRAPH_SOURCES), color=COLOR_LIVE, color_on="#3b3a1f"),
-        button(2, 2, "Evolution", [], live=plugin_live("evolution", graph=GRAPH_EVOLUTION), color_on="#3a1f1f"),
-        button(2, 3, "{FPlanet}", [], icon="🪐", font=12),
-        button(2, 4, "{FMeldung}", [], icon="💬", font=10),
-    ])
+        button(2, 2, "Evolution", [], span=2, rows=2, live=plugin_live("evolution", graph=GRAPH_EVOLUTION),
+               color_on="#3a1f1f"),
+        button(2, 4, "{FPlanet}", [], icon="🪐", font=12),
+        button(2, 5, "Spielzeit\n{FSpielzeit}", [], icon="🕒", font=11),
+        button(3, 4, "Raketen\n{FRaketen}", [], icon="🚀", font=11),
+        button(3, 5, "{FMeldung}", [], icon="💬", font=10),
+    ], rows=4, cols=6)
 
 
 def time_page():
@@ -187,7 +211,7 @@ def research_page():
         button(0, 1, "Aktuell", [], icon="🔬", span=2, live=plugin_live("research", bar=True),
                color=COLOR_LIVE, color_on="#2f6f9e"),
         button(0, 3, "Warteschlange\n{FWarteschlange}", [], icon="📋", font=12),
-        button(0, 4, "Abbrechen\n(halten)", [], icon="✖️", color="#5a2b2b", hold=key("cancel")),
+        button(0, 4, "Abbrechen", key("cancel"), icon="✖️", color="#5a2b2b", confirm=True),
     ]
     for i in range(3):
         buttons.append(button(1, i, f"#{i + 1}\n{{FVorschlag{i + 1}}}", key(f"research{i + 1}"),
@@ -263,7 +287,7 @@ def production_page():
 def events():
     return [
         {"id": "ev_factorio_fokus", "name": "Factorio im Vordergrund → Seite Factorio", "enabled": True,
-         "trigger": {"type": "app_focus", "params": {"app": WINDOW}}, "cooldown": 0,
+         "trigger": {"type": "app_focus", "params": {"app": WINDOW, "once": True}}, "cooldown": 0,
          "actions": [action("deck_show_page", page=PAGE_MAIN)]},
         {"id": "ev_factorio_forschung", "name": "Factorio: Forschung fertig → Meldung auf dem Deck", "enabled": True,
          "trigger": {"type": f"{PLUGIN}:research_finished", "params": {}}, "cooldown": 0,
@@ -295,6 +319,7 @@ VALUES = {
     "FStromVerbrauch": "Strom-Verbrauch des Netzes, in dem du stehst",
     "FMeldung": "Letzte Antwort des Spiels auf einen Befehl",
 }
+# bleibt beim Trennen stehen: ja/nein, ob UTLogistics im Spiel aktiv ist (Button auf der Startseite)
 for _i in range(1, ITEM_SLOTS + 1):
     VALUES[f"FItem{_i}"] = f"Produktions-Platz {_i}: Item und Menge pro Minute"
 # Gemerkte Auswahl der Plätze: bleibt nach einem Neustart erhalten (nicht zurücksetzen)
@@ -309,6 +334,8 @@ def build():
     values.update({name: {"default": "", "description": f"{desc} (Plugin Factorio)", "folder": "Factorio",
                           "resetOnStart": False}
                    for name, desc in KEEP.items()})
+    values["FUtlAktiv"] = {"default": "nein", "description": "UTLogistics im Spiel aktiv: ja/nein (Plugin Factorio)",
+                           "folder": "Factorio", "resetOnStart": False}
     return {
         "format": "touchdeck-profile", "formatVersion": 1, "app": "0.9.0",
         "name": "Factorio", "pages": pages, "flows": [], "events": events(),
@@ -323,6 +350,7 @@ COLOR_UTL = "#1f2f3a"
 
 UTL_VALUES = {
     "FUtlStatus": "UTLogistics: Version oder „nicht aktiv“",
+    "FUtlFlaeche": "UTLogistics: angezeigter Planet (automatisch, gewählt oder alle)",
     "FUtlZuegeFrei": "UTLogistics: freie Züge im Depot (dein Team)",
     "FUtlUnterwegs": "UTLogistics: laufende Lieferungen",
     "FUtlStationen": "UTLogistics: Stationen (dein Team)",
@@ -338,6 +366,13 @@ UTL_VALUES = {
     "FUtlWare2": "UTLogistics: zweitmeist gelieferte Ware pro Stunde",
     "FUtlWare3": "UTLogistics: drittmeist gelieferte Ware pro Stunde",
 }
+for _i in range(1, 9):
+    UTL_VALUES[f"FUtlStation{_i}"] = f"UTLogistics: angeheftete Station {_i} (Züge da/unterwegs)"
+    UTL_VALUES[f"FUtlStationInfo{_i}"] = f"UTLogistics: angeheftete Station {_i}, Angebot (+) und Bedarf (−)"
+    UTL_VALUES[f"FUtlNetz{_i}"] = f"UTLogistics: Netz-Platz {_i}"
+for _i in range(1, 6):
+    UTL_VALUES[f"FUtlWarnung{_i}"] = f"UTLogistics: Warnung {_i} (neueste zuerst, voller Text)"
+    UTL_VALUES[f"FUtlOhneZug{_i}"] = f"UTLogistics: Anfrage ohne Zug {_i} (älteste zuerst)"
 GRAPH_UTL_TRAINS = {"graph": "line", "graphPoints": 90, "graphInterval": 10, "graphMin": 0, "graphAlign": "left"}
 GRAPH_UTL_GOODS = {"graph": "stack", "graphPoints": 60, "graphInterval": 60, "graphMin": 0, "graphAlign": "left"}
 
@@ -346,27 +381,98 @@ GRAPH_UTL_RATE = {"graph": "bars", "graphPoints": 60, "graphInterval": 60, "grap
                   "graphColor": "#2f9e6b", "graphAlign": "left"}   # letzte Stunde, ein Balken je Minute
 
 
+PAGES_UTL = {"stationen": "p_factorio_utl_stationen", "netze": "p_factorio_utl_netze",
+             "warnungen": "p_factorio_utl_warnungen"}
+GRAPH_UTL_STATION = {"graph": "line", "graphPoints": 60, "graphInterval": 10, "graphMin": 0, "graphAlign": "left"}
+GRAPH_UTL_NET = {"graph": "line", "graphPoints": 60, "graphInterval": 10, "graphMin": 0, "graphAlign": "left"}
+
+
+def planet_button(row, col):
+    # Planet: antippen = nächster, halten = alle, doppelt = automatisch (wo ich bin)
+    return button(row, col, "{FUtlFlaeche}\n{FUtlStatus}", [action(f"{PLUGIN}:utl_surface", op="next")], icon="🪐",
+                  font=10, color=COLOR_UTL, hold=[action(f"{PLUGIN}:utl_surface", op="all")],
+                  double=[action(f"{PLUGIN}:utl_surface", op="auto")])
+
+
 def utl_page():
+    # Übersicht 4 × 6; Zurück oben links (z. B. zur Factorio-Startseite)
     return page(PAGE_UTL, "UTLogistics", [
-        button(0, 0, "{FUtlStatus}", [], icon="🚂", font=11, color=COLOR_UTL),
-        button(0, 1, "Züge", [], span=2, live=plugin_live("utl_trains", graph=GRAPH_UTL_TRAINS),
+        back(),
+        planet_button(0, 1),
+        button(0, 2, "Züge", [], span=2, live=plugin_live("utl_trains", graph=GRAPH_UTL_TRAINS),
                color=COLOR_LIVE, color_on="#2f4f6f"),
-        button(0, 3, "Warnungen", key("utl_alerts"), icon="⚠️", live=plugin_live("utl_alerts"),
+        button(0, 4, "Warnungen", key("utl_alerts"), icon="⚠️", live=plugin_live("utl_alerts"),
                color=COLOR_UTL, color_on="#c0392b", font=10),
-        button(0, 4, "Manager\nöffnen", key("utl"), icon="📋", color=COLOR_GAME),
+        button(0, 5, "Manager\nöffnen", key("utl"), icon="📋", color=COLOR_GAME),
         button(1, 0, "Frei im Depot\n{FUtlZuegeFrei}", [], icon="🅿️", font=12),
         button(1, 1, "Unterwegs\n{FUtlUnterwegs}", [], icon="🚆", font=12),
         button(1, 2, "Stationen\n{FUtlStationen}", [], icon="🚉", font=12),
         button(1, 3, "Netze\n{FUtlNetze}", [], icon="🕸️", font=12),
         button(1, 4, "Auslastung\n{FUtlAuslastung}", [], icon="📈", font=12),
+        button(1, 5, "Lieferungen/h\n{FUtlLieferungenStunde}", [], icon="📦", font=11),
         button(2, 0, "Gelieferte Waren pro Stunde", [], span=3,
                live=plugin_live("utl_goods", graph=GRAPH_UTL_GOODS), color=COLOR_LIVE, color_on="#2f4f6f"),
-        button(2, 3, "Lieferungen", [], span=2, live=plugin_live("utl_rate", graph=GRAPH_UTL_RATE),
+        button(2, 3, "Lieferungen", [], span=3, live=plugin_live("utl_rate", graph=GRAPH_UTL_RATE),
                color=COLOR_LIVE, color_on="#1f3a2f"),
-        button(3, 0, "{FUtlWarnung}", [], icon="🔔", span=3, font=10, color=COLOR_UTL),
-        button(3, 3, "{FUtlOhneZugText}", key("utl"), icon="⏳", span=2, font=10,
+        folder(3, 0, "Stationen", "🚉", PAGES_UTL["stationen"]),
+        folder(3, 1, "Netze", "🕸️", PAGES_UTL["netze"]),
+        folder(3, 2, "Warnungen", "⚠️", PAGES_UTL["warnungen"]),
+        button(3, 3, "{FUtlWarnung}", [], icon="🔔", span=2, font=10, color=COLOR_UTL),
+        button(3, 5, "{FUtlOhneZugText}", key("utl"), icon="⏳", font=9,
                live=plugin_live("utl_unserved"), color=COLOR_UTL, color_on="#9e6b2f"),
-    ], rows=4)
+    ], rows=4, cols=6)
+
+
+def utl_stations_page():
+    buttons = [
+        back(),
+        button(0, 1, "Im Spiel anheften: Stationsfenster › TouchDeck › „Auf dem TouchDeck zeigen“ und Platz 1–8",
+               [], span=3, font=10, color=COLOR_FOLDER),
+        button(0, 4, "Manager\nöffnen", key("utl"), icon="📋", color=COLOR_GAME),
+    ]
+    for i in range(8):
+        n = i + 1
+        buttons.append(button(1 + i // 4, i % 4, f"{{FUtlStationInfo{n}}}", [],
+                              live=plugin_live(f"utlst{n}", graph=GRAPH_UTL_STATION),
+                              color=COLOR_LIVE, color_on="#2f6f4f", font=9))
+    buttons.append(button(1, 4, "Stationen\n{FUtlStationen}", [], icon="🚉", font=11))
+    buttons.append(button(2, 4, "{FUtlOhneZugText}", [], icon="⏳", font=9, live=plugin_live("utl_unserved"),
+                          color=COLOR_UTL, color_on="#9e6b2f"))
+    return page(PAGES_UTL["stationen"], "UTLogistics › Stationen", buttons)
+
+
+def utl_nets_page():
+    def net(op, n):
+        return [action(f"{PLUGIN}:utl_net", slot=n, op=op)]
+    buttons = [
+        back(),
+        button(0, 1, "Platz antippen = nächstes Netz · halten = voriges · doppelt = automatisch", [],
+               span=2, font=10, color=COLOR_FOLDER),
+        button(0, 3, "Alle\nautomatisch", [action(f"{PLUGIN}:utl_net", slot=1, op="all_auto")], icon="🔁"),
+        planet_button(0, 4),
+    ]
+    for i in range(8):
+        n = i + 1
+        buttons.append(button(1 + i // 4, i % 4, "", net("next", n), live=plugin_live(f"utlnet{n}", graph=GRAPH_UTL_NET),
+                              color=COLOR_LIVE, color_on="#2f4f6f", font=10,
+                              hold=net("prev", n), double=net("auto", n)))
+    buttons.append(button(1, 4, "Netze\n{FUtlNetze}", [], icon="🕸️", font=11))
+    buttons.append(button(2, 4, "Manager\nöffnen", key("utl"), icon="📋", color=COLOR_GAME))
+    return page(PAGES_UTL["netze"], "UTLogistics › Netze", buttons)
+
+
+def utl_alerts_page():
+    buttons = [
+        back(),
+        button(0, 1, "Letzte Warnungen", [], icon="⚠️", span=2, font=11, color=COLOR_FOLDER),
+        button(0, 3, "Anfragen ohne Zug", [], icon="⏳", span=1, font=10, color=COLOR_FOLDER),
+        button(0, 4, "Manager:\nWarnungen", key("utl_alerts"), icon="📋", color=COLOR_GAME),
+        planet_button(0, 5),
+    ]
+    for i in range(5):
+        buttons.append(button(1 + i, 0, f"{{FUtlWarnung{i + 1}}}", [], span=3, font=10, color=COLOR_UTL))
+        buttons.append(button(1 + i, 3, f"{{FUtlOhneZug{i + 1}}}", [], span=3, font=10, color=COLOR_UTL))
+    return page(PAGES_UTL["warnungen"], "UTLogistics › Warnungen", buttons, rows=6, cols=6)
 
 
 def build_utl():
@@ -375,9 +481,16 @@ def build_utl():
     values = {name: {"default": "–", "description": f"{desc} (Plugin Factorio)", "folder": "Factorio › UTL",
                      "resetOnStart": True}
               for name, desc in UTL_VALUES.items()}
+    # gewählter Planet: bleibt nach einem Neustart erhalten ("" = automatisch, "*" = alle)
+    values["FUtlFlaecheWahl"] = {"default": "", "description": "UTLogistics: gewählter Planet (leer = automatisch, * = alle) (Plugin Factorio)",
+                                 "folder": "Factorio › UTL", "resetOnStart": False}
+    for i in range(1, 9):
+        values[f"FUtlNetzWahl{i}"] = {"default": "", "description": f"UTLogistics: gewähltes Netz für Platz {i} (leer = automatisch) (Plugin Factorio)",
+                                      "folder": "Factorio › UTL", "resetOnStart": False}
     return {
         "format": "touchdeck-profile", "formatVersion": 1, "app": "0.10.0",
-        "name": "UTLogistics", "pages": [utl_page()], "flows": [], "events": events,
+        "name": "UTLogistics", "pages": [utl_page(), utl_stations_page(), utl_nets_page(), utl_alerts_page()],
+        "flows": [], "events": events,
         "values": values, "images": {},
     }
 
