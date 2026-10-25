@@ -354,6 +354,9 @@ class Plugin:
         with self.lock:
             self.set_connected(False, t("st_off"), fire=False)
             self.reset_values()
+            # „?“ = noch unbekannt: Der erste echte Wert („ja“/„nein“) ist so immer eine Änderung und
+            # löst die Events zum Zeigen/Verstecken des UTL-Buttons aus – auch nach einem Neustart.
+            self.set_value("FUtlAktiv", "?")
         threading.Thread(target=self.watch_loop, daemon=True).start()
 
     def shutdown(self):

@@ -146,10 +146,13 @@ def pause_button(row, col):
 UTL_PORTAL = "https://mods.factorio.com/mod/UTLogistics"
 
 
+UTL_BUTTON = "b_factorio_utl"   # feste ID: die Events zum Zeigen/Verstecken zielen darauf
+
+
 def utl_button(row, col):
     """UTLogistics: mit dem Mod (FUtlAktiv = ja) die Seite „UTLogistics“ öffnen (eigenes Profil, gesucht über
     den Namen), sonst die Mod-Seite im Portal. Darf gelöscht werden, wenn man UTL nicht nutzt."""
-    return button(row, col, "UTLogistics", [
+    b = button(row, col, "UTLogistics", [
         comment("Mit UTLogistics: Seite „UTLogistics“ (aus UTLogistics.tdprofile), sonst die Mod-Seite im Portal."),
         action("if", name="FUtlAktiv", op="eq", value="ja"),
         action(f"{PLUGIN}:utl_open"),
@@ -157,6 +160,9 @@ def utl_button(row, col):
         action("open_url", url=UTL_PORTAL),
         action("end"),
     ], icon="🚂", color=COLOR_FOLDER)
+    b["id"] = UTL_BUTTON
+    b["hidden"] = True   # erscheint erst, wenn das Spiel UTLogistics meldet (Events unten)
+    return b
 
 
 def main_page():
@@ -289,6 +295,13 @@ def events():
         {"id": "ev_factorio_fokus", "name": "Factorio im Vordergrund → Seite Factorio", "enabled": True,
          "trigger": {"type": "app_focus", "params": {"app": WINDOW, "once": True}}, "cooldown": 0,
          "actions": [action("deck_show_page", page=PAGE_MAIN)]},
+        {"id": "ev_factorio_utl_zeigen", "name": "Factorio: UTLogistics aktiv → Button zeigen", "enabled": True,
+         "trigger": {"type": "value_change", "params": {"name": "FUtlAktiv", "op": "eq", "value": "ja"}}, "cooldown": 0,
+         "actions": [action("button_visible", target=UTL_BUTTON, op="show")]},
+        {"id": "ev_factorio_utl_verstecken", "name": "Factorio: UTLogistics nicht aktiv → Button verstecken",
+         "enabled": True,
+         "trigger": {"type": "value_change", "params": {"name": "FUtlAktiv", "op": "eq", "value": "nein"}}, "cooldown": 0,
+         "actions": [action("button_visible", target=UTL_BUTTON, op="hide")]},
         {"id": "ev_factorio_forschung", "name": "Factorio: Forschung fertig → Meldung auf dem Deck", "enabled": True,
          "trigger": {"type": f"{PLUGIN}:research_finished", "params": {}}, "cooldown": 0,
          "actions": [action("var_set", name="FMeldung", value="🔬 Forschung fertig: {Event.Name}")]},

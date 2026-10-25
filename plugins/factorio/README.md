@@ -67,7 +67,9 @@ sind von der Art „Anzeige“: kein Antippen, keine Drück-Animation.
 Der Pause-Zustand kommt aus dem Spiel (Wert `{FPause}`), nicht aus einem frei laufenden Umschalter.
 Er stimmt also auch, wenn du am Rechner pausierst.
 
-**UTLogistics-Button (Startseite):** Ist UTLogistics im Spiel aktiv (Wert `FUtlAktiv` = ja), öffnet
+**UTLogistics-Button (Startseite):** Er ist anfangs **versteckt** und erscheint erst, wenn das Spiel
+UTLogistics meldet (Events „UTLogistics aktiv → Button zeigen“ / „… nicht aktiv → Button verstecken“, Aktion
+„Button zeigen/verstecken“, TouchDeck 0.11). Ist UTLogistics im Spiel aktiv (Wert `FUtlAktiv` = ja), öffnet
 er die Seite „UTLogistics“ aus dem eigenen Profil `UTLogistics.tdprofile` (gesucht über den Namen,
 weil der Import Seiten neue IDs gibt; die Seite erscheint dann auf allen Geräten). Sonst öffnet er die
 Mod-Seite im Portal. Wer UTL nicht nutzt, löscht den Button einfach.
