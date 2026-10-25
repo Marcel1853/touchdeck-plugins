@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TDB_Enabled>Server for TouchDeck on</TDB_Enabled>
+  <TDB_EnabledTip>Opens a small TCP server that the TouchDeck plugin "rimworld" connects to.</TDB_EnabledTip>
+  <TDB_Address>Address</TDB_Address>
+  <TDB_AddressHint>127.0.0.1 = this PC only (recommended). 0.0.0.0 = all network cards, or the IP of one network card. Anything except 127.0.0.1 needs a secret.</TDB_AddressHint>
+  <TDB_Port>Port (1024–65535)</TDB_Port>
+  <TDB_Secret>Secret</TDB_Secret>
+  <TDB_SecretEmpty>(empty)</TDB_SecretEmpty>
+  <TDB_Show>Show</TDB_Show>
+  <TDB_Hide>Hide</TDB_Hide>
+  <TDB_SecretHint>Must be entered the same way in the plugin. Optional for 127.0.0.1, required otherwise (at least 12 characters). The connection is not encrypted.</TDB_SecretHint>
+  <TDB_Interval>Send state at most every {0} ms</TDB_Interval>
+  <TDB_StatusOff>Server is switched off.</TDB_StatusOff>
+  <TDB_StatusRunning>Server running on {0}, connected: {1}</TDB_StatusRunning>
+  <TDB_StatusStopped>Server not running: {0}</TDB_StatusStopped>
+  <TDB_StatusBlocked>This address can be reached from other computers. The server does not start without a secret of at least {0} characters.</TDB_StatusBlocked>
+  <TDB_RemoteWarning>Note: other devices in the network can connect (with the secret). Only use this in your own network, never on the open internet.</TDB_RemoteWarning>
+  <TDB_Problem>Note: {0}</TDB_Problem>
+  <TDB_Apply>Apply and restart server</TDB_Apply>
+  <TDB_ApplyHint>Changed settings are also applied when you close this window; no game restart needed.</TDB_ApplyHint>
+</LanguageData>

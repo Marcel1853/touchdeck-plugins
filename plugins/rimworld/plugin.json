@@ -1,0 +1,695 @@
+{
+  "id": "rimworld",
+  "name": "RimWorld",
+  "version": "0.1.0",
+  "author": "Marcel1853",
+  "license": "MIT",
+  "description": {
+    "en": "RimWorld on your buttons: date, speed, mood, silver, research and threat live; pause, speed 1–4, save, screenshot, draft all, jump to colonists or the last letter, in-game messages, main tabs and research. Letters, raids, deaths, mental breaks and finished research as events. Needs the included RimWorld mod “TouchDeck Bridge” (local TCP connection, nothing goes to the internet). Advanced plugin (Python), with ready-made pages.",
+    "de": "RimWorld auf deinen Buttons: Datum, Tempo, Stimmung, Silber, Forschung und Bedrohung live; Pause, Tempo 1–4, Speichern, Screenshot, alle einziehen, Kamera zu Kolonisten oder zum letzten Brief, Nachrichten im Spiel, Hauptreiter und Forschung. Briefe, Überfälle, Todesfälle, Nervenzusammenbrüche und fertige Forschung als Auslöser. Braucht den mitgelieferten RimWorld-Mod „TouchDeck Bridge“ (lokale TCP-Verbindung, nichts geht ins Internet). Erweitertes Plugin (Python), mit fertigen Seiten."
+  },
+  "native": {
+    "command": [
+      "python3",
+      "plugin.py"
+    ]
+  },
+  "settings": [
+    {
+      "key": "host",
+      "label": {
+        "en": "RimWorld address (127.0.0.1 = this PC)",
+        "de": "Adresse von RimWorld (127.0.0.1 = dieser PC)"
+      },
+      "type": "text",
+      "default": "127.0.0.1"
+    },
+    {
+      "key": "port",
+      "label": {
+        "en": "Port (as in the mod settings, 1024–65535)",
+        "de": "Port (wie in den Mod-Einstellungen, 1024–65535)"
+      },
+      "type": "number",
+      "default": 34200
+    },
+    {
+      "key": "secret",
+      "label": {
+        "en": "Secret (as in the mod settings; required if the address is not 127.0.0.1, at least 12 characters)",
+        "de": "Geheimwort (wie in den Mod-Einstellungen; Pflicht, wenn die Adresse nicht 127.0.0.1 ist, mindestens 12 Zeichen)"
+      },
+      "type": "password",
+      "default": ""
+    },
+    {
+      "key": "timeout",
+      "label": {
+        "en": "Wait for the game's answer at most … seconds (2–60)",
+        "de": "Auf Antwort des Spiels höchstens … Sekunden warten (2–60)"
+      },
+      "type": "number",
+      "default": 5
+    }
+  ],
+  "actions": [
+    {
+      "id": "pause",
+      "label": {
+        "en": "Pause",
+        "de": "Pause"
+      },
+      "icon": "⏸️",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "toggle",
+          "options": [
+            {
+              "value": "toggle",
+              "label": {
+                "en": "Toggle",
+                "de": "Umschalten"
+              }
+            },
+            {
+              "value": "on",
+              "label": {
+                "en": "Pause",
+                "de": "Anhalten"
+              }
+            },
+            {
+              "value": "off",
+              "label": {
+                "en": "Resume",
+                "de": "Weiterlaufen"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "label": {
+        "en": "Game speed",
+        "de": "Spieltempo"
+      },
+      "icon": "⏩",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "set",
+          "options": [
+            {
+              "value": "set",
+              "label": {
+                "en": "Set speed",
+                "de": "Tempo setzen"
+              }
+            },
+            {
+              "value": "up",
+              "label": {
+                "en": "Faster",
+                "de": "Schneller"
+              }
+            },
+            {
+              "value": "down",
+              "label": {
+                "en": "Slower",
+                "de": "Langsamer"
+              }
+            }
+          ]
+        },
+        {
+          "key": "value",
+          "label": {
+            "en": "Speed 1–4 (4 only in dev mode)",
+            "de": "Tempo 1–4 (4 nur im Entwicklermodus)"
+          },
+          "type": "number",
+          "default": 1,
+          "showIf": {
+            "op": [
+              "set"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "save",
+      "label": {
+        "en": "Save game",
+        "de": "Spiel speichern"
+      },
+      "icon": "💾",
+      "fields": [
+        {
+          "key": "name",
+          "label": {
+            "en": "Name (empty = quick save “TouchDeck-Quicksave”)",
+            "de": "Name (leer = Schnellspeicher „TouchDeck-Quicksave“)"
+          },
+          "type": "text",
+          "default": "",
+          "placeholder": {
+            "en": "e.g. Before the raid",
+            "de": "z. B. Vor dem Überfall"
+          }
+        }
+      ]
+    },
+    {
+      "id": "screenshot",
+      "label": {
+        "en": "Screenshot",
+        "de": "Screenshot"
+      },
+      "icon": "📸",
+      "fields": []
+    },
+    {
+      "id": "draft",
+      "label": {
+        "en": "Draft colonists",
+        "de": "Kolonisten einziehen"
+      },
+      "icon": "🪖",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "toggle",
+          "options": [
+            {
+              "value": "toggle",
+              "label": {
+                "en": "Toggle (all in or all out)",
+                "de": "Umschalten (alle rein oder alle raus)"
+              }
+            },
+            {
+              "value": "on",
+              "label": {
+                "en": "Draft all",
+                "de": "Alle einziehen"
+              }
+            },
+            {
+              "value": "off",
+              "label": {
+                "en": "Release all",
+                "de": "Alle freigeben"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jump",
+      "label": {
+        "en": "Camera to colonist no.",
+        "de": "Kamera zu Kolonist Nr."
+      },
+      "icon": "🎯",
+      "fields": [
+        {
+          "key": "n",
+          "label": {
+            "en": "Number in the colonist bar (1 = leftmost)",
+            "de": "Nummer in der Kolonistenleiste (1 = ganz links)"
+          },
+          "type": "number",
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "cycle",
+      "label": {
+        "en": "Next / previous colonist",
+        "de": "Nächster / voriger Kolonist"
+      },
+      "icon": "🔁",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "Direction",
+            "de": "Richtung"
+          },
+          "type": "select",
+          "default": "next",
+          "options": [
+            {
+              "value": "next",
+              "label": {
+                "en": "Next",
+                "de": "Nächster"
+              }
+            },
+            {
+              "value": "prev",
+              "label": {
+                "en": "Previous",
+                "de": "Voriger"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "letter",
+      "label": {
+        "en": "Last letter",
+        "de": "Letzter Brief"
+      },
+      "icon": "✉️",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "jump",
+          "options": [
+            {
+              "value": "jump",
+              "label": {
+                "en": "Camera to its location",
+                "de": "Kamera zum Ort"
+              }
+            },
+            {
+              "value": "open",
+              "label": {
+                "en": "Open letter",
+                "de": "Brief öffnen"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "message",
+      "label": {
+        "en": "Show message in game",
+        "de": "Nachricht im Spiel zeigen"
+      },
+      "icon": "💬",
+      "fields": [
+        {
+          "key": "text",
+          "label": {
+            "en": "Text (placeholders like {RWKolonisten} work)",
+            "de": "Text (Platzhalter wie {RWKolonisten} gehen)"
+          },
+          "type": "text",
+          "default": ""
+        },
+        {
+          "key": "kind",
+          "label": {
+            "en": "Look",
+            "de": "Art"
+          },
+          "type": "select",
+          "default": "neutral",
+          "options": [
+            {
+              "value": "neutral",
+              "label": {
+                "en": "Neutral",
+                "de": "Neutral"
+              }
+            },
+            {
+              "value": "positive",
+              "label": {
+                "en": "Positive (green)",
+                "de": "Positiv (grün)"
+              }
+            },
+            {
+              "value": "negative",
+              "label": {
+                "en": "Negative",
+                "de": "Negativ"
+              }
+            },
+            {
+              "value": "threat",
+              "label": {
+                "en": "Threat (with sound)",
+                "de": "Bedrohung (mit Ton)"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tab",
+      "label": {
+        "en": "Open / close main tab",
+        "de": "Hauptreiter öffnen / schließen"
+      },
+      "icon": "🗂️",
+      "fields": [
+        {
+          "key": "name",
+          "label": {
+            "en": "Tab",
+            "de": "Reiter"
+          },
+          "type": "select",
+          "default": "Research",
+          "options": [
+            {
+              "value": "Work",
+              "label": {
+                "en": "Work",
+                "de": "Arbeit"
+              }
+            },
+            {
+              "value": "Schedule",
+              "label": {
+                "en": "Schedule",
+                "de": "Zeitplan"
+              }
+            },
+            {
+              "value": "Assign",
+              "label": {
+                "en": "Assign",
+                "de": "Zuweisen"
+              }
+            },
+            {
+              "value": "Animals",
+              "label": {
+                "en": "Animals",
+                "de": "Tiere"
+              }
+            },
+            {
+              "value": "Wildlife",
+              "label": {
+                "en": "Wildlife",
+                "de": "Wildtiere"
+              }
+            },
+            {
+              "value": "Research",
+              "label": {
+                "en": "Research",
+                "de": "Forschung"
+              }
+            },
+            {
+              "value": "Quests",
+              "label": {
+                "en": "Quests",
+                "de": "Aufträge"
+              }
+            },
+            {
+              "value": "World",
+              "label": {
+                "en": "World",
+                "de": "Welt"
+              }
+            },
+            {
+              "value": "History",
+              "label": {
+                "en": "History",
+                "de": "Verlauf"
+              }
+            },
+            {
+              "value": "Factions",
+              "label": {
+                "en": "Factions",
+                "de": "Fraktionen"
+              }
+            },
+            {
+              "value": "Architect",
+              "label": {
+                "en": "Architect",
+                "de": "Architekt"
+              }
+            },
+            {
+              "value": "Menu",
+              "label": {
+                "en": "Menu",
+                "de": "Menü"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "label": {
+        "en": "Choose research",
+        "de": "Forschung wählen"
+      },
+      "icon": "🔬",
+      "fields": [
+        {
+          "key": "name",
+          "label": {
+            "en": "Name as in the game (or part of it, or internal name)",
+            "de": "Name wie im Spiel (oder Teil davon, oder interner Name)"
+          },
+          "type": "text",
+          "default": "",
+          "placeholder": {
+            "en": "e.g. Electricity",
+            "de": "z. B. Elektrizität"
+          }
+        }
+      ]
+    },
+    {
+      "id": "refresh",
+      "label": {
+        "en": "Fetch state now",
+        "de": "Zustand jetzt abfragen"
+      },
+      "icon": "🔄",
+      "fields": []
+    }
+  ],
+  "triggers": [
+    {
+      "id": "letter",
+      "label": {
+        "en": "Letter arrived",
+        "de": "Brief angekommen"
+      },
+      "icon": "✉️",
+      "fields": [
+        {
+          "key": "Typ",
+          "label": {
+            "en": "Type (internal, e.g. ThreatBig, NegativeEvent; empty = any)",
+            "de": "Typ (intern, z. B. ThreatBig, NegativeEvent; leer = jeder)"
+          },
+          "type": "text"
+        },
+        {
+          "key": "Bedrohung",
+          "label": {
+            "en": "Threat",
+            "de": "Bedrohung"
+          },
+          "type": "select",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "Any",
+                "de": "Egal"
+              }
+            },
+            {
+              "value": "big",
+              "label": {
+                "en": "Big threat",
+                "de": "Große Bedrohung"
+              }
+            },
+            {
+              "value": "small",
+              "label": {
+                "en": "Small threat",
+                "de": "Kleine Bedrohung"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "raid",
+      "label": {
+        "en": "Raid / big threat",
+        "de": "Überfall / große Bedrohung"
+      },
+      "icon": "⚔️",
+      "fields": []
+    },
+    {
+      "id": "colonist_died",
+      "label": {
+        "en": "Colonist died",
+        "de": "Kolonist gestorben"
+      },
+      "icon": "🪦",
+      "fields": []
+    },
+    {
+      "id": "mental_break",
+      "label": {
+        "en": "Mental break",
+        "de": "Nervenzusammenbruch"
+      },
+      "icon": "🤯",
+      "fields": [
+        {
+          "key": "Name",
+          "label": {
+            "en": "Colonist (empty = any)",
+            "de": "Kolonist (leer = jeder)"
+          },
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "research_finished",
+      "label": {
+        "en": "Research finished",
+        "de": "Forschung abgeschlossen"
+      },
+      "icon": "🔬",
+      "fields": [
+        {
+          "key": "Intern",
+          "label": {
+            "en": "Internal name (empty = any)",
+            "de": "Interner Name (leer = jede)"
+          },
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "connected",
+      "label": {
+        "en": "Connected to RimWorld",
+        "de": "Mit RimWorld verbunden"
+      },
+      "icon": "🔌",
+      "fields": []
+    },
+    {
+      "id": "disconnected",
+      "label": {
+        "en": "Connection to RimWorld lost",
+        "de": "Verbindung zu RimWorld weg"
+      },
+      "icon": "⛔",
+      "fields": []
+    }
+  ],
+  "lives": [
+    {
+      "id": "status",
+      "label": {
+        "en": "Connection and state (on = in game)",
+        "de": "Verbindung und Zustand (an = im Spiel)"
+      }
+    },
+    {
+      "id": "date",
+      "label": {
+        "en": "Date and hour",
+        "de": "Datum und Uhrzeit"
+      }
+    },
+    {
+      "id": "speed",
+      "label": {
+        "en": "Speed (on = running)",
+        "de": "Tempo (an = läuft)"
+      }
+    },
+    {
+      "id": "mood",
+      "label": {
+        "en": "Lowest mood (bar; on = below 25 %)",
+        "de": "Niedrigste Stimmung (Balken; an = unter 25 %)"
+      }
+    },
+    {
+      "id": "research",
+      "label": {
+        "en": "Research with progress (bar)",
+        "de": "Forschung mit Fortschritt (Balken)"
+      }
+    },
+    {
+      "id": "silver",
+      "label": {
+        "en": "Silver",
+        "de": "Silber"
+      }
+    },
+    {
+      "id": "danger",
+      "label": {
+        "en": "Threat on the map (on = danger)",
+        "de": "Bedrohung auf der Karte (an = Gefahr)"
+      }
+    },
+    {
+      "id": "draft",
+      "label": {
+        "en": "Drafted colonists (on = all drafted)",
+        "de": "Eingezogene Kolonisten (an = alle eingezogen)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>TouchDeck Bridge</name>
+  <author>Marcel171297</author>
+  <packageId>Marcel171297.TouchDeckBridge</packageId>
+  <modVersion>0.1.0</modVersion>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+  <description>Connects RimWorld to TouchDeck (phone or tablet as a control panel).
+
+The mod opens a small local TCP server (default 127.0.0.1:34200). The TouchDeck plugin "rimworld" connects to it, shows date, speed, mood, silver, research and more live on your buttons and sends commands: pause, speed, save, screenshot, draft all, jump to colonists or the last letter, show a message, open main tabs, choose research. Events (letters, raids, deaths, mental breaks, finished research) trigger TouchDeck events.
+
+Settings: Mod settings › TouchDeck Bridge (on/off, address, port, secret, send interval). Remote access (address other than 127.0.0.1) needs a secret of at least 12 characters. Unencrypted: only use it in your own network, never on the open internet.
+
+Verbindet RimWorld mit TouchDeck (Handy oder Tablet als Bedienfeld): Werte live auf den Buttons, Befehle per Fingertipp, Ereignisse als TouchDeck-Auslöser.</description>
+</ModMetaData>

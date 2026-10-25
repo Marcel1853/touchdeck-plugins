@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    RimWorld-Mod „TouchDeck Bridge“. Ergebnis: ../../1.6/Assemblies/TouchDeckBridge.dll (Aufruf: ../../build.sh).
+
+    Referenzen kommen aus der eigenen RimWorld-Installation (genau die Version, die gespielt wird) und aus
+    Harmony im Steam-Workshop. Pfade über RimWorldDir / HarmonyDir änderbar:
+      dotnet build -p:RimWorldDir=/pfad/zu/RimWorld -p:HarmonyDir=/pfad/zu/2009463077
+    Nichts davon wird mitgeliefert (Private=false). Die .NET-4.7.2-Referenzen kommen von Mono
+    (/usr/lib/mono/4.7.2-api), damit nichts heruntergeladen werden muss.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>TouchDeckBridge</AssemblyName>
+    <RootNamespace>TouchDeckBridge</RootNamespace>
+    <Version>0.1.0</Version>
+    <OutputPath>../../1.6/Assemblies/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <FrameworkPathOverride Condition="'$(FrameworkPathOverride)' == '' And Exists('/usr/lib/mono/4.7.2-api')">/usr/lib/mono/4.7.2-api</FrameworkPathOverride>
+    <RimWorldDir Condition="'$(RimWorldDir)' == ''">$(HOME)/.local/share/Steam/steamapps/common/RimWorld</RimWorldDir>
+    <HarmonyDir Condition="'$(HarmonyDir)' == ''">$(HOME)/.local/share/Steam/steamapps/workshop/content/294100/2009463077</HarmonyDir>
+    <Managed>$(RimWorldDir)/RimWorldLinux_Data/Managed</Managed>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="../Tests/**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="netstandard"><HintPath>$(Managed)/netstandard.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(Managed)/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(Managed)/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(Managed)/UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(Managed)/UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(HarmonyDir)/1.6/Assemblies/0Harmony.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>
