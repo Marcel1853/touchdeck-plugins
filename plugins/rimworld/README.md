@@ -1,167 +1,152 @@
-# RimWorld für TouchDeck · RimWorld for TouchDeck
+# RimWorld for TouchDeck
 
-🇩🇪 Deutsch · [🇬🇧 English below](#english)
+**English** · [Deutsch](README.de.md)
 
-**Erweitertes TouchDeck-Plugin** für RimWorld 1.6. Zeigt Datum, Tempo, Stimmung, Silber, Forschung,
-Bedrohung und mehr live auf deinen Buttons und steuert das Spiel: Pause, Tempo 1–4, Speichern,
-Screenshot, alle einziehen, Kamera zu Kolonisten oder zum letzten Brief, Nachrichten im Spiel,
-Hauptreiter und Forschung. Briefe, Überfälle, Todesfälle, Nervenzusammenbrüche und fertige Forschung
-lösen TouchDeck-Events aus.
+**Advanced TouchDeck plugin** for RimWorld 1.6. Shows date, speed, mood, silver, research, threat
+and more live on your buttons and controls the game: pause, speed 1–4, save, screenshot, draft all,
+camera to colonists or the last letter, in-game messages, main tabs and research. Letters, raids,
+deaths, mental breaks and finished research trigger TouchDeck events.
 
-Dazu gehört der RimWorld-Mod **TouchDeck Bridge** (Ordner `mod/TouchDeckBridge`, braucht Harmony).
+It comes with the RimWorld mod **TouchDeck Bridge** (folder `mod/TouchDeckBridge`, needs Harmony).
 
-## So funktioniert es
+## How it works
 
 ```
-RimWorld + Mod (TCP-Server 127.0.0.1:34200) ◀──── JSON-Zeilen ────▶ Plugin (Client) ──▶ Werte, Live-Anzeigen, Auslöser
-TouchDeck-Button ──▶ Plugin-Aktion ──▶ Befehl an den Mod ──▶ Antwort („Spiel pausiert“) als Meldung des Buttons
+RimWorld + mod (TCP server 127.0.0.1:34200) ◀──── JSON lines ────▶ plugin (client) ──▶ values, live displays, triggers
+TouchDeck button ──▶ plugin action ──▶ command to the mod ──▶ answer ("Game paused") as the button's message
 ```
 
-- Der Mod öffnet beim Spielstart einen kleinen TCP-Server, standardmäßig nur auf diesem PC
-  (`127.0.0.1`). Das Plugin verbindet sich, baut die Verbindung bei Abbruch selbst wieder auf und
-  bekommt den Zustand, sobald sich etwas ändert (mindestens alle 5 s ein Herzschlag).
-- Befehle laufen im Spiel im Hauptthread – auch bei Pause und im Hauptmenü (dort antworten sie
-  „Kein Spiel geladen“).
-- Kein Tastendruck, keine Startoption, keine Einstellung in RimWorld nötig.
+- When the game starts, the mod opens a small TCP server, by default reachable from this PC only
+  (`127.0.0.1`). The plugin connects, reconnects by itself after a drop and receives the state
+  whenever something changes (a heartbeat at least every 5 s).
+- Commands run on the game's main thread – also while paused and in the main menu (there they
+  answer "No game loaded").
+- No key presses, no launch options, nothing to set up in RimWorld.
 
-## Einrichtung in vier Schritten
+## Setup in four steps
 
-1. **Mod installieren und aktivieren:** Harmony aus dem Steam-Workshop abonnieren. Den Ordner
-   `mod/TouchDeckBridge` (oder `TouchDeckBridge_0.1.0.zip` entpackt) nach
-   `…/steamapps/common/RimWorld/Mods/` legen. In RimWorld unter **Mods** „TouchDeck Bridge“ nach
-   Harmony aktivieren und neu starten.
-2. **Plugin laden:** In TouchDeck den erweiterten Modus einschalten (Plugins › Erweitert), dann
-   Plugins › Marktplatz › **RimWorld** installieren (oder Plugins › Entwickeln › diesen Ordner
-   laden). Zweimal bestätigen, weil es ein erweitertes Plugin ist.
-3. **Seiten importieren:** In der Plugin-Karte oder unter „Fertige Seiten“ auf
-   `RimWorld.tdprofile` klicken. Der Import fügt nur hinzu.
-4. **Spiel starten** und eine Kolonie laden – fertig. Der Status-Button oben links zeigt „läuft“.
+1. **Install and enable the mod:** subscribe to Harmony in the Steam Workshop. Put the folder
+   `mod/TouchDeckBridge` (or the unpacked `TouchDeckBridge_0.1.0.zip`) into
+   `…/steamapps/common/RimWorld/Mods/`. In RimWorld, enable "TouchDeck Bridge" under **Mods**
+   after Harmony and restart.
+2. **Load the plugin:** turn on advanced mode in TouchDeck (Plugins › Advanced), then install
+   **RimWorld** under Plugins › Marketplace (or load this folder under Plugins › Develop).
+   Confirm twice, because it is an advanced plugin.
+3. **Import the pages:** on the plugin card or under "Ready-made pages", click
+   **RimWorld (English)** or **RimWorld (Deutsch)** – same pages, only the texts differ. Import
+   only one of them: importing only adds, it never overwrites.
+4. **Start the game** and load a colony – done. The status button at the top left shows "running".
 
-Voraussetzungen: RimWorld 1.6 mit Harmony, TouchDeck 0.12, Python 3.8 oder neuer. Keine
-Pflicht-Einstellungen: Adresse `127.0.0.1`, Port `34200` und leeres Geheimwort passen zu den
-Vorgaben des Mods.
+Requirements: RimWorld 1.6 with Harmony, TouchDeck 0.12, Python 3.8 or newer. No settings needed:
+address `127.0.0.1`, port `34200` and an empty secret match the mod's defaults.
 
-## Die fertigen Seiten
+## The ready-made pages
 
-Hauptseite **RimWorld** (4 × 6) mit Live-Anzeigen und vier Ordnern, angelegt wie „Ordner hier
-erstellen“ im Editor (eigene Seite „RimWorld › …“ mit Zurück oben links): **Zeit**, **Kolonisten**,
-**Meldungen**, **Spiel**. Kommt RimWorld in den Vordergrund, wechselt TouchDeck einmal pro
-Spielstart auf die Seite „RimWorld“ (Event „RimWorld im Vordergrund“; „nur beim ersten Mal“
-ausschalten, wenn es jedes Mal springen soll). Bei einem Überfall oder Tod eines Kolonisten kommt
-eine Benachrichtigung auf dem PC.
+Main page **RimWorld** (4 × 6) with live displays and four folders, created like "Create folder
+here" in the editor (own page "RimWorld › …" with Back at the top left): **Time**, **Colonists**,
+**Messages**, **Game**. When RimWorld comes to the front, TouchDeck switches to the page "RimWorld"
+once per game start (event "RimWorld in front"; turn off "only the first time" if it should switch
+every time). A raid or a colonist's death shows a notification on the PC.
 
-### Was jeder Button kann
+### What each button does
 
-| Button | Tippen | Doppeltippen | Halten | Anzeige |
+| Button | Tap | Double tap | Hold | Display |
 | --- | --- | --- | --- | --- |
-| Status (Hauptseite) | – | – | – | Verbindung und Zustand, grün im Spiel |
-| Datum (Hauptseite) | – | – | – | Datum und Stunde im Spiel |
-| Tempo | eine Stufe schneller | eine Stufe langsamer | zurück auf 1× | Tempo, an = läuft |
-| Pause | Pause an/aus | – | – | `{RWPause}`: an = pausiert (▶️, braun) |
-| Speichern | Schnellspeicher „TouchDeck-Quicksave“ | – | Spielstand „TouchDeck ‹Datum› ‹Stunde›“ | – |
-| Stimmung | – | – | – | niedrigste Stimmung als Balken, rot unter 25 % |
-| Forschung | Forschungsfenster auf/zu | – | – | Forschung mit Balken |
-| Silber | – | – | – | Silber im Lager |
-| Bedrohung | Kamera zum letzten Brief | Brief öffnen | – | rot ⚔️, solange das Spiel Gefahr meldet |
-| Einziehen | alle rein, wenn nicht alle drin sind, sonst alle raus | alle freigeben | alle einziehen | „2/5 eingezogen“, rot = alle eingezogen |
-| Nächster | nächster Kolonist (Kamera + Auswahl) | voriger | alle 0,8 s weiter | – |
-| Brief `{RWBrief}` | Kamera zum letzten Brief | Brief öffnen | – | Titel des letzten Briefs |
-| Tempo 1× bis 4× (Zeit) | Tempo setzen (Vorlage „Tempo setzen“), 4× nur im Entwicklermodus | – | – | – |
-| Langsamer / Schneller (Zeit) | eine Stufe | – | Schneller: alle 0,6 s eine Stufe | – |
-| Pause an / Weiter (Zeit) | anhalten / weiterlaufen | – | – | – |
-| Halten = kurz Pause (Zeit) | – | – | Pause, beim **Loslassen** weiter | – |
-| Kolonist 1–8 (Kolonisten) | Kamera zu Kolonist Nr. (Vorlage „Kolonist springen“) | – | – | Name aus der Kolonistenleiste |
-| Alle einziehen / freigeben (Kolonisten) | wie beschriftet | – | – | – |
-| Arbeit, Zeitplan, Zuweisen, Tiere, Forschung, Welt, Architekt, Menü, Aufträge, Verlauf, Fraktionen | Hauptreiter auf/zu | – | – | – |
-| Schnellnachrichten (Meldungen) | Text oben links im Spiel (Vorlage „Nachricht senden“) | – | – | – |
-| Schnellspeichern / Speichern mit Datum / Screenshot (Spiel) | wie beschriftet, Pfad des Screenshots als Meldung | – | – | – |
-| Zustand abfragen, Verbunden (Spiel) | Zustand sofort neu holen | – | – | Verbindung |
+| Status (main page) | – | – | – | connection and state, green in game |
+| Date (main page) | – | – | – | in-game date and hour |
+| Speed | one step faster | one step slower | back to 1× | speed, on = running |
+| Pause | pause on/off | – | – | `{RWPause}`: on = paused (▶️, brown) |
+| Save | quick save "TouchDeck-Quicksave" | – | save "TouchDeck ‹date› ‹hour›" | – |
+| Mood | – | – | – | lowest mood as a bar, red below 25 % |
+| Research | open/close research tab | – | – | research with bar |
+| Silver | – | – | – | silver in storage |
+| Threat | camera to the last letter | open the letter | – | red ⚔️ while the game reports danger |
+| Draft | all in if not all are drafted, otherwise all out | release all | draft all | "2/5 drafted", red = all drafted |
+| Next | next colonist (camera + selection) | previous | step on every 0.8 s | – |
+| Letter `{RWBrief}` | camera to the last letter | open the letter | – | title of the last letter |
+| 1× to 4× (Time) | set speed (template "set speed"), 4× only in dev mode | – | – | – |
+| Slower / Faster (Time) | one step | – | Faster: one step every 0.6 s | – |
+| Pause / Resume (Time) | pause / resume | – | – | – |
+| Hold = short pause (Time) | – | – | pause, resumes on **release** | – |
+| Colonist 1–8 (Colonists) | camera to colonist no. (template "jump to colonist") | – | – | name from the colonist bar |
+| Draft all / Release all (Colonists) | as labelled | – | – | – |
+| Work, Schedule, Assign, Animals, Research, World, Architect, Menu, Quests, History, Factions | open/close main tab | – | – | – |
+| Quick messages (Messages) | text at the top left of the game (template "send message") | – | – | – |
+| Quick save / Save with date / Screenshot (Game) | as labelled, screenshot path as message | – | – | – |
+| Fetch state, Connected (Game) | fetch the state right now | – | – | connection |
 
-Die Seite **Kolonisten** holt beim Öffnen einmal den Zustand (Seiten-Logik „Seite geöffnet“).
+The page **Colonists** fetches the state once when opened (page logic "page opened").
 
-**Warum keine Umschalter?** Ein Umschalter merkt sich seinen Zustand in TouchDeck. Pausiert man
-mit der Leertaste im Spiel oder zieht Kolonisten dort ein, wäre er falsch. Pause, Einziehen und
-Bedrohung zeigen deshalb den echten Zustand des Spiels über Live-Anzeigen mit „an“-Look.
+**Why no toggles?** A toggle keeps its state inside TouchDeck. If you pause with the space bar in
+the game or draft colonists there, it would be wrong. Pause, draft and threat therefore show the
+game's real state through live displays with the "on" look.
 
-**Warum kein Regler fürs Tempo?** Regler in TouchDeck steuern nur Lautstärke, Mikrofon, OBS oder
-einen Befehl (`store.rs`, `live.json`), keine Plugin-Werte. RimWorld hat ohnehin nur vier Stufen:
-Plus/Minus und Stufen-Buttons sind genauer.
+**Why no slider for the speed?** Sliders in TouchDeck only control volume, microphone, OBS or a
+command (`store.rs`, `live.json`), not plugin values. RimWorld has only four speeds anyway: plus/minus
+and step buttons are more precise.
 
-**`deck.setLook`** nutzt das Plugin nicht: Beim Import bekommen Buttons neue IDs, das Plugin könnte
-sie nicht sicher finden. Die Färbung bei Gefahr kommt aus der Live-Anzeige „Bedrohung“ (an = rot).
+**`deck.setLook`** is not used: buttons get new IDs on import, so the plugin could not find them
+reliably. The red colour on danger comes from the live display "threat" (on = red).
 
-## Aktionen, Auslöser, Werte
+## Actions, triggers, values
 
-**Aktionen** (`plugin:rimworld:…`): `pause` (umschalten/an/aus), `speed` (setzen 1–4, schneller,
-langsamer), `save` (Name, leer = Schnellspeicher; im Permadeath-Modus immer der eigene Spielstand),
-`screenshot`, `draft` (umschalten/alle/keiner), `jump` (Kolonist Nr.), `cycle` (nächster/voriger),
-`letter` (Kamera zum letzten Brief / öffnen), `message` (Text mit Platzhaltern, Art), `tab`
-(Hauptreiter), `research` (Forschung nach Name wählen), `refresh`.
+**Actions** (`plugin:rimworld:…`): `pause` (toggle/on/off), `speed` (set 1–4, faster, slower),
+`save` (name, empty = quick save; in permadeath mode always the game's own save), `screenshot`,
+`draft` (toggle/all/none), `jump` (colonist no.), `cycle` (next/previous), `letter` (camera to the
+last letter / open), `message` (text with placeholders, kind), `tab` (main tab), `research`
+(choose research by name), `refresh`.
 
-**Auslöser**: `letter` (Titel, Typ, Text, Bedrohung), `raid` (Brief mit großer Bedrohung),
-`colonist_died` (Name), `mental_break` (Name, Art), `research_finished` (Name, Intern),
-`connected`, `disconnected`. Daten im Event als `{Event.Titel}`, `{Event.Name}` usw. Gleiche
-Ereignisse derselben Ursache innerhalb von 4 s meldet der Mod nur einmal.
+**Triggers**: `letter` (Title, Kind, Text, Threat), `raid` (letter with a big threat),
+`colonist_died` (Name), `mental_break` (Name, Kind), `research_finished` (Name, Intern),
+`connected`, `disconnected`. Event data is available as `{Event.Title}`, `{Event.Name}` etc.
+(German keys like `{Event.Titel}` work too). The mod reports events with the same cause within 4 s
+only once.
 
-**Werte**: `RWDatum`, `RWUhrzeit`, `RWTempo` (0–4), `RWPause` (an/aus), `RWKolonisten`,
-`RWGefangene`, `RWStimmungMin`, `RWStimmungSchnitt`, `RWEingezogen`, `RWSilber`, `RWStahl`,
-`RWKomponenten`, `RWMedizin`, `RWNahrung`, `RWForschung`, `RWForschungProzent`, `RWWetter`,
-`RWTemperatur`, `RWKarte`, `RWKolonie`, `RWSpielstand`, `RWBedrohung`, `RWBrief`,
-`RWKolonist1`–`RWKolonist8`, `RWStatus`, `RWVerbunden` (ja/nein), `RWImSpiel` (ja/nein).
+**Values** (names are the same in both languages, the plugin sets exactly these): `RWDatum` (date),
+`RWUhrzeit` (hour), `RWTempo` (speed 0–4), `RWPause` (on/off), `RWKolonisten` (colonists),
+`RWGefangene` (prisoners), `RWStimmungMin` / `RWStimmungSchnitt` (lowest / average mood),
+`RWEingezogen` (drafted), `RWSilber`, `RWStahl` (steel), `RWKomponenten` (components),
+`RWMedizin` (medicine), `RWNahrung` (food), `RWForschung` / `RWForschungProzent` (research),
+`RWWetter` (weather), `RWTemperatur`, `RWKarte` (map), `RWKolonie` (colony), `RWSpielstand` (save
+game), `RWBedrohung` (threat), `RWBrief` (last letter), `RWKolonist1`–`RWKolonist8`, `RWStatus`,
+`RWVerbunden` (connected yes/no), `RWImSpiel` (in game yes/no). Their texts (e.g. "paused",
+"yes") follow the system language.
 
-**Live-Anzeigen**: `status`, `date`, `speed`, `mood` (Balken), `research` (Balken), `silver`,
-`danger`, `draft`.
+**Live displays**: `status`, `date`, `speed`, `mood` (bar), `research` (bar), `silver`, `danger`,
+`draft`.
 
-## Einstellungen
+## Settings
 
-| Plugin | Mod (Optionen › Mod-Einstellungen › TouchDeck Bridge) |
+| Plugin | Mod (Options › Mod settings › TouchDeck Bridge) |
 | --- | --- |
-| Adresse (Standard `127.0.0.1`) | Adresse (Standard `127.0.0.1`, `0.0.0.0` = alle Netzwerkkarten) |
-| Port (Standard `34200`) | Port (1024–65535) |
-| Geheimwort | Geheimwort |
-| Wartezeit auf Antwort (5 s) | Server an/aus, Sendeintervall (500 ms) |
+| Address (default `127.0.0.1`) | Address (default `127.0.0.1`, `0.0.0.0` = all network cards) |
+| Port (default `34200`) | Port (1024–65535) |
+| Secret | Secret |
+| Wait for the answer (5 s) | Server on/off, send interval (500 ms) |
 
-Geänderte Mod-Einstellungen gelten sofort (der Server startet neu), ein Neustart des Spiels ist
-nicht nötig.
+Changed mod settings apply immediately (the server restarts); no game restart needed.
 
-## Datenschutz und Sicherheit
+## Privacy and security
 
-- Alles bleibt auf deinem PC: Plugin und Mod reden über `127.0.0.1`. Nichts geht ins Internet,
-  es gibt keine Telemetrie.
-- Auch mit `127.0.0.1` kann jedes Programm auf diesem PC Befehle an den Mod schicken. Wer das
-  nicht möchte, trägt in Mod und Plugin dasselbe Geheimwort ein.
-- **Fernzugriff** (Mod auf einem anderen Rechner): Adresse im Mod auf `0.0.0.0` oder die IP der
-  Netzwerkkarte, im Plugin die IP des Spiele-PCs. Dann ist ein Geheimwort mit mindestens
-  12 Zeichen Pflicht, sonst startet der Server nicht. Die Verbindung ist **nicht verschlüsselt**:
-  nur im eigenen Netz nutzen, nie ins offene Internet stellen (keine Portfreigabe im Router).
+- Everything stays on your PC: plugin and mod talk via `127.0.0.1`. Nothing goes to the internet,
+  there is no telemetry.
+- Even with `127.0.0.1`, any program on this PC can send commands to the mod. If you don't want
+  that, enter the same secret in mod and plugin.
+- **Remote access** (mod on another computer): set the mod's address to `0.0.0.0` or the IP of the
+  network card, and the plugin's address to the IP of the gaming PC. Then a secret of at least
+  12 characters is required, otherwise the server does not start. The connection is **not
+  encrypted**: use it only in your own network, never on the open internet (no port forwarding in
+  the router).
 
 ## Tests
 
 ```
-python3 tests/test_plugin.py         # Plugin gegen einen Fake-Mod (Hallo, Zustand, Befehle, Timeout, Abbruch …)
-python3 tests/test_real_server.py    # Plugin gegen den echten C#-Server des Mods (braucht dotnet + mono)
-python3 tests/check_profile.py ../../../touchdeck-rs/server/catalog   # Seiten gegen die Regeln von TouchDeck
-mod/TouchDeckBridge/build.sh         # Mod bauen + Protokoll-Tests (JSON, Warteschlange, TCP-Server)
-python3 tests/fake_mod.py            # Fake-Mod zum Ausprobieren der Seiten ohne Spiel
+python3 tests/test_plugin.py         # plugin against a fake mod (hello, state, commands, timeout, drop …)
+python3 tests/test_real_server.py    # plugin against the mod's real C# server (needs dotnet + mono)
+python3 tests/check_profile.py ../../../touchdeck-rs/server/catalog   # pages against TouchDeck's rules
+python3 tools/make_profile.py        # builds both page files (English and German)
+mod/TouchDeckBridge/build.sh         # builds the mod + protocol tests (JSON, queue, TCP server)
+python3 tests/fake_mod.py            # fake mod to try the pages without the game
 ```
-
----
-
-## English
-
-**Advanced TouchDeck plugin** for RimWorld 1.6 with the included mod **TouchDeck Bridge**
-(needs Harmony). The mod runs a small local TCP server (default `127.0.0.1:34200`); the plugin
-connects as a client, shows date, speed, mood, silver, research and threat live and sends commands:
-pause, speed 1–4, save, screenshot, draft all, camera to colonists or the last letter, in-game
-messages, main tabs, research. Letters, raids, deaths, mental breaks and finished research are
-triggers.
-
-Setup: 1. subscribe to Harmony, put `mod/TouchDeckBridge` into `RimWorld/Mods/` and enable it after
-Harmony; 2. turn on advanced mode in TouchDeck and install the plugin; 3. import
-`RimWorld.tdprofile`; 4. start the game. No settings needed for the default case.
-
-Privacy: everything stays on your PC, nothing goes to the internet. Any program on this PC can
-talk to `127.0.0.1`; set the same secret in mod and plugin if you want to prevent that. Remote
-access needs a secret of at least 12 characters and is unencrypted – own network only.
 
 License: MIT.

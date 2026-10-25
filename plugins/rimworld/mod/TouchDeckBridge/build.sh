@@ -28,6 +28,6 @@ if [ "${1:-}" = "install" ]; then
   mkdir -p "$target"
   # Nur, was das Spiel braucht, plus Anleitung; den Quellcode gibt es im Repo
   rm -rf "$target/About" "$target/1.6" "$target/Languages"
-  cp -r About 1.6 Languages README.md CHANGELOG.md LICENSE "$target/"
+  cp -r About 1.6 Languages README.md README.de.md CHANGELOG.md LICENSE "$target/"
   echo "Installiert nach $target"
 fi

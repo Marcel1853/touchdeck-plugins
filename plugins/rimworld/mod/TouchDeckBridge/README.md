@@ -1,159 +1,135 @@
-# TouchDeck Bridge (RimWorld-Mod)
+# TouchDeck Bridge (RimWorld mod)
 
-🇩🇪 Deutsch · [🇬🇧 English below](#english)
+**English** · [Deutsch](README.de.md)
 
-Verbindet RimWorld mit [TouchDeck](https://github.com/Marcel1853/touchdeck-plugins) (Handy oder Tablet
-als Bedienfeld). Der Mod öffnet einen kleinen TCP-Server; das TouchDeck-Plugin `rimworld` verbindet
-sich damit, zeigt den Zustand der Kolonie live und schickt Befehle.
+Connects RimWorld to [TouchDeck](https://github.com/Marcel1853/touchdeck-plugins) (phone or tablet as
+a control panel). The mod opens a small TCP server; the TouchDeck plugin `rimworld` connects to it,
+shows the colony's state live and sends commands.
 
-- **Version:** 0.1.0 · **Spiel:** RimWorld 1.6 (gebaut und geprüft gegen 1.6.4871 rev598)
-- **Braucht:** Harmony (`brrainz.harmony`), vor diesem Mod laden
-- **packageId:** `Marcel171297.TouchDeckBridge` · **Autor:** Marcel171297 · **Lizenz:** MIT
+- **Version:** 0.1.0 · **Game:** RimWorld 1.6 (built and checked against 1.6.4871 rev598)
+- **Needs:** Harmony (`brrainz.harmony`), loaded before this mod
+- **packageId:** `Marcel171297.TouchDeckBridge` · **Author:** Marcel171297 · **License:** MIT
 
-## Funktionen
+## Features
 
-- **Zustand** (höchstens alle 500 ms, nur bei Änderung, sonst alle 5 s ein Herzschlag): Datum und
-  Stunde, Tick, Tempo und Pause, freie Kolonisten und Gefangene der aktuellen Karte, niedrigste und
-  mittlere Stimmung, eingezogene Kolonisten, Namen in der Reihenfolge der Kolonistenleiste, Silber,
-  Stahl, Komponenten, Medizin, Nahrung, Wetter und Außentemperatur, Kolonie, Karte, Spielstand,
-  aktuelle Forschung mit Prozent, Gefahrenstufe (wie für die Musik des Spiels: ruhig/Gefahr/groß),
-  letzter Brief. Im Hauptmenü nur `inGame: false`.
-- **Befehle:** Pause (umschalten/an/aus), Tempo 1–4 und schneller/langsamer (4 nur im
-  Entwicklermodus, wie im Spiel), Speichern (Name oder Schnellspeicher; im Permadeath-Modus immer
-  der eigene Spielstand), Screenshot (Pfad in der Antwort), alle einziehen/freigeben, Kamera zu
-  Kolonist Nr. N, nächster/voriger Kolonist, Kamera zum letzten Brief oder Brief öffnen, Nachricht
-  oben links einblenden, Hauptreiter öffnen/schließen, Forschung nach Name wählen.
-- **Ereignisse:** jeder Brief (Titel, Typ, Text gekürzt, Bedrohung), Tod eines Kolonisten,
-  Nervenzusammenbruch (Name, Art), fertige Forschung. Gleiche Ereignisse derselben Ursache innerhalb
-  von 4 s werden nur einmal gemeldet.
+- **State** (at most every 500 ms, only on change, otherwise a heartbeat every 5 s): date and hour,
+  tick, speed and pause, free colonists and prisoners of the current map, lowest and average mood,
+  drafted colonists, names in the order of the colonist bar, silver, steel, components, medicine,
+  food, weather and outdoor temperature, colony, map, save game, current research with percent,
+  danger level (as used for the game's music: calm/danger/high), last letter. In the main menu
+  only `inGame: false`.
+- **Commands:** pause (toggle/on/off), speed 1–4 and faster/slower (4 only in dev mode, as in the
+  game), save (name or quick save; in permadeath mode always the game's own save), screenshot (path
+  in the answer), draft/release all, camera to colonist no. N, next/previous colonist, camera to the
+  last letter or open it, show a message at the top left, open/close main tabs, choose research by
+  name.
+- **Events:** every letter (title, type, shortened text, threat), death of a colonist, mental break
+  (name, kind), finished research. Events with the same cause within 4 s are reported only once.
 
-## Einrichtung
+## Setup
 
-1. Harmony im Workshop abonnieren.
-2. Diesen Ordner `TouchDeckBridge` nach `…/steamapps/common/RimWorld/Mods/` kopieren.
-3. Im Spiel unter **Mods** aktivieren (nach Harmony), neu starten.
-4. Optional: **Optionen › Mod-Einstellungen › TouchDeck Bridge** – Server an/aus, Adresse, Port,
-   Geheimwort, Sendeintervall. Änderungen gelten sofort, der Server startet selbst neu.
+1. Subscribe to Harmony in the Workshop.
+2. Copy this folder `TouchDeckBridge` into `…/steamapps/common/RimWorld/Mods/`.
+3. Enable it in the game under **Mods** (after Harmony) and restart.
+4. Optional: **Options › Mod settings › TouchDeck Bridge** – server on/off, address, port, secret,
+   send interval. Changes apply immediately, the server restarts by itself.
 
-Danach das TouchDeck-Plugin `rimworld` einrichten (siehe README des Plugins).
+Then set up the TouchDeck plugin `rimworld` (see the [plugin's README](../../README.md)).
 
-## Bauen
+## Building
 
 ```
-./build.sh            # baut 1.6/Assemblies/TouchDeckBridge.dll und führt die Protokoll-Tests aus
-./build.sh install    # zusätzlich nach RimWorld/Mods/TouchDeckBridge kopieren
+./build.sh            # builds 1.6/Assemblies/TouchDeckBridge.dll and runs the protocol tests
+./build.sh install    # also copies it to RimWorld/Mods/TouchDeckBridge
 ```
 
-Braucht das .NET-SDK (getestet mit 8.0) und Mono (für die net472-Referenzen unter
-`/usr/lib/mono/4.7.2-api` und zum Ausführen der Tests). Gebaut wird gegen die DLLs der eigenen
-RimWorld-Installation und Harmony aus dem Workshop – so passen die Namen genau zur gespielten
-Version, und nichts muss heruntergeladen werden. Andere Pfade: `RIMWORLD_DIR=… HARMONY_DIR=… ./build.sh`.
-Wer lieber ohne installiertes Spiel baut, kann die Referenzen in `TouchDeckBridge.csproj` durch das
-NuGet-Paket `Krafs.Rimworld.Ref` (1.6.*) und `Lib.Harmony` (`ExcludeAssets=runtime`) ersetzen.
+Needs the .NET SDK (tested with 8.0) and Mono (for the net472 references in
+`/usr/lib/mono/4.7.2-api` and to run the tests). It builds against the DLLs of your own RimWorld
+installation and Harmony from the Workshop – so the names match the version you play, and nothing
+has to be downloaded. Other paths: `RIMWORLD_DIR=… HARMONY_DIR=… ./build.sh`. To build without an
+installed game, replace the references in `TouchDeckBridge.csproj` with the NuGet packages
+`Krafs.Rimworld.Ref` (1.6.*) and `Lib.Harmony` (`ExcludeAssets=runtime`).
 
-Aufbau des Quellcodes:
+Source layout:
 
-| Ordner | Inhalt |
+| Folder | Contents |
 | --- | --- |
-| `Source/TouchDeckBridge/Protocol/` | JSON, Protokoll, Befehlswarteschlange, TCP-Server – ohne RimWorld-Typen |
-| `Source/TouchDeckBridge/Game/` | dünne Adapter: Mod-Einstellungen, Hauptthread-Takt, Zustand, Befehle, Harmony-Patches |
-| `Source/Tests/` | Tests der Protokoll-Teile (laufen unter Mono, ohne Spiel) |
+| `Source/TouchDeckBridge/Protocol/` | JSON, protocol, command queue, TCP server – no RimWorld types |
+| `Source/TouchDeckBridge/Game/` | thin adapters: mod settings, main-thread tick, state, commands, Harmony patches |
+| `Source/Tests/` | tests of the protocol parts (run on Mono, without the game) |
 
-## Wie der Mod mit dem Spiel umgeht
+## How the mod treats the game
 
-- **Hauptthread:** Der Netzwerk-Thread fasst den Spielzustand nie an. Befehle landen in einer
-  Warteschlange; ein unsichtbares Unity-Objekt arbeitet sie in jedem Bild im Hauptthread ab
-  (höchstens 8 pro Bild) und sammelt dort auch den Zustand ein. Das läuft auch bei Pause und im
-  Hauptmenü – anders als eine `GameComponent`, die es im Hauptmenü nicht gibt (dann käme auf Befehle
-  keine Antwort).
-- **Keine Last pro Tick:** Zustand höchstens alle 250–5000 ms (Einstellung), nur aus vorhandenen
-  Listen und Zählern (`FreeColonists`, `resourceCounter`, Kolonistenleiste). Ohne verbundenes Plugin
-  wird nichts eingesammelt.
-- **Harmony nur für Ereignisse:** `LetterStack.ReceiveLetter`, `Pawn.Kill`,
-  `MentalStateHandler.TryStartMentalState`, `ResearchManager.FinishProject` und für den Namen des
-  Spielstands `GameDataSaveLoader.SaveGame`/`LoadGame`. Jeder Patch wird einzeln angelegt; fehlt eine
-  Methode in einer anderen Version, fällt nur dieses Ereignis weg (Warnung im Log).
-- **Fehler** werden abgefangen und ins Log geschrieben, sie bringen das Spiel nicht zum Absturz.
+- **Main thread:** the network thread never touches the game state. Commands go into a queue; an
+  invisible Unity object processes them on the main thread every frame (at most 8 per frame) and
+  also collects the state there. This also works while paused and in the main menu – unlike a
+  `GameComponent`, which does not exist in the main menu (commands would then never be answered).
+- **No load per tick:** the state is collected at most every 250–5000 ms (setting), only from
+  existing lists and counters (`FreeColonists`, `resourceCounter`, colonist bar). Nothing is
+  collected while no plugin is connected.
+- **Harmony only for events:** `LetterStack.ReceiveLetter`, `Pawn.Kill`,
+  `MentalStateHandler.TryStartMentalState`, `ResearchManager.FinishProject` and, for the save game's
+  name, `GameDataSaveLoader.SaveGame`/`LoadGame`. Each patch is applied separately; if a method is
+  missing in another version, only that event is dropped (warning in the log).
+- **Errors** are caught and written to the log; they never crash the game.
 
-## Sicherheit
+## Security
 
-- Standard ist `127.0.0.1`: nur Programme auf diesem PC erreichen den Server. **Auch das ist jedes
-  Programm auf diesem PC** – wer das nicht will, setzt ein Geheimwort (Mod und Plugin gleich).
-- Jede andere Adresse (z. B. `0.0.0.0` für alle Netzwerkkarten) verlangt ein Geheimwort mit
-  mindestens 12 Zeichen; ohne startet der Server nicht und das Einstellungsfenster zeigt eine Warnung.
-  Das Geheimwort steht im Hallo des Plugins und wird in konstanter Zeit verglichen.
-- **Unverschlüsselt.** Nur im eigenen Netz nutzen, nie ins offene Internet stellen.
-- Höchstens 4 Verbindungen, Zeilen über 64 KB werden verworfen, höchstens 64 wartende Befehle.
+- The default is `127.0.0.1`: only programs on this PC can reach the server. **That still means
+  every program on this PC** – if you don't want that, set a secret (the same in mod and plugin).
+- Any other address (e.g. `0.0.0.0` for all network cards) requires a secret of at least
+  12 characters; without one the server does not start and the settings window shows a warning.
+  The secret is sent in the plugin's hello and compared in constant time.
+- **Unencrypted.** Use it only in your own network, never on the open internet.
+- At most 4 connections, lines over 64 KB are dropped, at most 64 queued commands.
 
-## Mehrspieler
+## Multiplayer
 
-Ein Mehrspieler-Betrieb (z. B. mit dem Mod „Multiplayer“) ist nicht Ziel. Befehle ändern das Spiel
-direkt im eigenen Spiel und laufen nicht über die Synchronisation eines Mehrspieler-Mods: Pause,
-Tempo, Einziehen und Forschung würden die Spiele auseinanderlaufen lassen (Desync). Nur Anzeigen,
-Kamera, Screenshot und Nachrichten wären unkritisch – das ist nicht getestet.
+Multiplayer (e.g. with the "Multiplayer" mod) is not a goal. Commands change your own game directly
+and do not go through a multiplayer mod's synchronisation: pause, speed, draft and research would
+make the games drift apart (desync). Only displays, camera, screenshot and messages would be
+harmless – this is not tested.
 
-## Bekannte Grenzen
+## Known limits
 
-- Tempo 4 (ultraschnell) gibt es in RimWorld nur im Entwicklermodus; sonst antwortet der Befehl mit
-  einem Hinweis.
-- „Speichern“ meldet „gespeichert“, sobald die Speicher-Aktion des Spiels fertig ist. Scheitert das
-  Speichern im Spiel selbst (z. B. Platte voll), zeigt RimWorld seinen eigenen Fehler.
-- Der Screenshot wird erst am Ende des Bildes geschrieben; der Pfad in der Antwort stimmt trotzdem.
-- „Spielstand“ kennt der Mod erst, nachdem in dieser Sitzung gespeichert oder geladen wurde.
-- Kolonist Nr. N folgt der Kolonistenleiste (alle Karten, auch Karawanen); Kolonisten und Stimmung
-  im Zustand zählen nur die aktuelle Karte.
-- Nur IPv4.
+- Speed 4 (ultrafast) only exists in RimWorld's dev mode; otherwise the command answers with a hint.
+- "Save" reports "saved" once the game's save action has finished. If saving fails inside the game
+  itself (e.g. disk full), RimWorld shows its own error.
+- The screenshot is written at the end of the frame; the path in the answer is still correct.
+- The mod only knows the save game's name after saving or loading in this session.
+- Colonist no. N follows the colonist bar (all maps, including caravans); colonists and mood in the
+  state only count the current map.
+- IPv4 only.
 
-## Im Spiel prüfen (Testliste)
+## Checking in the game (test list)
 
-Was nur im Spiel läuft, ist nicht automatisch getestet. So prüfst du es (Plugin verbunden, Seite
-„RimWorld“ offen):
+Anything that only runs in the game is not tested automatically. This is how you check it (plugin
+connected, page "RimWorld" open):
 
-| Schritt | Erwartet |
+| Step | Expected |
 | --- | --- |
-| Spiel starten, im **Hauptmenü** bleiben | Log: „[TouchDeck Bridge] listening on 127.0.0.1:34200“. Status-Button „Hauptmenü (kein Spiel geladen)“, Werte „–“. Pause drücken → Meldung „Kein Spiel geladen“. |
-| Mod-Einstellungen öffnen | „Server läuft auf 127.0.0.1:34200, verbunden: 1“. |
-| Kolonie laden | Status „läuft“, Datum, Silber, Stimmung, Forschung erscheinen innerhalb ~1 s. |
-| **Leertaste im Spiel** (Pause) | Pause-Button wird braun mit ▶️, Tempo-Anzeige „pausiert“. |
-| Pause-Button am Deck | Spiel pausiert/läuft weiter, Meldung am Button. |
-| Tempo antippen / doppelt / halten | schneller / langsamer / 1×; bei Pause hebt Tempo die Pause auf. |
-| Tempo 4× ohne Entwicklermodus | Meldung „Tempo 4 gibt es … nur im Entwicklermodus“, Tempo bleibt. |
-| **Spiel pausiert**, dann Einziehen, Kolonist 1, Nachricht | Alles klappt auch bei Pause (Befehle laufen pro Bild, nicht pro Tick). |
-| Einziehen antippen | Alle einziehbaren Kolonisten eingezogen, Button rot „3/3 eingezogen“; nochmal → alle frei. |
-| Einen Kolonisten im Spiel von Hand freigeben | Einziehen-Button wird wieder dunkel („2/3“). |
-| Kolonist 1–8 | Kamera springt und wählt aus; Namen stimmen mit der Leiste oben überein. |
-| Nachricht-Button | Text erscheint oben links; „Bedrohung“ mit Warnton. |
-| Speichern antippen | Ladebildschirm „Speichern“, danach „Gespeichert als TouchDeck-Quicksave“; Spielstand im Laden-Menü. |
-| Screenshot | Meldung mit Pfad, Datei liegt in `~/.config/unity3d/Ludeon Studios/RimWorld by Ludeon Studios/Screenshots/`. |
-| Forschung-Button | Forschungsfenster öffnet/schließt. |
-| Dev-Modus › Überfall auslösen | Brief kommt; Event „raid“ → PC-Benachrichtigung; Bedrohung wird rot; Brief-Button zeigt den Titel; „Bedrohung“ antippen → Kamera zum Ort. |
-| Dev-Modus › Kolonist töten | Benachrichtigung „… ist gestorben“, Kolonistenzahl sinkt. |
-| Dev-Modus › Nervenzusammenbruch | Auslöser `mental_break` (z. B. im Event-Protokoll von TouchDeck). |
-| Dev-Modus › Forschung abschließen | Auslöser `research_finished`, Forschungsanzeige wechselt. |
-| **Spiel laden, während verbunden** | Kurz „Hauptmenü“, danach Werte des neuen Spielstands; „Spielstand“ zeigt dessen Namen; keine Fehler im Log. |
-| Zurück ins Hauptmenü | Werte „–“, Verbindung bleibt („Verbunden: ja“). |
-| Mod-Einstellungen: Port ändern, schließen | Log: Server neu gestartet auf dem neuen Port; Plugin verliert die Verbindung, bis dort derselbe Port steht. |
-| Adresse `0.0.0.0` ohne Geheimwort | Rote Warnung im Fenster, Server läuft nicht. Mit 12+ Zeichen: läuft, gelber Hinweis. |
-| Spiel beenden | Plugin: „RimWorld nicht erreichbar“, Auslöser `disconnected`. |
-| Log (`Player.log`) nach allem | keine roten Fehler mit „TouchDeck Bridge“; bei Warnung „event … disabled“ fehlt nur dieses Ereignis. |
-
----
-
-## English
-
-RimWorld 1.6 mod that opens a small local TCP server (default `127.0.0.1:34200`) for the TouchDeck
-plugin `rimworld`: live colony state, commands (pause, speed, save, screenshot, draft, camera jumps,
-messages, main tabs, research) and events (letters, deaths, mental breaks, finished research).
-Needs Harmony. Settings: Options › Mod settings › TouchDeck Bridge (server on/off, address, port,
-secret, send interval; changes apply immediately).
-
-Network code never touches the game: commands are queued and run on the main thread by an
-invisible Unity object, which also works while paused and in the main menu. Harmony is only used
-for events, each patch separately, so a missing method only disables that one event.
-
-Security: `127.0.0.1` is reachable by every program on this PC – set a secret in mod and plugin to
-prevent that. Any other address requires a secret of at least 12 characters, otherwise the server
-does not start. Unencrypted: own network only, never on the open internet. Multiplayer is not
-supported (commands would desync).
-
-Build: `./build.sh` (needs the .NET SDK and Mono; references your installed RimWorld and Harmony).
+| Start the game, stay in the **main menu** | Log: "[TouchDeck Bridge] listening on 127.0.0.1:34200". Status button "Main menu (no game loaded)", values "–". Press Pause → message "No game loaded". |
+| Open the mod settings | "Server running on 127.0.0.1:34200, connected: 1". |
+| Load a colony | Status "running"; date, silver, mood and research appear within ~1 s. |
+| **Space bar in the game** (pause) | Pause button turns brown with ▶️, speed display "paused". |
+| Pause button on the deck | Game pauses/resumes, message on the button. |
+| Speed tap / double tap / hold | faster / slower / 1×; while paused, speed unpauses. |
+| Speed 4× without dev mode | Message "Speed 4 only exists in RimWorld's dev mode", speed stays. |
+| **Game paused**, then Draft, Colonist 1, message | Everything works while paused too (commands run per frame, not per tick). |
+| Tap Draft | All draftable colonists drafted, button red "3/3 drafted"; again → all released. |
+| Release one colonist by hand in the game | Draft button turns dark again ("2/3"). |
+| Colonist 1–8 | Camera jumps and selects; names match the bar at the top. |
+| Message button | Text appears at the top left; "threat" with a warning sound. |
+| Tap Save | Loading screen "Saving", then "Saved as TouchDeck-Quicksave"; save shows up in the load menu. |
+| Screenshot | Message with path, file in `~/.config/unity3d/Ludeon Studios/RimWorld by Ludeon Studios/Screenshots/`. |
+| Research button | Research window opens/closes. |
+| Dev mode › trigger a raid | Letter arrives; event "raid" → PC notification; Threat turns red; letter button shows the title; tap Threat → camera to the location. |
+| Dev mode › kill a colonist | Notification "… has died", colonist count goes down. |
+| Dev mode › mental break | Trigger `mental_break` (e.g. in TouchDeck's event log). |
+| Dev mode › finish research | Trigger `research_finished`, research display changes. |
+| **Load a game while connected** | Briefly "main menu", then the values of the new save; "save game" shows its name; no errors in the log. |
+| Back to the main menu | Values "–", connection stays ("Connected: yes"). |
+| Mod settings: change the port, close | Log: server restarted on the new port; the plugin loses the connection until the same port is set there. |
+| Address `0.0.0.0` without secret | Red warning in the window, server not running. With 12+ characters: running, yellow hint. |
+| Quit the game | Plugin: "RimWorld not reachable", trigger `disconnected`. |
+| Log (`Player.log`) after everything | no red errors with "TouchDeck Bridge"; a warning "event … disabled" only drops that one event. |

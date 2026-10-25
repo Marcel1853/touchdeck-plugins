@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prüft RimWorld.tdprofile gegen die Regeln von TouchDeck (store.rs, profiles.rs, Katalog, createFolder).
+"""Prüft „RimWorld (English).tdprofile“ und „RimWorld (Deutsch).tdprofile“ gegen die Regeln von TouchDeck (store.rs, profiles.rs, Katalog, createFolder).
 
 Aufruf:  python3 tests/check_profile.py [Pfad zu touchdeck-rs/server/catalog]
 Ohne Katalogpfad werden nur Aufbau, Überlappung, Werte, Ordner und Verweise geprüft.
@@ -13,7 +13,8 @@ import zipfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ERRORS = []
 TOP_PAGE = "p_rimworld"
-BACK = {"title": "Zurück", "icon": {"type": "emoji", "value": "⬅️"}, "color": "#3a3f4b",
+FILES = {"RimWorld (English).tdprofile": "Back", "RimWorld (Deutsch).tdprofile": "Zurück"}   # Datei → Titel des Zurück-Buttons
+BACK = {"icon": {"type": "emoji", "value": "⬅️"}, "color": "#3a3f4b",
         "actions": [{"id": "", "type": "go_page", "enabled": True, "params": {"page": "__back"}}]}
 
 
@@ -27,7 +28,18 @@ def valid_value_name(name):           # store.rs: valid_variable_name
 
 def main():
     catalog = sys.argv[1] if len(sys.argv) > 1 else None
-    with zipfile.ZipFile(os.path.join(ROOT, "RimWorld.tdprofile")) as z:
+    for file, back_title in FILES.items():
+        print(f"— {file}")
+        before = len(ERRORS)
+        check_file(file, back_title, catalog)
+        for e in ERRORS[before:]:
+            print("FEHLER", e)
+    sys.exit(1 if ERRORS else 0)
+
+
+def check_file(file, back_title, catalog):
+    errors_before = len(ERRORS)
+    with zipfile.ZipFile(os.path.join(ROOT, file)) as z:
         names = z.namelist()
         prof = json.loads(z.read("profile.json"))
     plugin = json.load(open(os.path.join(ROOT, "plugin.json"), encoding="utf-8"))
@@ -89,7 +101,7 @@ def main():
                 used_flows.add(a["params"].get("flow"))
             for v in a["params"].values():
                 check_refs(where, v)
-                for ref in re.findall(r"\{Eingabe\.([^}]+)\}", str(v)):
+                for ref in re.findall(r"\{(?:Eingabe|Input)\.([^}]+)\}", str(v)):
                     if flow is None or ref not in flow_inputs[flow]:
                         err(f"{where}: {{Eingabe.{ref}}} ohne passende Eingabe der Vorlage")
 
@@ -154,7 +166,7 @@ def main():
             if (p["rows"], p["cols"]) != (main_page["rows"], main_page["cols"]):
                 err(f"{p['name']}: anderes Raster als die Elternseite")
             first = [b for b in p["buttons"] if b["row"] == 0 and b["col"] == 0]
-            if not first or any(first[0].get(k) != v for k, v in BACK.items()):
+            if not first or first[0]["title"] != back_title or any(first[0].get(k) != v for k, v in BACK.items()):
                 err(f"{p['name']}: Zurück-Button oben links nicht wie createFolder")
             openers = [b for b in main_page["buttons"]
                        if b["actions"] == [{"id": "", "type": "go_page", "enabled": True, "params": {"page": pid}}]]
@@ -189,11 +201,8 @@ def main():
 
     n_buttons = sum(len(p["buttons"]) for p in prof["pages"])
     print(f"{len(prof['pages'])} Seiten, {n_buttons} Buttons, {len(prof['flows'])} Vorlagen, "
-          f"{len(prof['events'])} Events, {len(values)} Werte – {len(ERRORS)} Fehler"
+          f"{len(prof['events'])} Events, {len(values)} Werte – {len(ERRORS) - errors_before} Fehler"
           + ("" if catalog else " (ohne Katalog geprüft)"))
-    for e in ERRORS:
-        print("FEHLER", e)
-    sys.exit(1 if ERRORS else 0)
 
 
 if __name__ == "__main__":
