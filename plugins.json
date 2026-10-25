@@ -36,8 +36,8 @@
         "de": "RimWorld"
       },
       "description": {
-        "en": "RimWorld on your buttons: date, speed, mood, silver, research and threat live; pause, speed, save, screenshot, draft all, camera to colonists or the last letter, in-game messages and research. Raids, deaths and mental breaks as events. Needs the included mod “TouchDeck Bridge” (local connection, nothing goes to the internet). Advanced plugin (Python), with ready-made pages.",
-        "de": "RimWorld auf deinen Buttons: Datum, Tempo, Stimmung, Silber, Forschung und Bedrohung live; Pause, Tempo, Speichern, Screenshot, alle einziehen, Kamera zu Kolonisten oder zum letzten Brief, Nachrichten im Spiel und Forschung. Überfälle, Todesfälle und Nervenzusammenbrüche als Auslöser. Braucht den mitgelieferten Mod „TouchDeck Bridge“ (lokale Verbindung, nichts geht ins Internet). Erweitertes Plugin (Python), mit fertigen Seiten."
+        "de": "RimWorld auf deinen Buttons: Datum, Tempo, Stimmung, Silber, Forschung und Bedrohung live; Pause, Tempo, Speichern, alle einziehen, zu Kolonisten springen. Briefe, Überfälle und Tode als Ereignisse. Braucht den mitgelieferten Mod „TouchDeck Bridge“. Erweitertes Plugin (Python), mit fertigen Seiten.",
+        "en": "RimWorld on your buttons: date, speed, mood, silver, research and threat live; pause, speed, save, draft all, jump to colonists. Letters, raids and deaths as events. Needs the included mod “TouchDeck Bridge”. Advanced plugin (Python), with ready-made pages."
       },
       "author": "Marcel1853",
       "license": "MIT"

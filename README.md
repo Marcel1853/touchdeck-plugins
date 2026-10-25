@@ -17,6 +17,7 @@ the macro remote control for Linux. This repo contains:
 |---|---|---|
 | [`plugins/clipboard-slots`](plugins/clipboard-slots) | advanced (Python) | Clipboard manager: slots, history, clipboard ↔ value, clean-ups, ready-made page (MIT) |
 | [`plugins/factorio`](plugins/factorio) | advanced (Python) | Factorio live on your buttons (research, power with graphs, evolution …) and game control; needs the included mod “TouchDeck Bridge”, ready-made pages (MIT) |
+| [`plugins/rimworld`](plugins/rimworld) | advanced (Python) | RimWorld live on your buttons (date, speed, mood, research, threat …) and game control; needs the included mod “TouchDeck Bridge”, ready-made pages (MIT) |
 
 Install them from the marketplace in TouchDeck. Each plugin has its own license (see its folder).
 
