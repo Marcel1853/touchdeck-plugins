@@ -213,6 +213,32 @@ class PluginTests(unittest.TestCase):
         ids = [m["id"] for m in self.mod.received if m.get("type") == "cmd"]
         self.assertEqual(len(ids), len(set(ids)), "jede Anfrage hat eine eigene id")
 
+    def test_event_history(self):
+        self.connected()
+        self.pl.wait(lambda: self.pl.values.get("RWEreignis1") == "Händler (2 Std.)", what="Ereignis 1")
+        v, L = self.pl.values, self.pl.lives
+        self.assertEqual(v["RWEreignis2"], "Überfall (1 Tag)")
+        self.assertEqual(v["RWEreignis4"], "–")
+        self.assertEqual(L["event1"], {"text": "Händler\n2 Std.", "value": None, "on": False})
+        self.assertTrue(L["event2"]["on"], "Überfall rot")
+        self.assertTrue(L["event3"]["on"], "Tod rot")
+        self.assertEqual(L["event8"]["text"], "–")
+        r = self.pl.action("letter", {"op": "jump", "n": 2})
+        self.assertEqual(r["message"], "Kamera beim Brief „Überfall“")
+        sent = [m for m in self.mod.received if m.get("cmd") == "letter"][-1]
+        self.assertEqual(sent["args"], {"op": "jump", "id": 40}, "Nummer wird zur Brief-ID")
+        r = self.pl.action("letter", {"op": "open", "n": "3"})
+        self.assertEqual(r["message"], "Brief „Tod: Tom“ geöffnet")
+        r = self.pl.action("letter", {"op": "jump", "n": 5})
+        self.assertFalse(r["ok"])
+        self.assertEqual(r["error"], "Ereignis 5 gibt es noch nicht")
+        r = self.pl.action("letter", {"op": "jump"})
+        self.assertEqual(r["message"], "Kamera beim Brief „Händler“", "ohne Nummer = letzter Brief")
+        # Brief inzwischen aus dem Verlauf gefallen
+        self.mod.state["events"][0]["id"] = 99
+        r = self.pl.action("letter", {"op": "jump", "n": 1})
+        self.assertEqual(r["error"], "Dieser Brief ist nicht mehr im Verlauf")
+
     def test_parallel_commands(self):
         self.connected()
         rids = []

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 – 2026-10-26
+
+- Zustand enthält die letzten 8 Briefe aus „Verlauf › Nachrichten“ (auch weggeklickte):
+  ID, Titel, Typ, Bedrohung und Alter in der Sprache des Spiels.
+- Befehl `letter` mit `id`: Kamera zu einem Brief aus dem Verlauf oder ihn öffnen.
+- Plugin 0.2.0: Seite „Meldungen“ zeigt diese Ereignisse (rot bei Bedrohung und Tod) statt der
+  Schnellnachrichten; Vorlage „Nachricht senden“ entfernt (die Aktion „Nachricht im Spiel zeigen“
+  gibt es weiterhin).
+
 ## 0.1.0 – 2026-10-25
 
 - JSON-Serialisierer und -Parser ohne fremdes Paket (Strings, Zahlen, Booleans, Objekte, Listen),

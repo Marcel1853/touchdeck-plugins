@@ -27,7 +27,7 @@ TouchDeck-Button ──▶ Plugin-Aktion ──▶ Befehl an den Mod ──▶ A
 ## Einrichtung in vier Schritten
 
 1. **Mod installieren und aktivieren:** Harmony aus dem Steam-Workshop abonnieren. Den Ordner
-   `mod/TouchDeckBridge` (oder `TouchDeckBridge_0.1.0.zip` entpackt) nach
+   `mod/TouchDeckBridge` (oder `TouchDeckBridge_0.2.0.zip` entpackt) nach
    `…/steamapps/common/RimWorld/Mods/` legen. In RimWorld unter **Mods** „TouchDeck Bridge“ nach
    Harmony aktivieren und neu starten.
 2. **Plugin laden:** In TouchDeck den erweiterten Modus einschalten (Plugins › Erweitert), dann
@@ -74,7 +74,8 @@ eine Benachrichtigung auf dem PC.
 | Kolonist 1–8 (Kolonisten) | Kamera zu Kolonist Nr. (Vorlage „Kolonist springen“) | – | – | Name aus der Kolonistenleiste |
 | Alle einziehen / freigeben (Kolonisten) | wie beschriftet | – | – | – |
 | Arbeit, Zeitplan, Zuweisen, Tiere, Forschung, Welt, Architekt, Menü, Aufträge, Verlauf, Fraktionen | Hauptreiter auf/zu | – | – | – |
-| Schnellnachrichten (Meldungen) | Text oben links im Spiel (Vorlage „Nachricht senden“) | – | – | – |
+| Ereignis 1–8 (Meldungen) | Kamera dorthin, wo es passiert ist | Brief öffnen | – | die letzten 8 Briefe aus Verlauf › Nachrichten (auch weggeklickte), neueste zuerst: Titel und Alter, rot bei Bedrohung und Tod |
+| Ältere: Verlauf öffnen (Meldungen) | Fenster „Verlauf“ öffnen | – | – | – |
 | Schnellspeichern / Speichern mit Datum / Screenshot (Spiel) | wie beschriftet, Pfad des Screenshots als Meldung | – | – | – |
 | Zustand abfragen, Verbunden (Spiel) | Zustand sofort neu holen | – | – | Verbindung |
 
@@ -96,7 +97,7 @@ sie nicht sicher finden. Die Färbung bei Gefahr kommt aus der Live-Anzeige „B
 **Aktionen** (`plugin:rimworld:…`): `pause` (umschalten/an/aus), `speed` (setzen 1–4, schneller,
 langsamer), `save` (Name, leer = Schnellspeicher; im Permadeath-Modus immer der eigene Spielstand),
 `screenshot`, `draft` (umschalten/alle/keiner), `jump` (Kolonist Nr.), `cycle` (nächster/voriger),
-`letter` (Kamera zum letzten Brief / öffnen), `message` (Text mit Platzhaltern, Art), `tab`
+`letter` (Kamera zum letzten Brief oder zu Ereignis Nr. 1–8 / öffnen), `message` (Text mit Platzhaltern, Art), `tab`
 (Hauptreiter), `research` (Forschung nach Name wählen), `refresh`.
 
 **Auslöser**: `letter` (Titel, Typ, Text, Bedrohung), `raid` (Brief mit großer Bedrohung),
@@ -109,12 +110,12 @@ meldet der Mod nur einmal.
 `RWTempo` (0–4), `RWPause` (an/aus), `RWKolonisten`, `RWGefangene`, `RWStimmungMin`,
 `RWStimmungSchnitt`, `RWEingezogen`, `RWSilber`, `RWStahl`, `RWKomponenten`, `RWMedizin`,
 `RWNahrung`, `RWForschung`, `RWForschungProzent`, `RWWetter`, `RWTemperatur`, `RWKarte`,
-`RWKolonie`, `RWSpielstand`, `RWBedrohung`, `RWBrief`, `RWKolonist1`–`RWKolonist8`, `RWStatus`,
+`RWKolonie`, `RWSpielstand`, `RWBedrohung`, `RWBrief`, `RWKolonist1`–`RWKolonist8`, `RWEreignis1`–`RWEreignis8` (Ereignisse aus dem Verlauf), `RWStatus`,
 `RWVerbunden` (ja/nein), `RWImSpiel` (ja/nein). Ihre Texte (z. B. „pausiert“, „ja“) folgen der
 Systemsprache.
 
 **Live-Anzeigen**: `status`, `date`, `speed`, `mood` (Balken), `research` (Balken), `silver`,
-`danger`, `draft`.
+`danger`, `draft`, `event1`–`event8` (Ereignisse aus dem Verlauf; an = Bedrohung oder Tod).
 
 ## Einstellungen
 

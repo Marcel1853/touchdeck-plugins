@@ -35,7 +35,7 @@ namespace TouchDeckBridge
     public class TouchDeckBridgeMod : Mod
     {
         public static BridgeSettings Settings;
-        public static string Version = "0.1.0";
+        public static string Version = "0.2.0";
         bool showSecret;
 
         public TouchDeckBridgeMod(ModContentPack content) : base(content)

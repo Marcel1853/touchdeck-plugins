@@ -6,7 +6,7 @@ Verbindet RimWorld mit [TouchDeck](https://github.com/Marcel1853/touchdeck-plugi
 als Bedienfeld). Der Mod öffnet einen kleinen TCP-Server; das TouchDeck-Plugin `rimworld` verbindet
 sich damit, zeigt den Zustand der Kolonie live und schickt Befehle.
 
-- **Version:** 0.1.0 · **Spiel:** RimWorld 1.6 (gebaut und geprüft gegen 1.6.4871 rev598)
+- **Version:** 0.2.0 · **Spiel:** RimWorld 1.6 (gebaut und geprüft gegen 1.6.4871 rev598)
 - **Braucht:** Harmony (`brrainz.harmony`), vor diesem Mod laden
 - **packageId:** `Marcel171297.TouchDeckBridge` · **Autor:** Marcel171297 · **Lizenz:** MIT
 
@@ -17,11 +17,12 @@ sich damit, zeigt den Zustand der Kolonie live und schickt Befehle.
   mittlere Stimmung, eingezogene Kolonisten, Namen in der Reihenfolge der Kolonistenleiste, Silber,
   Stahl, Komponenten, Medizin, Nahrung, Wetter und Außentemperatur, Kolonie, Karte, Spielstand,
   aktuelle Forschung mit Prozent, Gefahrenstufe (wie für die Musik des Spiels: ruhig/Gefahr/groß),
-  letzter Brief. Im Hauptmenü nur `inGame: false`.
+  letzter Brief, die letzten 8 Briefe aus Verlauf › Nachrichten (Titel, Typ, Bedrohung, Alter).
+  Im Hauptmenü nur `inGame: false`.
 - **Befehle:** Pause (umschalten/an/aus), Tempo 1–4 und schneller/langsamer (4 nur im
   Entwicklermodus, wie im Spiel), Speichern (Name oder Schnellspeicher; im Permadeath-Modus immer
   der eigene Spielstand), Screenshot (Pfad in der Antwort), alle einziehen/freigeben, Kamera zu
-  Kolonist Nr. N, nächster/voriger Kolonist, Kamera zum letzten Brief oder Brief öffnen, Nachricht
+  Kolonist Nr. N, nächster/voriger Kolonist, Kamera zum letzten Brief oder zu einem Brief aus dem Verlauf, Brief öffnen, Nachricht
   oben links einblenden, Hauptreiter öffnen/schließen, Forschung nach Name wählen.
 - **Ereignisse:** jeder Brief (Titel, Typ, Text gekürzt, Bedrohung), Tod eines Kolonisten,
   Nervenzusammenbruch (Name, Art), fertige Forschung. Gleiche Ereignisse derselben Ursache innerhalb

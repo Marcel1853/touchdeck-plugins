@@ -1,7 +1,7 @@
 {
   "id": "rimworld",
   "name": "RimWorld",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Marcel1853",
   "license": "MIT",
   "description": {
@@ -282,8 +282,8 @@
     {
       "id": "letter",
       "label": {
-        "en": "Last letter",
-        "de": "Letzter Brief"
+        "en": "Letter (last or from the history)",
+        "de": "Brief (letzter oder aus dem Verlauf)"
       },
       "icon": "✉️",
       "fields": [
@@ -311,6 +311,15 @@
               }
             }
           ]
+        },
+        {
+          "key": "n",
+          "label": {
+            "en": "Which: 0 = last letter, 1–8 = event no. (newest first, as in History › Messages)",
+            "de": "Welcher: 0 = letzter Brief, 1–8 = Ereignis Nr. (neueste zuerst, wie in Verlauf › Nachrichten)"
+          },
+          "type": "number",
+          "default": 0
         }
       ]
     },
@@ -689,6 +698,62 @@
       "label": {
         "en": "Drafted colonists (on = all drafted)",
         "de": "Eingezogene Kolonisten (an = alle eingezogen)"
+      }
+    },
+    {
+      "id": "event1",
+      "label": {
+        "en": "Event 1 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 1 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
+      }
+    },
+    {
+      "id": "event2",
+      "label": {
+        "en": "Event 2 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 2 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
+      }
+    },
+    {
+      "id": "event3",
+      "label": {
+        "en": "Event 3 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 3 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
+      }
+    },
+    {
+      "id": "event4",
+      "label": {
+        "en": "Event 4 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 4 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
+      }
+    },
+    {
+      "id": "event5",
+      "label": {
+        "en": "Event 5 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 5 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
+      }
+    },
+    {
+      "id": "event6",
+      "label": {
+        "en": "Event 6 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 6 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
+      }
+    },
+    {
+      "id": "event7",
+      "label": {
+        "en": "Event 7 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 7 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
+      }
+    },
+    {
+      "id": "event8",
+      "label": {
+        "en": "Event 8 from the history (title and age; on = threat or death)",
+        "de": "Ereignis 8 aus dem Verlauf (Titel und Alter; an = Bedrohung oder Tod)"
       }
     }
   ]

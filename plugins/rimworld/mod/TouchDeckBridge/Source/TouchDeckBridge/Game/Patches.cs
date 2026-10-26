@@ -65,6 +65,10 @@ namespace TouchDeckBridge
 
         // ---------------- Briefe ----------------
 
+        /** big (Überfall, Belagerung …), small oder "". */
+        public static string Threat(Letter letter) =>
+            letter.def == LetterDefOf.ThreatBig ? "big" : letter.def == LetterDefOf.ThreatSmall ? "small" : "";
+
         // Verzögerte Briefe laufen später ein zweites Mal hier durch (dann mit delayTicks 0); gemeldet wird nur,
         // was wirklich im Stapel angekommen ist.
         static void LetterPostfix(LetterStack __instance, Letter let, int delayTicks)
@@ -73,7 +77,7 @@ namespace TouchDeckBridge
             {
                 if (let == null || delayTicks > 0 || !__instance.LettersListForReading.Contains(let)) return;
                 Bridge.LastLetter = let;
-                var threat = let.def == LetterDefOf.ThreatBig ? "big" : let.def == LetterDefOf.ThreatSmall ? "small" : "";
+                var threat = Threat(let);
                 var text = let is ChoiceLetter choice ? Clip(choice.Text.ToString()) : "";
                 var title = LetterTitle(let);
                 Bridge.Emit("letter", new Dictionary<string, object>

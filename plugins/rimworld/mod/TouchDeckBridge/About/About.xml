@@ -3,7 +3,7 @@
   <name>TouchDeck Bridge</name>
   <author>Marcel171297</author>
   <packageId>Marcel171297.TouchDeckBridge</packageId>
-  <modVersion>0.1.0</modVersion>
+  <modVersion>0.2.0</modVersion>
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>

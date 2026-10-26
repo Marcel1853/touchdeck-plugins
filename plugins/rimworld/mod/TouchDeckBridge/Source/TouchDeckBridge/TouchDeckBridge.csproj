@@ -14,7 +14,7 @@
     <Nullable>disable</Nullable>
     <AssemblyName>TouchDeckBridge</AssemblyName>
     <RootNamespace>TouchDeckBridge</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <OutputPath>../../1.6/Assemblies/</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugType>none</DebugType>

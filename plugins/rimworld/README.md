@@ -26,7 +26,7 @@ TouchDeck button ──▶ plugin action ──▶ command to the mod ──▶ 
 ## Setup in four steps
 
 1. **Install and enable the mod:** subscribe to Harmony in the Steam Workshop. Put the folder
-   `mod/TouchDeckBridge` (or the unpacked `TouchDeckBridge_0.1.0.zip`) into
+   `mod/TouchDeckBridge` (or the unpacked `TouchDeckBridge_0.2.0.zip`) into
    `…/steamapps/common/RimWorld/Mods/`. In RimWorld, enable "TouchDeck Bridge" under **Mods**
    after Harmony and restart.
 2. **Load the plugin:** turn on advanced mode in TouchDeck (Plugins › Advanced), then install
@@ -71,7 +71,8 @@ every time). A raid or a colonist's death shows a notification on the PC.
 | Colonist 1–8 (Colonists) | camera to colonist no. (template "jump to colonist") | – | – | name from the colonist bar |
 | Draft all / Release all (Colonists) | as labelled | – | – | – |
 | Work, Schedule, Assign, Animals, Research, World, Architect, Menu, Quests, History, Factions | open/close main tab | – | – | – |
-| Quick messages (Messages) | text at the top left of the game (template "send message") | – | – | – |
+| Event 1–8 (Messages) | camera to where it happened | open the letter | – | the last 8 letters from History › Messages (also dismissed ones), newest first: title and age, red for threats and deaths |
+| Older: open History (Messages) | open the History window | – | – | – |
 | Quick save / Save with date / Screenshot (Game) | as labelled, screenshot path as message | – | – | – |
 | Fetch state, Connected (Game) | fetch the state right now | – | – | connection |
 
@@ -93,7 +94,7 @@ reliably. The red colour on danger comes from the live display "threat" (on = re
 **Actions** (`plugin:rimworld:…`): `pause` (toggle/on/off), `speed` (set 1–4, faster, slower),
 `save` (name, empty = quick save; in permadeath mode always the game's own save), `screenshot`,
 `draft` (toggle/all/none), `jump` (colonist no.), `cycle` (next/previous), `letter` (camera to the
-last letter / open), `message` (text with placeholders, kind), `tab` (main tab), `research`
+last letter or to event no. 1–8 / open it), `message` (text with placeholders, kind), `tab` (main tab), `research`
 (choose research by name), `refresh`.
 
 **Triggers**: `letter` (Title, Kind, Text, Threat), `raid` (letter with a big threat),
@@ -108,12 +109,12 @@ only once.
 `RWEingezogen` (drafted), `RWSilber`, `RWStahl` (steel), `RWKomponenten` (components),
 `RWMedizin` (medicine), `RWNahrung` (food), `RWForschung` / `RWForschungProzent` (research),
 `RWWetter` (weather), `RWTemperatur`, `RWKarte` (map), `RWKolonie` (colony), `RWSpielstand` (save
-game), `RWBedrohung` (threat), `RWBrief` (last letter), `RWKolonist1`–`RWKolonist8`, `RWStatus`,
+game), `RWBedrohung` (threat), `RWBrief` (last letter), `RWKolonist1`–`RWKolonist8`, `RWEreignis1`–`RWEreignis8` (events from the history), `RWStatus`,
 `RWVerbunden` (connected yes/no), `RWImSpiel` (in game yes/no). Their texts (e.g. "paused",
 "yes") follow the system language.
 
 **Live displays**: `status`, `date`, `speed`, `mood` (bar), `research` (bar), `silver`, `danger`,
-`draft`.
+`draft`, `event1`–`event8` (events from the history; on = threat or death).
 
 ## Settings
 

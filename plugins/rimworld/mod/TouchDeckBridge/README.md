@@ -6,7 +6,7 @@ Connects RimWorld to [TouchDeck](https://github.com/Marcel1853/touchdeck-plugins
 a control panel). The mod opens a small TCP server; the TouchDeck plugin `rimworld` connects to it,
 shows the colony's state live and sends commands.
 
-- **Version:** 0.1.0 · **Game:** RimWorld 1.6 (built and checked against 1.6.4871 rev598)
+- **Version:** 0.2.0 · **Game:** RimWorld 1.6 (built and checked against 1.6.4871 rev598)
 - **Needs:** Harmony (`brrainz.harmony`), loaded before this mod
 - **packageId:** `Marcel171297.TouchDeckBridge` · **Author:** Marcel171297 · **License:** MIT
 
@@ -16,12 +16,13 @@ shows the colony's state live and sends commands.
   tick, speed and pause, free colonists and prisoners of the current map, lowest and average mood,
   drafted colonists, names in the order of the colonist bar, silver, steel, components, medicine,
   food, weather and outdoor temperature, colony, map, save game, current research with percent,
-  danger level (as used for the game's music: calm/danger/high), last letter. In the main menu
+  danger level (as used for the game's music: calm/danger/high), last letter, the last 8 letters
+  from History › Messages (title, type, threat, age). In the main menu
   only `inGame: false`.
 - **Commands:** pause (toggle/on/off), speed 1–4 and faster/slower (4 only in dev mode, as in the
   game), save (name or quick save; in permadeath mode always the game's own save), screenshot (path
   in the answer), draft/release all, camera to colonist no. N, next/previous colonist, camera to the
-  last letter or open it, show a message at the top left, open/close main tabs, choose research by
+  last letter or to a letter from the history, or open it, show a message at the top left, open/close main tabs, choose research by
   name.
 - **Events:** every letter (title, type, shortened text, threat), death of a colonist, mental break
   (name, kind), finished research. Events with the same cause within 4 s are reported only once.

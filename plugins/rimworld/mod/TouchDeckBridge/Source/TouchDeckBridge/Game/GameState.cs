@@ -115,7 +115,42 @@ namespace TouchDeckBridge
             // Briefe
             st["letters"] = Find.LetterStack?.LettersListForReading?.Count ?? 0;
             st["lastLetter"] = Bridge.LastLetter != null ? Patches.LetterTitle(Bridge.LastLetter) : "";
+            st["events"] = RecentLetters(tm.TicksGame);
             return st;
+        }
+
+        public const int MaxEvents = 8;
+
+        /** Die letzten Briefe aus dem Verlauf (Fenster „Verlauf › Nachrichten“), neueste zuerst – auch weggeklickte. */
+        static List<object> RecentLetters(int now)
+        {
+            var list = new List<object>();
+            var all = Find.Archive?.ArchivablesListForReading;
+            if (all == null) return list;
+            // Das Archiv ist nach Ankunft sortiert; von hinten lesen, bis genug Briefe da sind (keine volle Suche)
+            for (var i = all.Count - 1; i >= 0 && list.Count < MaxEvents; i--)
+            {
+                if (!(all[i] is Letter letter)) continue;
+                list.Add(new Dictionary<string, object>
+                {
+                    ["id"] = letter.ID,
+                    ["title"] = Patches.LetterTitle(letter),
+                    ["kind"] = letter.def?.defName ?? "",
+                    ["threat"] = Patches.Threat(letter),
+                    ["ago"] = GenDate.ToStringTicksToPeriod(Math.Max(0, now - letter.arrivalTick), allowSeconds: false, shortForm: true),
+                });
+            }
+            return list;
+        }
+
+        /** Brief aus dem Verlauf nach ID (0 = keiner). */
+        public static Letter FindLetter(int id)
+        {
+            var all = Find.Archive?.ArchivablesListForReading;
+            if (all == null || id <= 0) return null;
+            for (var i = all.Count - 1; i >= 0; i--)
+                if (all[i] is Letter letter && letter.ID == id) return letter;
+            return null;
         }
 
         public static bool CanDraft(Pawn p) =>

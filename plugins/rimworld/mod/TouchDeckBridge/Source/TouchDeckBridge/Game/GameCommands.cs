@@ -42,7 +42,7 @@ namespace TouchDeckBridge
                 case "draft": Draft(cmd, Json.Str(a, "op", "toggle")); return;
                 case "jump": Jump(cmd, (int)Json.Num(a, "n", 1)); return;
                 case "cycle": Cycle(cmd, Json.Num(a, "dir", 1) < 0 ? -1 : 1); return;
-                case "letter": Letter(cmd, Json.Str(a, "op", "jump")); return;
+                case "letter": Letter(cmd, Json.Str(a, "op", "jump"), (int)Json.Num(a, "id", 0)); return;
                 case "message": Message(cmd, Json.Str(a, "text"), Json.Str(a, "kind", "neutral")); return;
                 case "tab": Tab(cmd, Json.Str(a, "name")); return;
                 case "research": Research(cmd, Json.Str(a, "name").Trim()); return;
@@ -215,14 +215,28 @@ namespace TouchDeckBridge
 
         // ---------------- Meldungen ----------------
 
-        static void Letter(Command cmd, string op)
+        /** id 0 = letzter Brief; sonst ein Brief aus dem Verlauf (auch schon weggeklickt). */
+        static void Letter(Command cmd, string op, int id)
         {
-            var letter = Bridge.LastLetter;
+            Letter letter;
             var stack = Find.LetterStack?.LettersListForReading;
-            if (letter == null || stack == null || !stack.Contains(letter))
+            if (id > 0)
             {
-                // gemerkter Brief schon weg: den neuesten im Stapel nehmen
-                letter = stack != null && stack.Count > 0 ? stack[stack.Count - 1] : null;
+                letter = GameState.FindLetter(id);
+                if (letter == null)
+                {
+                    cmd.Reply(false, "letter_gone");
+                    return;
+                }
+            }
+            else
+            {
+                letter = Bridge.LastLetter;
+                if (letter == null || stack == null || !stack.Contains(letter))
+                {
+                    // gemerkter Brief schon weg: den neuesten im Stapel nehmen
+                    letter = stack != null && stack.Count > 0 ? stack[stack.Count - 1] : null;
+                }
             }
             if (letter == null)
             {
@@ -232,7 +246,9 @@ namespace TouchDeckBridge
             var title = Patches.LetterTitle(letter);
             if (op == "open")
             {
-                letter.OpenLetter();
+                // Im Stapel wie ein Klick auf den Brief, sonst wie im Verlauf-Fenster
+                if (stack != null && stack.Contains(letter)) letter.OpenLetter();
+                else ((IArchivable)letter).OpenArchived();
                 cmd.Reply(true, "letter_opened", A("name", title));
                 return;
             }

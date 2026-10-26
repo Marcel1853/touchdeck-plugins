@@ -22,6 +22,9 @@ def base_state():
         "silver": 1234, "steel": 450, "components": 12, "medicine": 7, "nutrition": 88.0,
         "weather": "Klar", "tempC": 21.5, "temp": "22°C", "research": "Elektrizität", "researchPct": 42.0,
         "danger": "none", "letters": 2, "lastLetter": "Händler",
+        "events": [{"id": 41, "title": "Händler", "kind": "NeutralEvent", "threat": "", "ago": "2 Std."},
+                   {"id": 40, "title": "Überfall", "kind": "ThreatBig", "threat": "big", "ago": "1 Tag"},
+                   {"id": 37, "title": "Tod: Tom", "kind": "Death", "threat": "", "ago": "3 Tage"}],
     }
 
 
@@ -182,7 +185,12 @@ class FakeMod:
         elif cmd == "cycle":
             ack(True, "jumped", name=st["names"][0])
         elif cmd == "letter":
-            ack(True, "letter_opened" if args.get("op") == "open" else "letter_jumped", name=st["lastLetter"])
+            lid = int(args.get("id") or 0)
+            title = next((e["title"] for e in st["events"] if e["id"] == lid), None) if lid else st["lastLetter"]
+            if title is None:
+                ack(False, "letter_gone")
+                return
+            ack(True, "letter_opened" if args.get("op") == "open" else "letter_jumped", name=title)
         elif cmd == "message":
             ack(bool(args.get("text")), "message_shown" if args.get("text") else "empty_text")
         elif cmd == "tab":

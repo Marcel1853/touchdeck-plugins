@@ -22,12 +22,13 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 PROTO = 1
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 MAX_LINE = 64 * 1024          # wie Proto.MaxLine im Mod
 VALUE_LIMIT = 1000            # TouchDeck kürzt Werte auf 1000 Zeichen (store.rs, set_variable)
 DEAD_AFTER = float(os.environ.get("RIMWORLD_DEAD_AFTER") or 12.0)   # Herzschlag alle 5 s; so lange ohne Daten = tot
 MIN_REMOTE_SECRET = 12
 NAMES = 8                     # RWKolonist1 … RWKolonist8
+EVENTS = 8                    # RWEreignis1 … RWEreignis8 (letzte Briefe aus dem Verlauf)
 
 # --------------------------------------------------------------------------
 # Texte (Sprache aus der Systemumgebung, TouchDeck folgt standardmäßig ebenfalls)
@@ -85,6 +86,8 @@ TEXTS = {
     "no_colonist": ("Kolonist {value} gibt es nicht (es gibt {count})", "There is no colonist {value} (there are {count})"),
     "jumped": ("Kamera bei {name}", "Camera at {name}"),
     "no_letter": ("Kein Brief da", "No letter"),
+    "no_event": ("Ereignis {n} gibt es noch nicht", "There is no event {n} yet"),
+    "letter_gone": ("Dieser Brief ist nicht mehr im Verlauf", "This letter is no longer in the history"),
     "no_target": ("Brief „{name}“ hat keinen Ort", "Letter “{name}” has no location"),
     "letter_jumped": ("Kamera beim Brief „{name}“", "Camera at letter “{name}”"),
     "letter_opened": ("Brief „{name}“ geöffnet", "Letter “{name}” opened"),
@@ -207,8 +210,8 @@ def check_settings(settings):
 ALL_VALUES = ["RWDatum", "RWUhrzeit", "RWTempo", "RWPause", "RWKolonisten", "RWStimmungMin", "RWStimmungSchnitt",
               "RWSilber", "RWForschung", "RWForschungProzent", "RWWetter", "RWTemperatur", "RWKarte", "RWKolonie",
               "RWSpielstand", "RWGefangene", "RWEingezogen", "RWBedrohung", "RWStahl", "RWKomponenten", "RWMedizin",
-              "RWNahrung", "RWBrief"] + [f"RWKolonist{i}" for i in range(1, NAMES + 1)]
-LIVES = ["status", "mood", "research", "speed", "silver", "danger", "draft", "date"]
+              "RWNahrung", "RWBrief"] + [f"RWKolonist{i}" for i in range(1, NAMES + 1)] + [f"RWEreignis{i}" for i in range(1, EVENTS + 1)]
+LIVES = ["status", "mood", "research", "speed", "silver", "danger", "draft", "date"] + [f"event{i}" for i in range(1, EVENTS + 1)]
 
 
 class Plugin:
@@ -476,6 +479,19 @@ class Plugin:
         for i in range(1, NAMES + 1):
             self.set_value(f"RWKolonist{i}", str(names[i - 1]) if i <= len(names) else t("none"))
 
+        # Letzte Briefe aus dem Verlauf, neueste zuerst; „an“ (rot) bei Bedrohung oder Tod
+        events = [e for e in (st.get("events") if isinstance(st.get("events"), list) else []) if isinstance(e, dict)]
+        for i in range(1, EVENTS + 1):
+            if i <= len(events):
+                e = events[i - 1]
+                title, ago = str(e.get("title") or ""), str(e.get("ago") or "")
+                self.set_value(f"RWEreignis{i}", f"{title} ({ago})" if ago else title)
+                alarm = str(e.get("threat") or "") in ("big", "small") or str(e.get("kind") or "") == "Death"
+                self.set_live(f"event{i}", f"{title}\n{ago}" if ago else title, None, alarm)
+            else:
+                self.set_value(f"RWEreignis{i}", t("none"))
+                self.set_live(f"event{i}", t("none"))
+
     # ---------------- Ereignisse → Auslöser ----------------
 
     def handle_event(self, name, d):
@@ -530,7 +546,16 @@ class Plugin:
         if action == "cycle":
             return self.command("cycle", {"dir": -1 if op("next") == "prev" else 1})
         if action == "letter":
-            return self.command("letter", {"op": op("jump")})
+            n = to_int(p.get("n"), 0, 0, EVENTS)
+            letter_id = 0
+            if n:
+                # Nummer → Brief-ID aus dem letzten Zustand (die Liste kann sich seitdem verschoben haben)
+                with self.lock:
+                    events = (self.state or {}).get("events") or []
+                if n > len(events) or not isinstance(events[n - 1], dict):
+                    raise UserError(t("no_event", n=n))
+                letter_id = to_int(events[n - 1].get("id"), 0, 0, 2 ** 31 - 1)
+            return self.command("letter", {"op": op("jump"), "id": letter_id})
         if action == "message":
             return self.command("message", {"text": str(p.get("text") or ""), "kind": str(p.get("kind") or "neutral")})
         if action == "tab":

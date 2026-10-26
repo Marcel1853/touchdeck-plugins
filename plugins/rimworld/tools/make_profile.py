@@ -25,7 +25,6 @@ PAGES = {"zeit": "p_rimworld_zeit", "kolonisten": "p_rimworld_kolonisten",
          "meldungen": "p_rimworld_meldungen", "spiel": "p_rimworld_spiel"}
 FLOW_SPEED = "f_rimworld_tempo"
 FLOW_JUMP = "f_rimworld_kolonist"
-FLOW_MESSAGE = "f_rimworld_nachricht"
 NAMES = 8
 
 COLOR = "#2b2f3a"
@@ -277,35 +276,29 @@ def colonists_page():
                                              "When opened, fetch the current state from the game.")), rw("refresh")))
 
 
-QUICK = [
-    (("Alle in Deckung!", "Everyone take cover!"), "🛡️", "threat"),
-    (("Essenszeit!", "Dinner time!"), "🍲", "neutral"),
-    (("Gut gemacht, Leute!", "Well done, everyone!"), "👍", "positive"),
-    (("Feierabend – ab ins Bett!", "Work's over – off to bed!"), "🛏️", "neutral"),
-    (("Überfall kommt!", "Raid incoming!"), "⚔️", "threat"),
-    (("Kolonie: {RWKolonisten} Leute, Stimmung ab {RWStimmungMin} %",
-      "Colony: {RWKolonisten} people, mood from {RWStimmungMin} %"), "📊", "neutral"),
-]
+EVENTS = 8
 
 
 def messages_page():
+    """Was zuletzt passiert ist: die letzten 8 Briefe aus „Verlauf › Nachrichten“ (auch weggeklickte),
+    neueste zuerst, rot bei Bedrohung oder Tod. Tippen = Kamera zum Ort, doppelt = Brief öffnen."""
     buttons = [
         back(),
-        letter_button(0, 1, span=3),
-        danger_button(0, 4),
-        button(0, 5, L("Aufträge", "Quests"), [rw("tab", name="Quests")], icon="📜", color=COLOR_FOLDER),
+        danger_button(0, 1),
+        button(0, 2, L("Letzte Ereignisse – antippen: Kamera hin · doppelt: Brief öffnen",
+                       "Latest events – tap: camera there · double tap: open letter"), [], span=2, font=10,
+               color=COLOR_FOLDER),
+        button(0, 4, L("Aufträge", "Quests"), [rw("tab", name="Quests")], icon="📜", color=COLOR_FOLDER),
+        button(0, 5, L("Fraktionen", "Factions"), [rw("tab", name="Factions")], icon="🏳️", color=COLOR_FOLDER),
     ]
-    for i, (texts, icon, kind) in enumerate(QUICK):
-        text = L(*texts)
-        buttons.append(button(1 + i // 3, (i % 3) * 2, text, [flow(FLOW_MESSAGE, **{"Text": text, L("Art", "Kind"): kind})], icon=icon,
-                              span=2, font=11, color=COLOR_GAME))
-    buttons += [
-        button(3, 0, L("Hinweis: Eigene Texte als Kopie eines Buttons, nur den Text der Vorlage-Eingabe ändern.",
-                         "Tip: for your own texts, copy a button and change only the text of the template input."),
-               [], span=4, font=9, color=COLOR_FOLDER),
-        button(3, 4, L("Verlauf", "History"), [rw("tab", name="History")], icon="📖", color=COLOR_FOLDER),
-        button(3, 5, L("Fraktionen", "Factions"), [rw("tab", name="Factions")], icon="🏳️", color=COLOR_FOLDER),
-    ]
+    for i in range(EVENTS):
+        n = i + 1
+        buttons.append(button(1 + i // 3, (i % 3) * 2, "", [rw("letter", op="jump", n=n)], icon="✉️", span=2,
+                              font=10, live=plugin_live(f"event{n}"), color=COLOR, color_on=COLOR_DANGER,
+                              double=[rw("letter", op="open", n=n)]))
+    # neunter Platz: das Fenster mit allen älteren Ereignissen
+    buttons.append(button(3, 4, L("Ältere: Verlauf öffnen", "Older: open History"), [rw("tab", name="History")],
+                          icon="📖", span=2, font=11, color=COLOR_FOLDER))
     return page(PAGES["meldungen"], L("RimWorld › Meldungen", "RimWorld › Messages"), buttons)
 
 
@@ -340,7 +333,7 @@ def game_page():
 # ---------------------------------------------------------------- Vorlagen, Events, Werte
 
 def flows():
-    stufe, nr, art = L("Stufe", "Speed"), L("Nr", "No"), L("Art", "Kind")
+    stufe, nr = L("Stufe", "Speed"), L("Nr", "No")
     return [
         {"id": FLOW_SPEED, "name": L("RimWorld: Tempo setzen", "RimWorld: set speed"), "folder": "RimWorld",
          "inputs": [{"name": stufe, "default": "1"}],
@@ -352,14 +345,6 @@ def flows():
          "actions": [comment(L("Kamera zu Kolonist Nr. (Reihenfolge der Kolonistenleiste) und auswählen.",
                                "Camera to colonist no. (order of the colonist bar) and select them.")),
                      rw("jump", n=inp(nr))]},
-        {"id": FLOW_MESSAGE, "name": L("RimWorld: Nachricht senden", "RimWorld: send message"), "folder": "RimWorld",
-         "inputs": [{"name": "Text", "default": L("Hallo aus TouchDeck!", "Hello from TouchDeck!")},
-                    {"name": art, "default": "neutral"}],
-         "actions": [comment(L("Text oben links im Spiel einblenden. Art: neutral, positive, negative oder threat. "
-                               "Platzhalter wie {RWKolonisten} werden vorher ersetzt.",
-                               "Show text at the top left of the game. Kind: neutral, positive, negative or threat. "
-                               "Placeholders like {RWKolonisten} are filled in first.")),
-                     rw("message", text=inp("Text"), kind=inp(art))]},
     ]
 
 
@@ -409,6 +394,9 @@ VALUES = {
 }
 for _i in range(1, NAMES + 1):
     VALUES[f"RWKolonist{_i}"] = (f"Kolonist {_i} der Kolonistenleiste", f"Colonist {_i} of the colonist bar")
+for _i in range(1, 9):
+    VALUES[f"RWEreignis{_i}"] = (f"Ereignis {_i} aus dem Verlauf (neueste zuerst): Titel (Alter)",
+                                 f"Event {_i} from the history (newest first): title (age)")
 
 PROFILES = {"en": "RimWorld (English).tdprofile", "de": "RimWorld (Deutsch).tdprofile"}
 
