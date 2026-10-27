@@ -22,7 +22,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 PROTO = 1
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 DEFAULT_PORT = 34201
 MAX_LINE = 64 * 1024          # wie Proto.MaxLine im Mod
 VALUE_LIMIT = 1000            # TouchDeck kürzt Werte auf 1000 Zeichen (store.rs, set_variable)
