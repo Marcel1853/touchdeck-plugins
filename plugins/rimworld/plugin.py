@@ -22,7 +22,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 PROTO = 1
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 MAX_LINE = 64 * 1024          # wie Proto.MaxLine im Mod
 VALUE_LIMIT = 1000            # TouchDeck kürzt Werte auf 1000 Zeichen (store.rs, set_variable)
 DEAD_AFTER = float(os.environ.get("RIMWORLD_DEAD_AFTER") or 12.0)   # Herzschlag alle 5 s; so lange ohne Daten = tot
@@ -37,6 +37,12 @@ EVENTS = 8                    # RWEreignis1 … RWEreignis8 (letzte Briefe aus d
 _LOCALE = (os.environ.get("LC_ALL") or os.environ.get("LC_MESSAGES")
            or os.environ.get("LANG") or "").lower()
 DE = _LOCALE.startswith("de")
+if not _LOCALE and os.name == "nt":
+    try:
+        import ctypes
+        DE = (ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3FF) == 0x07
+    except (AttributeError, OSError):
+        pass
 
 TEXTS = {
     "yes": ("ja", "yes"),

@@ -3,8 +3,9 @@
 
 Erweitertes Plugin: TouchDeck startet dieses Programm und tauscht mit ihm
 JSON-Zeilen über stdin/stdout aus (siehe Wiki › Advanced plugins).
-Nur Python-Standardbibliothek. Für die Zwischenablage wird ein vorhandenes
-Programm genutzt: xclip, xsel oder wl-clipboard (wl-copy / wl-paste).
+Nur Python-Standardbibliothek. Für die Zwischenablage wird unter Linux ein vorhandenes
+Programm genutzt: xclip, xsel oder wl-clipboard (wl-copy / wl-paste). Unter Windows
+(ganz frühe Alpha) spricht es direkt mit der Windows-Zwischenablage, ohne Zusatzprogramm.
 """
 
 import json
@@ -26,6 +27,12 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 _LOCALE = (os.environ.get("LC_ALL") or os.environ.get("LC_MESSAGES")
            or os.environ.get("LANG") or "").lower()
 DE = _LOCALE.startswith("de")
+if not _LOCALE and os.name == "nt":
+    try:
+        import ctypes
+        DE = (ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3FF) == 0x07
+    except (AttributeError, OSError):
+        pass
 
 TEXTS = {
     "no_tool": ("Kein Zwischenablage-Programm gefunden. Bitte installieren: sudo apt install xclip",
@@ -107,11 +114,86 @@ def log(message, level="info"):
 # Zwischenablage-Zugriff
 # --------------------------------------------------------------------------
 
-class Clipboard:
-    """Dünne Hülle um xclip / xsel / wl-clipboard."""
+class WindowsClipboard:
+    """Windows-Zwischenablage über user32/kernel32 (nur Text, CF_UNICODETEXT)."""
+
+    CF_UNICODETEXT = 13
+    GMEM_MOVEABLE = 0x0002
 
     def __init__(self):
-        self.kind = self._detect()
+        import ctypes
+        from ctypes import wintypes
+        self.ct = ctypes
+        u, k = ctypes.windll.user32, ctypes.windll.kernel32
+        u.OpenClipboard.argtypes = [wintypes.HWND]
+        u.OpenClipboard.restype = wintypes.BOOL
+        u.CloseClipboard.restype = wintypes.BOOL
+        u.EmptyClipboard.restype = wintypes.BOOL
+        u.GetClipboardData.argtypes = [wintypes.UINT]
+        u.GetClipboardData.restype = wintypes.HANDLE
+        u.SetClipboardData.argtypes = [wintypes.UINT, wintypes.HANDLE]
+        u.SetClipboardData.restype = wintypes.HANDLE
+        k.GlobalAlloc.argtypes = [wintypes.UINT, ctypes.c_size_t]
+        k.GlobalAlloc.restype = wintypes.HGLOBAL
+        k.GlobalLock.argtypes = [wintypes.HGLOBAL]
+        k.GlobalLock.restype = wintypes.LPVOID
+        k.GlobalUnlock.argtypes = [wintypes.HGLOBAL]
+        k.GlobalFree.argtypes = [wintypes.HGLOBAL]
+        self.u, self.k = u, k
+
+    def _open(self):
+        # Ein anderes Programm kann die Zwischenablage gerade offen haben: kurz erneut versuchen.
+        for _ in range(10):
+            if self.u.OpenClipboard(None):
+                return True
+            time.sleep(0.02)
+        return False
+
+    def read(self):
+        if not self._open():
+            return None
+        try:
+            h = self.u.GetClipboardData(self.CF_UNICODETEXT)
+            if not h:
+                return None
+            ptr = self.k.GlobalLock(h)
+            if not ptr:
+                return None
+            try:
+                return self.ct.wstring_at(ptr)
+            finally:
+                self.k.GlobalUnlock(h)
+        finally:
+            self.u.CloseClipboard()
+
+    def write(self, text):
+        if not self._open():
+            raise UserError(t("set_failed"))
+        try:
+            self.u.EmptyClipboard()
+            if not text:
+                return
+            data = (text + "\0").encode("utf-16-le")
+            h = self.k.GlobalAlloc(self.GMEM_MOVEABLE, len(data))
+            ptr = self.k.GlobalLock(h) if h else None
+            if not ptr:
+                raise UserError(t("set_failed"))
+            self.ct.memmove(ptr, data, len(data))
+            self.k.GlobalUnlock(h)
+            # Bei Erfolg gehört der Speicher Windows, sonst selbst freigeben.
+            if not self.u.SetClipboardData(self.CF_UNICODETEXT, h):
+                self.k.GlobalFree(h)
+                raise UserError(t("set_failed"))
+        finally:
+            self.u.CloseClipboard()
+
+
+class Clipboard:
+    """Dünne Hülle um xclip / xsel / wl-clipboard bzw. die Windows-Zwischenablage."""
+
+    def __init__(self):
+        self.win = WindowsClipboard() if os.name == "nt" else None
+        self.kind = "windows" if self.win else self._detect()
 
     @staticmethod
     def _detect():
@@ -138,6 +220,8 @@ class Clipboard:
 
     def read(self):
         """Gibt den Text zurück oder None, wenn kein Text vorliegt (leer / Bild / Fehler)."""
+        if self.win:
+            return self.win.read()
         if self.kind == "xclip":
             for target in ("UTF8_STRING", "STRING"):
                 text = self._run(["xclip", "-selection", "clipboard", "-o", "-t", target])
@@ -151,6 +235,8 @@ class Clipboard:
         return None
 
     def write(self, text):
+        if self.win:
+            return self.win.write(text)
         if self.kind == "xclip":
             cmd = ["xclip", "-selection", "clipboard", "-i"]
         elif self.kind == "xsel":
@@ -217,7 +303,10 @@ def clean_url(text):
 
 
 def data_file():
-    base = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.path.expanduser("~"), ".config")
+    if os.name == "nt":
+        base = os.environ.get("APPDATA") or os.path.expanduser("~")
+    else:
+        base = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.path.expanduser("~"), ".config")
     folder = os.path.join(base, "touchdeck-clipboard-slots")
     return folder, os.path.join(folder, "slots.json")
 

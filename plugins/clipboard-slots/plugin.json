@@ -4,9 +4,13 @@
     "en": "Clipboard Slots",
     "de": "Zwischenablage-Slots"
   },
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "Marcel1853",
   "license": "MIT",
+  "platforms": [
+    "linux",
+    "windows"
+  ],
   "description": {
     "en": "Clipboard manager for your buttons: save texts into slots, bring them back with one tap, history of recent copies, clipboard to value and back, quick text clean-ups.",
     "de": "Zwischenablage-Manager für deine Buttons: Texte in Slots speichern, per Fingertipp zurückholen, Verlauf der letzten Kopien, Zwischenablage in Wert und zurück, schnelle Text-Bereinigung."

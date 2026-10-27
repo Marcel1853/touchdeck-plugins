@@ -1,9 +1,13 @@
 {
   "id": "factorio",
   "name": "Factorio",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "author": "Marcel1853",
   "license": "MIT",
+  "platforms": [
+    "linux",
+    "windows"
+  ],
   "description": {
     "en": "Factorio on your buttons: live research, speed, evolution, power (with graphs), planet; pause, speed, save, screenshot, quick chat and research queue. Needs the Factorio mod “TouchDeck Bridge”. No launch options, no network: the mod writes a JSON file, the plugin watches it.",
     "de": "Factorio auf deinen Buttons: Forschung live, Geschwindigkeit, Evolution, Strom (mit Graphen), Planet; Pause, Tempo, Speichern, Screenshot, Schnell-Chat und Forschungs-Warteschlange. Braucht den Factorio-Mod „TouchDeck Bridge“. Keine Startoptionen, kein Netzwerk: Der Mod schreibt eine JSON-Datei, das Plugin achtet auf Änderungen."

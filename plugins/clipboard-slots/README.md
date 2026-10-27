@@ -17,6 +17,10 @@ TouchDeck (Aktionen, Trigger, Werte, Log) und baut nichts nach, was TouchDeck se
 sudo apt install xclip
 ```
 
+**Windows (ganz frühe Alpha, ungetestet):** Python 3.8+ von python.org genügt, ein
+Zwischenablage-Programm ist nicht nötig. Die Slots liegen dort unter
+`%APPDATA%\touchdeck-clipboard-slots`.
+
 ## Einrichten
 
 1. Plugins › Marktplatz › „Zwischenablage-Slots“ › **Prüfen** › installieren (zweimal bestätigen, weil es
@@ -114,7 +118,9 @@ clean-ups. It only uses TouchDeck's documented plugin messages and does not rebu
 TouchDeck already does.
 
 **Requirements:** TouchDeck 0.9 (Linux, X11) with advanced mode on, Python 3.8+, and `xclip`, `xsel`
-or `wl-clipboard` (`sudo apt install xclip`).
+or `wl-clipboard` (`sudo apt install xclip`). **Windows** (very early alpha, untested): Python 3.8+
+from python.org is enough, no clipboard tool needed; slots are stored in
+`%APPDATA%\touchdeck-clipboard-slots`.
 
 **Setup:** Plugins › Marketplace › “Clipboard Slots” › Check › install (or enter
 `Marcel1853/touchdeck-plugins/plugins/clipboard-slots`). Then click “📄 Zwischenablage Seite import” on the

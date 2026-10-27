@@ -1,9 +1,13 @@
 {
   "id": "rimworld",
   "name": "RimWorld",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "Marcel1853",
   "license": "MIT",
+  "platforms": [
+    "linux",
+    "windows"
+  ],
   "description": {
     "en": "RimWorld on your buttons: date, speed, mood, silver, research and threat live; pause, speed 1–4, save, screenshot, draft all, jump to colonists or the last letter, in-game messages, main tabs and research. Letters, raids, deaths, mental breaks and finished research as events. Needs the included RimWorld mod “TouchDeck Bridge” (local TCP connection, nothing goes to the internet). Advanced plugin (Python), with ready-made pages.",
     "de": "RimWorld auf deinen Buttons: Datum, Tempo, Stimmung, Silber, Forschung und Bedrohung live; Pause, Tempo 1–4, Speichern, Screenshot, alle einziehen, Kamera zu Kolonisten oder zum letzten Brief, Nachrichten im Spiel, Hauptreiter und Forschung. Briefe, Überfälle, Todesfälle, Nervenzusammenbrüche und fertige Forschung als Auslöser. Braucht den mitgelieferten RimWorld-Mod „TouchDeck Bridge“ (lokale TCP-Verbindung, nichts geht ins Internet). Erweitertes Plugin (Python), mit fertigen Seiten."

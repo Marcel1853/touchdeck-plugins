@@ -37,7 +37,7 @@ TouchDeck button ──▶ plugin action ──▶ command to the mod ──▶ 
    only one of them: importing only adds, it never overwrites.
 4. **Start the game** and load a colony – done. The status button at the top left shows "running".
 
-Requirements: RimWorld 1.6 with Harmony, TouchDeck 0.12, Python 3.8 or newer. No settings needed:
+Requirements: RimWorld 1.6 with Harmony, TouchDeck 0.12, Python 3.8 or newer (Linux; Windows is a very early alpha and untested). No settings needed:
 address `127.0.0.1`, port `34200` and an empty secret match the mod's defaults.
 
 ## The ready-made pages

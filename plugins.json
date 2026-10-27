@@ -8,11 +8,12 @@
         "de": "Zwischenablage-Slots"
       },
       "description": {
-        "en": "Clipboard manager for your buttons: save texts into slots, bring them back with one tap, history of recent copies, clipboard to value and back, quick clean-ups. Advanced plugin (Python, needs xclip). Comes with a ready-made page.",
-        "de": "Zwischenablage-Manager für deine Buttons: Texte in Slots speichern, per Fingertipp zurückholen, Verlauf der letzten Kopien, Zwischenablage in Wert und zurück, schnelle Bereinigung. Erweitertes Plugin (Python, braucht xclip). Mit fertiger Seite."
+        "en": "Clipboard manager for your buttons: save texts into slots, bring them back with one tap, history of recent copies, clipboard to value and back, quick clean-ups. Advanced plugin (Python; on Linux with xclip). Comes with a ready-made page.",
+        "de": "Zwischenablage-Manager für deine Buttons: Texte in Slots speichern, per Fingertipp zurückholen, Verlauf der letzten Kopien, Zwischenablage in Wert und zurück, schnelle Bereinigung. Erweitertes Plugin (Python; unter Linux mit xclip). Mit fertiger Seite."
       },
       "author": "Marcel1853",
-      "license": "MIT"
+      "license": "MIT",
+      "platforms": ["linux", "windows"]
     },
     {
       "repo": "Marcel1853/touchdeck-plugins",
@@ -26,7 +27,8 @@
         "de": "Factorio auf deinen Buttons: Forschung, Tempo, Evolution und Strom live (mit Graphen); Pause, Tempo, Speichern, Screenshot, Schnell-Chat und Forschungs-Warteschlange. Braucht den mitgelieferten Mod „TouchDeck Bridge“, keine Startoptionen. Erweitertes Plugin (Python), mit fertigen Seiten."
       },
       "author": "Marcel1853",
-      "license": "MIT"
+      "license": "MIT",
+      "platforms": ["linux", "windows"]
     },
     {
       "repo": "Marcel1853/touchdeck-plugins",
@@ -40,7 +42,8 @@
         "en": "RimWorld on your buttons: date, speed, mood, silver, research and threat live; pause, speed, save, draft all, jump to colonists. Letters, raids and deaths as events. Needs the included mod “TouchDeck Bridge”. Advanced plugin (Python), with ready-made pages."
       },
       "author": "Marcel1853",
-      "license": "MIT"
+      "license": "MIT",
+      "platforms": ["linux", "windows"]
     }
   ]
 }

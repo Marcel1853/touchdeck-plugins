@@ -28,7 +28,8 @@ TouchDeck-Button ──Tastenkürzel Strg+Alt+Umschalt+…──▶ Factorio-Fen
 ## Einrichtung in vier Schritten
 
 1. **Mod installieren:** `touchdeck-bridge_0.6.0.zip` nach `~/.factorio/mods/` legen (oder den
-   Ordner `touchdeck-bridge`). Factorio starten, der Mod ist automatisch an.
+   Ordner `touchdeck-bridge`); unter Windows (ganz frühe Alpha, ungetestet) nach
+   `%APPDATA%\Factorio\mods\`. Factorio starten, der Mod ist automatisch an.
 2. **Plugin laden:** In TouchDeck den erweiterten Modus einschalten (Plugins › Erweitert), dann
    Plugins › Marktplatz › **Factorio** installieren (oder Plugins › Entwickeln › diesen Ordner
    laden). Zweimal bestätigen, weil es ein erweitertes Plugin ist.
@@ -234,7 +235,7 @@ Kante die Gesamterzeugung. Akkus zählen nur beim Entladen (Laden ist Verbrauch)
 
 | Einstellung | Standard |
 | --- | --- |
-| Ordner der Mod-Dateien | leer = `~/.factorio/script-output/touchdeck-bridge` oder die Flatpak-Steam-Variante |
+| Ordner der Mod-Dateien | leer = `~/.factorio/script-output/touchdeck-bridge` oder die Flatpak-Steam-Variante; unter Windows `%APPDATA%\Factorio\script-output\touchdeck-bridge` |
 | Dateien prüfen alle … ms | 250 (solange Factorio läuft oder vor Kurzem Daten kamen) |
 | Ohne Factorio nur alle … ms prüfen | 3000 (`/proc` dann nur alle 5 s) |
 | Keine Daten seit … Sekunden = nicht verbunden | 5 |
@@ -296,7 +297,7 @@ Factorio mod **TouchDeck Bridge** (`touchdeck-bridge`, 0.6.0 or newer).
   button. TouchDeck never types text into the game (with IBus, generated keys do not reach Factorio
   text fields).
 
-**Setup:** 1. put the mod into `~/.factorio/mods/` · 2. enable advanced mode in TouchDeck and install
+**Setup:** 1. put the mod into `~/.factorio/mods/` (Windows, very early alpha: `%APPDATA%\Factorio\mods\`) · 2. enable advanced mode in TouchDeck and install
 **Factorio** from Plugins › Marketplace (or load this folder under Plugins › Develop) · 3. import `Factorio.tdprofile` (remove pages of an older version first) · 4. load a game.
 
 **Action:** *Wait for the game's answer* (after a Hotkey action). **Triggers:** research

@@ -14,6 +14,7 @@ Nichts geht ins Netz.
 
 import json
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -30,6 +31,12 @@ from item_slots import ItemSlots  # noqa: E402  (liegt neben plugin.py)
 _LOCALE = (os.environ.get("LC_ALL") or os.environ.get("LC_MESSAGES")
            or os.environ.get("LANG") or "").lower()
 DE = _LOCALE.startswith("de")
+if not _LOCALE and os.name == "nt":
+    try:
+        import ctypes
+        DE = (ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3FF) == 0x07
+    except (AttributeError, OSError):
+        pass
 
 TEXTS = {
     # Zustand
@@ -245,7 +252,15 @@ def fmt_time(ticks):
 
 
 def factorio_running():
-    """Läuft ein Prozess namens factorio? (nur /proc lesen, kein Fremdprogramm)"""
+    """Läuft ein Prozess namens factorio? (Linux: nur /proc lesen; Windows: tasklist ohne Fenster)"""
+    if os.name == "nt":
+        try:
+            out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq factorio.exe", "/NH", "/FO", "CSV"],
+                                 stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                 timeout=5, creationflags=0x08000000).stdout
+        except (OSError, subprocess.SubprocessError):
+            return False
+        return b'"factorio.exe"' in out.lower()
     try:
         for pid in os.listdir("/proc"):
             if pid.isdigit():
@@ -264,6 +279,10 @@ def candidate_folders(setting):
     if setting:
         return [os.path.expanduser(setting)]
     home = os.path.expanduser("~")
+    if os.name == "nt":
+        # Normale und Steam-Installation schreiben beide nach %APPDATA%\Factorio.
+        appdata = os.environ.get("APPDATA") or os.path.join(home, "AppData", "Roaming")
+        return [os.path.join(appdata, "Factorio", "script-output", "touchdeck-bridge")]
     return [os.path.join(home, ".factorio", "script-output", "touchdeck-bridge"),
             os.path.join(home, ".var", "app", "com.valvesoftware.Steam", ".factorio", "script-output",
                          "touchdeck-bridge")]

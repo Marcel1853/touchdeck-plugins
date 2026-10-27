@@ -38,7 +38,7 @@ TouchDeck-Button ──▶ Plugin-Aktion ──▶ Befehl an den Mod ──▶ A
    unterscheiden sich. Nur eine davon importieren: Der Import fügt nur hinzu, er überschreibt nichts.
 4. **Spiel starten** und eine Kolonie laden – fertig. Der Status-Button oben links zeigt „läuft“.
 
-Voraussetzungen: RimWorld 1.6 mit Harmony, TouchDeck 0.12, Python 3.8 oder neuer. Keine
+Voraussetzungen: RimWorld 1.6 mit Harmony, TouchDeck 0.12, Python 3.8 oder neuer (Linux; Windows ist eine ganz frühe Alpha und ungetestet). Keine
 Pflicht-Einstellungen: Adresse `127.0.0.1`, Port `34200` und leeres Geheimwort passen zu den
 Vorgaben des Mods.
 
