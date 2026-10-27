@@ -82,8 +82,8 @@ Hauptseite **Timberborn** (4 × 6) mit den wichtigsten Live-Anzeigen und sieben 
 „Ordner hier erstellen“ im Editor (eigene Seite „Timberborn › …“ mit Zurück oben links): **Zeit**,
 **Wetter**, **Biber**, **Vorräte**, **Meldungen**, **Warnungen**, **Spiel**. Kommt Timberborn in den
 Vordergrund, wechselt TouchDeck einmal pro Spielstart auf die Seite „Timberborn“ (zwei Events: Linux
-mit Proton und Windows; „nur beim ersten Mal“ ausschalten, wenn es jedes Mal springen soll). Kündigt
-das Spiel eine Gefahr an, beginnt sie oder stirbt ein Biber, kommt eine Benachrichtigung auf dem PC.
+mit Proton und Windows; „nur beim ersten Mal“ ausschalten, wenn es jedes Mal springen soll). Benachrichtigungen
+auf dem PC gibt es bewusst keine: Was wichtig ist, zeigen die Buttons rot an.
 
 | Seite | Was drauf ist |
 | --- | --- |

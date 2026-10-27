@@ -58,11 +58,6 @@ def inp(name):
     return "{" + L("Eingabe", "Input") + "." + name + "}"
 
 
-def ev(de, en):
-    """Platzhalter für Event-Daten; das Plugin liefert deutsche und englische Schlüssel (Name/Name, Tage/Days)."""
-    return "{Event." + L(de, en) + "}"
-
-
 def action(type_, **params):
     return {"id": "", "type": type_, "enabled": True, "params": params}
 
@@ -423,31 +418,13 @@ def flows():
 
 
 def events():
-    focus = [
+    # Keine Benachrichtigungen auf dem PC: was wichtig ist, zeigen die Buttons rot an.
+    return [
         {"id": f"ev_timberborn_fokus_{key}",
          "name": L(f"Timberborn im Vordergrund ({label}) → Seite Timberborn", f"Timberborn in front ({label}) → page Timberborn"),
          "folder": "Timberborn", "enabled": True, "trigger": {"type": "app_focus", "params": {"app": app, "once": True}},
          "cooldown": 0, "actions": [action("deck_show_page", page=PAGE_MAIN)]}
         for key, app, label in (("proton", WINDOWS["proton"], "Linux/Proton"), ("nativ", WINDOWS["native"], "Windows"))
-    ]
-    return focus + [
-        {"id": "ev_timberborn_gefahr_bald", "name": L("Timberborn: Gefahr steht bevor → Benachrichtigung",
-                                                      "Timberborn: hazard approaching → notification"),
-         "folder": "Timberborn", "enabled": True, "trigger": {"type": f"{PLUGIN}:hazard_approaching", "params": {}}, "cooldown": 5,
-         "actions": [action("notify", title="⏳ Timberborn",
-                            body=L("{Event.Name} steht bevor – Wasser und Nahrung prüfen!",
-                                   "{Event.Name} is approaching – check water and food!"), target="pc")]},
-        {"id": "ev_timberborn_gefahr", "name": L("Timberborn: Gefahr beginnt → Benachrichtigung",
-                                                 "Timberborn: hazard starts → notification"),
-         "folder": "Timberborn", "enabled": True, "trigger": {"type": f"{PLUGIN}:hazard_started", "params": {}}, "cooldown": 5,
-         "actions": [action("notify", title="☀️ Timberborn",
-                            body=L("{Event.Name} beginnt: " + ev("Tage", "Days") + " Tage.",
-                                   "{Event.Name} starts: " + ev("Tage", "Days") + " days."), target="pc")]},
-        {"id": "ev_timberborn_tod", "name": L("Timberborn: Biber gestorben → Benachrichtigung",
-                                              "Timberborn: beaver died → notification"),
-         "folder": "Timberborn", "enabled": True, "trigger": {"type": f"{PLUGIN}:character_died", "params": {}}, "cooldown": 0,
-         "actions": [action("notify", title="🪦 Timberborn",
-                            body=L("{Event.Name} ist gestorben.", "{Event.Name} has died."), target="pc")]},
     ]
 
 

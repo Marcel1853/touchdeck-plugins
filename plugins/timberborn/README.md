@@ -80,8 +80,8 @@ Main page **Timberborn** (4 × 6) with the most important live displays and seve
 “Create folder here” in the editor (own page “Timberborn › …” with Back at the top left): **Time**,
 **Weather**, **Beavers**, **Supplies**, **Notifications**, **Alerts**, **Game**. When Timberborn
 comes to the front, TouchDeck switches to the page “Timberborn” once per game start (two events: Linux
-with Proton and Windows; turn off “only the first time” to switch every time). When the game
-announces a hazard, when it starts or when a beaver dies, you get a notification on the PC.
+with Proton and Windows; turn off “only the first time” to switch every time). There are
+deliberately no notifications on the PC: whatever matters turns the buttons red.
 
 | Page | What's on it |
 | --- | --- |
