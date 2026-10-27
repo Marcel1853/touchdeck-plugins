@@ -1,0 +1,9 @@
+{
+  "Name": "TouchDeck Bridge",
+  "Version": "0.1.0",
+  "Id": "Marcel1853.TouchDeckBridge",
+  "MinimumGameVersion": "1.1.0.0",
+  "Description": "Connects Timberborn with TouchDeck (macro buttons on your phone or tablet): speed, pause, weather countdown, population, homeless, unemployed, supplies, notification history and alerts on your buttons. Opens a small local TCP server (127.0.0.1:34201 by default, settings in settings.json in the mod folder). Nothing goes to the internet. No Harmony needed.\n\nVerbindet Timberborn mit TouchDeck (Makro-Buttons auf Handy oder Tablet): Tempo, Pause, Wetter-Countdown, Bevölkerung, Obdachlose, Arbeitslose, Vorräte, Nachrichtenverlauf und Warnungen auf deinen Buttons. Öffnet einen kleinen lokalen TCP-Server (Standard 127.0.0.1:34201, Einstellungen in settings.json im Mod-Ordner). Nichts geht ins Internet. Kein Harmony nötig.",
+  "RequiredMods": [],
+  "OptionalMods": []
+}

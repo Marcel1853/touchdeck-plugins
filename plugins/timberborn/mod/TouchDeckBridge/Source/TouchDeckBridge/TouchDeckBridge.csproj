@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Timberborn-Mod „TouchDeck Bridge“. Ergebnis: ../../Code.dll (Aufruf: ../../build.sh).
+
+    Alle Verweise kommen aus der eigenen Timberborn-Installation (genau die Version, die gespielt wird),
+    auch mscorlib und netstandard – damit passt alles zur Laufzeit des Spiels und nichts muss
+    heruntergeladen werden. Nichts davon wird mitgeliefert (Private=false). Pfad über TimberbornDir änderbar:
+      dotnet build -p:TimberbornDir=/pfad/zu/Timberborn
+  -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>Code</AssemblyName>
+    <RootNamespace>TouchDeckBridge</RootNamespace>
+    <Version>0.1.0</Version>
+    <OutputPath>../../</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <NoStdLib>true</NoStdLib>
+    <TimberbornDir Condition="'$(TimberbornDir)' == ''">$(HOME)/.local/share/Steam/steamapps/common/Timberborn</TimberbornDir>
+    <Managed>$(TimberbornDir)/Timberborn_Data/Managed</Managed>
+    <FrameworkPathOverride>$(Managed)</FrameworkPathOverride>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="../Tests/**" />
+  </ItemGroup>
+  <ItemGroup>
+    <GameRef Include="mscorlib;netstandard;System;System.Core;System.Collections.Immutable;Bindito.Core;UnityEngine.CoreModule" />
+    <GameRef Include="Timberborn.BaseComponentSystem;Timberborn.Common;Timberborn.EntitySystem;Timberborn.GameCycleSystem" />
+    <GameRef Include="Timberborn.GameFactionSystem;Timberborn.FactionSystem;Timberborn.GameSaveRepositorySystem;Timberborn.GameSaveRuntimeSystem" />
+    <GameRef Include="Timberborn.Goods;Timberborn.GoodsSampling;Timberborn.HazardousWeatherSystem;Timberborn.Localization" />
+    <GameRef Include="Timberborn.LocalizationSerialization;Timberborn.BlueprintSystem;Timberborn.ModManagerScene;Timberborn.NotificationSystem" />
+    <GameRef Include="Timberborn.Population;Timberborn.QuickNotificationSystem;Timberborn.ResourceCountingSystem;Timberborn.ScienceSystem" />
+    <GameRef Include="Timberborn.SelectionSystem;Timberborn.SettlementNameSystem;Timberborn.SingletonSystem;Timberborn.StatusSystem" />
+    <GameRef Include="Timberborn.TimeSystem;Timberborn.Versioning;Timberborn.WeatherSystem;Timberborn.Wellbeing;Timberborn.Characters;Timberborn.Beavers;Timberborn.GameOver;Timberborn.HazardousWeatherSystemUI" />
+    <Reference Include="@(GameRef)">
+      <HintPath>$(Managed)/%(Identity).dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

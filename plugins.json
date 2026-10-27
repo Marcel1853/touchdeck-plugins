@@ -44,6 +44,21 @@
       "author": "Marcel1853",
       "license": "MIT",
       "platforms": ["linux", "windows"]
+    },
+    {
+      "repo": "Marcel1853/touchdeck-plugins",
+      "path": "plugins/timberborn",
+      "name": {
+        "en": "Timberborn",
+        "de": "Timberborn"
+      },
+      "description": {
+        "en": "Timberborn on your buttons: countdown to drought or badtide, beavers, homeless, unemployed, days of water and food, notification history and alerts live; pause, speed, save, camera to alerts. Needs the included mod “TouchDeck Bridge”. Advanced plugin (Python), with ready-made pages.",
+        "de": "Timberborn auf deinen Buttons: Countdown bis Dürre oder Faulwasserflut, Biber, Obdachlose, Arbeitslose, Tage Wasser und Nahrung, Nachrichtenverlauf und Warnungen live; Pause, Tempo, Speichern, Kamera zu Warnungen. Braucht den Mod „TouchDeck Bridge“. Erweitertes Plugin (Python), mit fertigen Seiten."
+      },
+      "author": "Marcel1853",
+      "license": "MIT",
+      "platforms": ["linux", "windows"]
     }
   ]
 }

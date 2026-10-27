@@ -1,0 +1,747 @@
+{
+  "id": "timberborn",
+  "name": "Timberborn",
+  "version": "0.1.0",
+  "author": "Marcel1853",
+  "license": "MIT",
+  "platforms": [
+    "linux",
+    "windows"
+  ],
+  "description": {
+    "en": "Timberborn on your buttons: cycle, day, speed, weather with a countdown to the next drought or badtide, beavers, homeless, unemployed, contaminated, well-being, science, supplies with “lasts … days”, notification history and active alerts live; pause, speed 1–3, save, camera to notifications and alerts, messages in the game. Hazards, new notifications, births and deaths as triggers. Needs the included Timberborn mod “TouchDeck Bridge” (local TCP connection, also from a second PC; nothing goes to the internet). Advanced plugin (Python), with ready-made pages.",
+    "de": "Timberborn auf deinen Buttons: Zyklus, Tag, Tempo, Wetter mit Countdown bis zur Dürre oder Faulwasserflut, Biber, Obdachlose, Arbeitslose, Verseuchte, Zufriedenheit, Wissenschaft, Vorräte mit „reicht noch … Tage“, Nachrichtenverlauf und aktive Warnungen live; Pause, Tempo 1–3, Speichern, Kamera zu Meldungen und Warnungen, Nachrichten im Spiel. Gefahren, neue Meldungen, Geburten und Todesfälle als Auslöser. Braucht den mitgelieferten Timberborn-Mod „TouchDeck Bridge“ (lokale TCP-Verbindung, auch von einem zweiten PC aus; nichts geht ins Internet). Erweitertes Plugin (Python), mit fertigen Seiten."
+  },
+  "native": {
+    "command": [
+      "python3",
+      "plugin.py"
+    ]
+  },
+  "settings": [
+    {
+      "key": "host",
+      "label": {
+        "en": "Address of the PC running Timberborn (127.0.0.1 = this PC, otherwise IP or host name)",
+        "de": "Adresse des PCs mit Timberborn (127.0.0.1 = dieser PC, sonst IP oder Rechnername)"
+      },
+      "type": "text",
+      "default": "127.0.0.1"
+    },
+    {
+      "key": "port",
+      "label": {
+        "en": "Port (as in the mod's settings.json, 1024–65535)",
+        "de": "Port (wie in settings.json des Mods, 1024–65535)"
+      },
+      "type": "number",
+      "default": 34201
+    },
+    {
+      "key": "secret",
+      "label": {
+        "en": "Secret (as in the mod's settings.json; required if the address is not 127.0.0.1, at least 12 characters)",
+        "de": "Geheimwort (wie in settings.json des Mods; Pflicht, wenn die Adresse nicht 127.0.0.1 ist, mindestens 12 Zeichen)"
+      },
+      "type": "password",
+      "default": ""
+    },
+    {
+      "key": "timeout",
+      "label": {
+        "en": "Wait for the game's answer at most … seconds (2–60)",
+        "de": "Auf Antwort des Spiels höchstens … Sekunden warten (2–60)"
+      },
+      "type": "number",
+      "default": 5
+    }
+  ],
+  "actions": [
+    {
+      "id": "pause",
+      "label": {
+        "en": "Pause",
+        "de": "Pause"
+      },
+      "icon": "⏸️",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "toggle",
+          "options": [
+            {
+              "value": "toggle",
+              "label": {
+                "en": "Toggle",
+                "de": "Umschalten"
+              }
+            },
+            {
+              "value": "on",
+              "label": {
+                "en": "Pause",
+                "de": "Anhalten"
+              }
+            },
+            {
+              "value": "off",
+              "label": {
+                "en": "Resume",
+                "de": "Weiterlaufen"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "label": {
+        "en": "Game speed",
+        "de": "Spieltempo"
+      },
+      "icon": "⏩",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "set",
+          "options": [
+            {
+              "value": "set",
+              "label": {
+                "en": "Set speed",
+                "de": "Tempo setzen"
+              }
+            },
+            {
+              "value": "up",
+              "label": {
+                "en": "Faster",
+                "de": "Schneller"
+              }
+            },
+            {
+              "value": "down",
+              "label": {
+                "en": "Slower",
+                "de": "Langsamer"
+              }
+            }
+          ]
+        },
+        {
+          "key": "value",
+          "label": {
+            "en": "Speed 1–3 (like the buttons in the game: ×1, ×3, ×7)",
+            "de": "Tempo 1–3 (wie die Knöpfe im Spiel: ×1, ×3, ×7)"
+          },
+          "type": "number",
+          "default": 1,
+          "showIf": {
+            "op": [
+              "set"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "save",
+      "label": {
+        "en": "Save game",
+        "de": "Spiel speichern"
+      },
+      "icon": "💾",
+      "fields": [
+        {
+          "key": "name",
+          "label": {
+            "en": "Name (empty = “TouchDeck-Quicksave”)",
+            "de": "Name (leer = „TouchDeck-Quicksave“)"
+          },
+          "type": "text",
+          "default": "",
+          "placeholder": {
+            "en": "e.g. Before the drought",
+            "de": "z. B. Vor der Dürre"
+          }
+        }
+      ]
+    },
+    {
+      "id": "notification",
+      "label": {
+        "en": "Camera to notification no.",
+        "de": "Kamera zu Meldung Nr."
+      },
+      "icon": "📜",
+      "fields": [
+        {
+          "key": "n",
+          "label": {
+            "en": "Number in the notification history (1 = newest, up to 8)",
+            "de": "Nummer im Nachrichtenverlauf (1 = neueste, bis 8)"
+          },
+          "type": "number",
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "alert",
+      "label": {
+        "en": "Camera to alert no.",
+        "de": "Kamera zu Warnung Nr."
+      },
+      "icon": "⚠️",
+      "fields": [
+        {
+          "key": "n",
+          "label": {
+            "en": "Alert number (1 = the one affecting the most, up to 8); each tap jumps to the next one affected",
+            "de": "Nummer der Warnung (1 = die mit den meisten Betroffenen, bis 8); jedes Tippen springt zum nächsten Betroffenen"
+          },
+          "type": "number",
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "message",
+      "label": {
+        "en": "Show message in game",
+        "de": "Nachricht im Spiel zeigen"
+      },
+      "icon": "💬",
+      "fields": [
+        {
+          "key": "text",
+          "label": {
+            "en": "Text (placeholders like {TBBiber} work)",
+            "de": "Text (Platzhalter wie {TBBiber} gehen)"
+          },
+          "type": "text",
+          "default": ""
+        },
+        {
+          "key": "kind",
+          "label": {
+            "en": "Look",
+            "de": "Art"
+          },
+          "type": "select",
+          "default": "info",
+          "options": [
+            {
+              "value": "info",
+              "label": {
+                "en": "Normal",
+                "de": "Normal"
+              }
+            },
+            {
+              "value": "warning",
+              "label": {
+                "en": "Warning",
+                "de": "Warnung"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "refresh",
+      "label": {
+        "en": "Fetch state now",
+        "de": "Zustand jetzt abfragen"
+      },
+      "icon": "🔄",
+      "fields": []
+    }
+  ],
+  "triggers": [
+    {
+      "id": "notification",
+      "label": {
+        "en": "New notification in the game",
+        "de": "Neue Meldung im Spiel"
+      },
+      "icon": "📜",
+      "fields": []
+    },
+    {
+      "id": "hazard_approaching",
+      "label": {
+        "en": "Hazard approaching (as in the game, 3 days before)",
+        "de": "Gefahr steht bevor (wie im Spiel, 3 Tage vorher)"
+      },
+      "icon": "⏳",
+      "fields": [
+        {
+          "key": "Art",
+          "label": {
+            "en": "Kind",
+            "de": "Art"
+          },
+          "type": "select",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "Any",
+                "de": "Egal"
+              }
+            },
+            {
+              "value": "drought",
+              "label": {
+                "en": "Drought",
+                "de": "Dürre"
+              }
+            },
+            {
+              "value": "badtide",
+              "label": {
+                "en": "Badtide",
+                "de": "Faulwasserflut"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hazard_started",
+      "label": {
+        "en": "Drought / badtide starts",
+        "de": "Dürre / Faulwasserflut beginnt"
+      },
+      "icon": "☀️",
+      "fields": [
+        {
+          "key": "Art",
+          "label": {
+            "en": "Kind",
+            "de": "Art"
+          },
+          "type": "select",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "Any",
+                "de": "Egal"
+              }
+            },
+            {
+              "value": "drought",
+              "label": {
+                "en": "Drought",
+                "de": "Dürre"
+              }
+            },
+            {
+              "value": "badtide",
+              "label": {
+                "en": "Badtide",
+                "de": "Faulwasserflut"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hazard_ended",
+      "label": {
+        "en": "Hazard over",
+        "de": "Gefahr vorbei"
+      },
+      "icon": "🌦️",
+      "fields": []
+    },
+    {
+      "id": "cycle_started",
+      "label": {
+        "en": "New cycle",
+        "de": "Neuer Zyklus"
+      },
+      "icon": "🔁",
+      "fields": []
+    },
+    {
+      "id": "beaver_born",
+      "label": {
+        "en": "Beaver born",
+        "de": "Biber geboren"
+      },
+      "icon": "🍼",
+      "fields": []
+    },
+    {
+      "id": "character_died",
+      "label": {
+        "en": "Beaver or bot died",
+        "de": "Biber oder Bot gestorben"
+      },
+      "icon": "🪦",
+      "fields": [
+        {
+          "key": "Name",
+          "label": {
+            "en": "Name (empty = any)",
+            "de": "Name (leer = jeder)"
+          },
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "alert",
+      "label": {
+        "en": "New alert (e.g. unemployed, no water)",
+        "de": "Neue Warnung (z. B. Arbeitslos, kein Wasser)"
+      },
+      "icon": "⚠️",
+      "fields": [
+        {
+          "key": "Text",
+          "label": {
+            "en": "Text exactly as in the game's alert panel (empty = any)",
+            "de": "Text genau wie im Warnfeld des Spiels (leer = jede)"
+          },
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "id": "game_over",
+      "label": {
+        "en": "Game over",
+        "de": "Spiel verloren"
+      },
+      "icon": "💀",
+      "fields": []
+    },
+    {
+      "id": "connected",
+      "label": {
+        "en": "Connected to Timberborn",
+        "de": "Mit Timberborn verbunden"
+      },
+      "icon": "🔌",
+      "fields": []
+    },
+    {
+      "id": "disconnected",
+      "label": {
+        "en": "Connection to Timberborn lost",
+        "de": "Verbindung zu Timberborn weg"
+      },
+      "icon": "⛔",
+      "fields": []
+    }
+  ],
+  "lives": [
+    {
+      "id": "status",
+      "label": {
+        "en": "Connection and state (on = in game)",
+        "de": "Verbindung und Zustand (an = im Spiel)"
+      }
+    },
+    {
+      "id": "date",
+      "label": {
+        "en": "Cycle, day and time (on = night)",
+        "de": "Zyklus, Tag und Uhrzeit (an = Nacht)"
+      }
+    },
+    {
+      "id": "speed",
+      "label": {
+        "en": "Speed (on = running)",
+        "de": "Tempo (an = läuft)"
+      }
+    },
+    {
+      "id": "weather",
+      "label": {
+        "en": "Weather: countdown to the hazard or days left (bar; on = hazard running or approaching)",
+        "de": "Wetter: Countdown bis zur Gefahr bzw. Resttage (Balken; an = Gefahr läuft oder steht bevor)"
+      }
+    },
+    {
+      "id": "population",
+      "label": {
+        "en": "Beavers, kids and bots",
+        "de": "Biber, Kinder und Bots"
+      }
+    },
+    {
+      "id": "homeless",
+      "label": {
+        "en": "Homeless and free beds (on = someone homeless)",
+        "de": "Obdachlose und freie Betten (an = jemand obdachlos)"
+      }
+    },
+    {
+      "id": "unemployed",
+      "label": {
+        "en": "Unemployed and free jobs (on = someone unemployed)",
+        "de": "Arbeitslose und freie Stellen (an = jemand arbeitslos)"
+      }
+    },
+    {
+      "id": "contaminated",
+      "label": {
+        "en": "Contaminated beavers (on = at least one)",
+        "de": "Verseuchte Biber (an = mindestens einer)"
+      }
+    },
+    {
+      "id": "wellbeing",
+      "label": {
+        "en": "Average well-being",
+        "de": "Durchschnittliche Zufriedenheit"
+      }
+    },
+    {
+      "id": "science",
+      "label": {
+        "en": "Science points",
+        "de": "Wissenschaftspunkte"
+      }
+    },
+    {
+      "id": "water",
+      "label": {
+        "en": "Water and how many days it lasts (on = below 3 days)",
+        "de": "Wasser und wie viele Tage es reicht (an = unter 3 Tagen)"
+      }
+    },
+    {
+      "id": "food",
+      "label": {
+        "en": "Food and how many days it lasts (on = below 3 days)",
+        "de": "Nahrung und wie viele Tage sie reicht (an = unter 3 Tagen)"
+      }
+    },
+    {
+      "id": "alerts",
+      "label": {
+        "en": "Active alerts: count and largest (on = there are some)",
+        "de": "Aktive Warnungen: Anzahl und größte (an = es gibt welche)"
+      }
+    },
+    {
+      "id": "good_Log",
+      "label": {
+        "en": "Logs: stock/capacity and trend (bar; on = storage full)",
+        "de": "Rohholz: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_Plank",
+      "label": {
+        "en": "Planks: stock/capacity and trend (bar; on = storage full)",
+        "de": "Bretter: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_Gear",
+      "label": {
+        "en": "Gears: stock/capacity and trend (bar; on = storage full)",
+        "de": "Zahnräder: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_TreatedPlank",
+      "label": {
+        "en": "Treated planks: stock/capacity and trend (bar; on = storage full)",
+        "de": "Behandelte Bretter: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_MetalBlock",
+      "label": {
+        "en": "Metal blocks: stock/capacity and trend (bar; on = storage full)",
+        "de": "Metallblöcke: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_ScrapMetal",
+      "label": {
+        "en": "Scrap metal: stock/capacity and trend (bar; on = storage full)",
+        "de": "Schrott: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_Biofuel",
+      "label": {
+        "en": "Biofuel: stock/capacity and trend (bar; on = storage full)",
+        "de": "Biokraftstoff: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_Dirt",
+      "label": {
+        "en": "Dirt: stock/capacity and trend (bar; on = storage full)",
+        "de": "Erde: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_Explosives",
+      "label": {
+        "en": "Explosives: stock/capacity and trend (bar; on = storage full)",
+        "de": "Sprengstoff: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_Paper",
+      "label": {
+        "en": "Paper: stock/capacity and trend (bar; on = storage full)",
+        "de": "Papier: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_Book",
+      "label": {
+        "en": "Books: stock/capacity and trend (bar; on = storage full)",
+        "de": "Bücher: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "good_PunchCard",
+      "label": {
+        "en": "Punch cards: stock/capacity and trend (bar; on = storage full)",
+        "de": "Lochkarten: Bestand/Lagerplatz und Trend (Balken; an = Lager voll)"
+      }
+    },
+    {
+      "id": "note1",
+      "label": {
+        "en": "Notification 1 from the history (on = from today)",
+        "de": "Meldung 1 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "note2",
+      "label": {
+        "en": "Notification 2 from the history (on = from today)",
+        "de": "Meldung 2 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "note3",
+      "label": {
+        "en": "Notification 3 from the history (on = from today)",
+        "de": "Meldung 3 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "note4",
+      "label": {
+        "en": "Notification 4 from the history (on = from today)",
+        "de": "Meldung 4 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "note5",
+      "label": {
+        "en": "Notification 5 from the history (on = from today)",
+        "de": "Meldung 5 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "note6",
+      "label": {
+        "en": "Notification 6 from the history (on = from today)",
+        "de": "Meldung 6 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "note7",
+      "label": {
+        "en": "Notification 7 from the history (on = from today)",
+        "de": "Meldung 7 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "note8",
+      "label": {
+        "en": "Notification 8 from the history (on = from today)",
+        "de": "Meldung 8 aus dem Nachrichtenverlauf (an = von heute)"
+      }
+    },
+    {
+      "id": "alert1",
+      "label": {
+        "en": "Alert 1 with number affected",
+        "de": "Warnung 1 mit Anzahl der Betroffenen"
+      }
+    },
+    {
+      "id": "alert2",
+      "label": {
+        "en": "Alert 2 with number affected",
+        "de": "Warnung 2 mit Anzahl der Betroffenen"
+      }
+    },
+    {
+      "id": "alert3",
+      "label": {
+        "en": "Alert 3 with number affected",
+        "de": "Warnung 3 mit Anzahl der Betroffenen"
+      }
+    },
+    {
+      "id": "alert4",
+      "label": {
+        "en": "Alert 4 with number affected",
+        "de": "Warnung 4 mit Anzahl der Betroffenen"
+      }
+    },
+    {
+      "id": "alert5",
+      "label": {
+        "en": "Alert 5 with number affected",
+        "de": "Warnung 5 mit Anzahl der Betroffenen"
+      }
+    },
+    {
+      "id": "alert6",
+      "label": {
+        "en": "Alert 6 with number affected",
+        "de": "Warnung 6 mit Anzahl der Betroffenen"
+      }
+    },
+    {
+      "id": "alert7",
+      "label": {
+        "en": "Alert 7 with number affected",
+        "de": "Warnung 7 mit Anzahl der Betroffenen"
+      }
+    },
+    {
+      "id": "alert8",
+      "label": {
+        "en": "Alert 8 with number affected",
+        "de": "Warnung 8 mit Anzahl der Betroffenen"
+      }
+    }
+  ]
+}
