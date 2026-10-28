@@ -1,0 +1,701 @@
+{
+  "id": "captain-of-industry",
+  "name": "Captain of Industry",
+  "version": "0.1.0",
+  "author": "Marcel1853",
+  "license": "MIT",
+  "platforms": [
+    "linux",
+    "windows"
+  ],
+  "description": {
+    "en": "Captain of Industry on your buttons: date, speed, power, computing, unity, free or missing workers, population, homeless, food in months, disease, research, pinned products with trend, active alerts and history live – red when something is wrong; pause, speed, save, camera to alerts. Alerts, messages, power shortage, starvation, research done and new year as triggers. Needs the included mod “TouchDeck Bridge” (local TCP connection, also from a second PC; nothing goes to the internet). Advanced plugin (Python), with ready-made pages.",
+    "de": "Captain of Industry auf deinen Buttons: Datum, Tempo, Strom, Rechenleistung, Einheit, freie oder fehlende Arbeiter, Einwohner, Obdachlose, Nahrung in Monaten, Krankheit, Forschung, angeheftete Waren mit Trend, aktive Meldungen und Verlauf live – rot, wenn etwas nicht stimmt; Pause, Tempo, Speichern, Kamera zu Meldungen. Meldungen, Nachrichten, Strommangel, Hunger, Forschung fertig und neues Jahr als Auslöser. Braucht den mitgelieferten Mod „TouchDeck Bridge“ (lokale TCP-Verbindung, auch von einem zweiten PC aus; nichts geht ins Internet). Erweitertes Plugin (Python), mit fertigen Seiten."
+  },
+  "native": {
+    "command": [
+      "python3",
+      "plugin.py"
+    ]
+  },
+  "mods": [
+    {
+      "name": "TouchDeck Bridge",
+      "file": "TouchDeckBridge_*.zip",
+      "unpack": true,
+      "keep": [
+        "TouchDeckBridge/settings.json"
+      ],
+      "targets": {
+        "windows": [
+          "{appdata}/Captain of Industry/Mods"
+        ],
+        "proton": [
+          "{proton:1594320}/AppData/Roaming/Captain of Industry/Mods"
+        ]
+      },
+      "page": "https://github.com/Marcel1853/touchdeck-plugins/tree/main/plugins/captain-of-industry/mod/TouchDeckBridge",
+      "hint": {
+        "en": "In Captain of Industry, switch on “TouchDeck Bridge” under “Mods” when loading or starting a game. It can also be added to existing saves.",
+        "de": "In Captain of Industry beim Laden oder Neuanlegen eines Spielstands unter „Mods“ „TouchDeck Bridge“ einschalten. Er lässt sich auch zu bestehenden Spielständen hinzufügen."
+      }
+    }
+  ],
+  "settings": [
+    {
+      "key": "host",
+      "label": {
+        "en": "Address of the PC running Captain of Industry (127.0.0.1 = this PC, otherwise IP or host name)",
+        "de": "Adresse des PCs mit Captain of Industry (127.0.0.1 = dieser PC, sonst IP oder Rechnername)"
+      },
+      "type": "text",
+      "default": "127.0.0.1"
+    },
+    {
+      "key": "port",
+      "label": {
+        "en": "Port (as in the mod's settings.json, 1024–65535)",
+        "de": "Port (wie in settings.json des Mods, 1024–65535)"
+      },
+      "type": "number",
+      "default": 34202
+    },
+    {
+      "key": "secret",
+      "label": {
+        "en": "Secret (as in the mod's settings.json; required if the address is not 127.0.0.1, at least 12 characters)",
+        "de": "Geheimwort (wie in settings.json des Mods; Pflicht, wenn die Adresse nicht 127.0.0.1 ist, mindestens 12 Zeichen)"
+      },
+      "type": "password",
+      "default": ""
+    },
+    {
+      "key": "timeout",
+      "label": {
+        "en": "Wait for the game's answer at most … seconds (2–60)",
+        "de": "Auf Antwort des Spiels höchstens … Sekunden warten (2–60)"
+      },
+      "type": "number",
+      "default": 5
+    }
+  ],
+  "actions": [
+    {
+      "id": "pause",
+      "label": {
+        "en": "Pause",
+        "de": "Pause"
+      },
+      "icon": "⏸️",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "toggle",
+          "options": [
+            {
+              "value": "toggle",
+              "label": {
+                "en": "Toggle",
+                "de": "Umschalten"
+              }
+            },
+            {
+              "value": "on",
+              "label": {
+                "en": "Pause",
+                "de": "Anhalten"
+              }
+            },
+            {
+              "value": "off",
+              "label": {
+                "en": "Resume",
+                "de": "Weiterlaufen"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "speed",
+      "label": {
+        "en": "Game speed",
+        "de": "Spieltempo"
+      },
+      "icon": "⏩",
+      "fields": [
+        {
+          "key": "op",
+          "label": {
+            "en": "What",
+            "de": "Was"
+          },
+          "type": "select",
+          "default": "set",
+          "options": [
+            {
+              "value": "set",
+              "label": {
+                "en": "Set speed",
+                "de": "Tempo setzen"
+              }
+            },
+            {
+              "value": "up",
+              "label": {
+                "en": "Faster",
+                "de": "Schneller"
+              }
+            },
+            {
+              "value": "down",
+              "label": {
+                "en": "Slower",
+                "de": "Langsamer"
+              }
+            }
+          ]
+        },
+        {
+          "key": "value",
+          "label": {
+            "en": "Level like the speed buttons in the game (1 = normal)",
+            "de": "Stufe wie die Tempo-Knöpfe im Spiel (1 = normal)"
+          },
+          "type": "number",
+          "default": 1,
+          "showIf": {
+            "op": [
+              "set"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "save",
+      "label": {
+        "en": "Save game",
+        "de": "Spiel speichern"
+      },
+      "icon": "💾",
+      "fields": [
+        {
+          "key": "name",
+          "label": {
+            "en": "Name (empty = “TouchDeck-Quicksave”)",
+            "de": "Name (leer = „TouchDeck-Quicksave“)"
+          },
+          "type": "text",
+          "default": "",
+          "placeholder": {
+            "en": "e.g. Before rebuilding",
+            "de": "z. B. Vor dem Umbau"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alert",
+      "label": {
+        "en": "Camera to alert no.",
+        "de": "Kamera zu Meldung Nr."
+      },
+      "icon": "⚠️",
+      "fields": [
+        {
+          "key": "n",
+          "label": {
+            "en": "Alert number (1 = the most important, up to 8); each tap jumps to the next one affected",
+            "de": "Nummer der Meldung (1 = die wichtigste, bis 8); jedes Tippen springt zum nächsten Betroffenen"
+          },
+          "type": "number",
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "label": {
+        "en": "Camera to history no.",
+        "de": "Kamera zu Verlauf Nr."
+      },
+      "icon": "📜",
+      "fields": [
+        {
+          "key": "n",
+          "label": {
+            "en": "Number in the history (1 = newest, up to 8)",
+            "de": "Nummer im Verlauf (1 = neueste, bis 8)"
+          },
+          "type": "number",
+          "default": 1
+        }
+      ]
+    },
+    {
+      "id": "refresh",
+      "label": {
+        "en": "Fetch state now",
+        "de": "Zustand jetzt abfragen"
+      },
+      "icon": "🔄",
+      "fields": []
+    }
+  ],
+  "triggers": [
+    {
+      "id": "notification",
+      "label": {
+        "en": "New alert in the game",
+        "de": "Neue Meldung im Spiel"
+      },
+      "icon": "⚠️",
+      "fields": [
+        {
+          "key": "Art",
+          "label": {
+            "en": "Kind",
+            "de": "Art"
+          },
+          "type": "select",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "Any",
+                "de": "Egal"
+              }
+            },
+            {
+              "value": "critical",
+              "label": {
+                "en": "Critical (red)",
+                "de": "Kritisch (rot)"
+              }
+            },
+            {
+              "value": "warning",
+              "label": {
+                "en": "Warning (yellow)",
+                "de": "Warnung (gelb)"
+              }
+            },
+            {
+              "value": "success",
+              "label": {
+                "en": "Success (green)",
+                "de": "Erfolg (grün)"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "message",
+      "label": {
+        "en": "New message (research, refugees, story …)",
+        "de": "Neue Nachricht (Forschung, Flüchtlinge, Story …)"
+      },
+      "icon": "✉️",
+      "fields": [
+        {
+          "key": "Art",
+          "label": {
+            "en": "Kind",
+            "de": "Art"
+          },
+          "type": "select",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": {
+                "en": "Any",
+                "de": "Egal"
+              }
+            },
+            {
+              "value": "message",
+              "label": {
+                "en": "Message",
+                "de": "Nachricht"
+              }
+            },
+            {
+              "value": "research",
+              "label": {
+                "en": "Research done",
+                "de": "Forschung fertig"
+              }
+            },
+            {
+              "value": "refugees",
+              "label": {
+                "en": "Refugees",
+                "de": "Flüchtlinge"
+              }
+            },
+            {
+              "value": "explored",
+              "label": {
+                "en": "Location explored",
+                "de": "Ort erkundet"
+              }
+            },
+            {
+              "value": "battle",
+              "label": {
+                "en": "Ship in battle",
+                "de": "Schiff im Kampf"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "research_finished",
+      "label": {
+        "en": "Research finished",
+        "de": "Forschung fertig"
+      },
+      "icon": "🔬",
+      "fields": []
+    },
+    {
+      "id": "power_short",
+      "label": {
+        "en": "Not enough power",
+        "de": "Strom reicht nicht mehr"
+      },
+      "icon": "⚡",
+      "fields": []
+    },
+    {
+      "id": "food_low",
+      "label": {
+        "en": "Food low (under 3 months)",
+        "de": "Nahrung knapp (unter 3 Monaten)"
+      },
+      "icon": "🥫",
+      "fields": []
+    },
+    {
+      "id": "starving",
+      "label": {
+        "en": "Starving (out of food)",
+        "de": "Hunger (Nahrung alle)"
+      },
+      "icon": "🍽️",
+      "fields": []
+    },
+    {
+      "id": "disease",
+      "label": {
+        "en": "Disease breaks out",
+        "de": "Krankheit bricht aus"
+      },
+      "icon": "🦠",
+      "fields": []
+    },
+    {
+      "id": "new_year",
+      "label": {
+        "en": "New year",
+        "de": "Neues Jahr"
+      },
+      "icon": "📅",
+      "fields": []
+    },
+    {
+      "id": "game_over",
+      "label": {
+        "en": "Game over",
+        "de": "Spiel verloren"
+      },
+      "icon": "💀",
+      "fields": []
+    },
+    {
+      "id": "connected",
+      "label": {
+        "en": "Connected to Captain of Industry",
+        "de": "Mit Captain of Industry verbunden"
+      },
+      "icon": "🔌",
+      "fields": []
+    },
+    {
+      "id": "disconnected",
+      "label": {
+        "en": "Connection to Captain of Industry lost",
+        "de": "Verbindung zu Captain of Industry weg"
+      },
+      "icon": "⛔",
+      "fields": []
+    }
+  ],
+  "lives": [
+    {
+      "id": "status",
+      "label": {
+        "en": "Connection and state (on = in game)",
+        "de": "Verbindung und Zustand (an = im Spiel)"
+      }
+    },
+    {
+      "id": "date",
+      "label": {
+        "en": "Year and month",
+        "de": "Jahr und Monat"
+      }
+    },
+    {
+      "id": "speed",
+      "label": {
+        "en": "Speed (bar = level; on = running)",
+        "de": "Tempo (Balken = Stufe; an = läuft)"
+      }
+    },
+    {
+      "id": "power",
+      "label": {
+        "en": "Power: use/generation (bar = load; on = power missing)",
+        "de": "Strom: Verbrauch/Erzeugung (Balken = Auslastung; an = Strom fehlt)"
+      }
+    },
+    {
+      "id": "computing",
+      "label": {
+        "en": "Computing (bar = load; on = not enough)",
+        "de": "Rechenleistung (Balken = Auslastung; an = reicht nicht)"
+      }
+    },
+    {
+      "id": "unity",
+      "label": {
+        "en": "Unity and change per month (on = decreasing)",
+        "de": "Einheit und Änderung pro Monat (an = nimmt ab)"
+      }
+    },
+    {
+      "id": "workers",
+      "label": {
+        "en": "Free or missing workers (on = some missing)",
+        "de": "Freie oder fehlende Arbeiter (an = es fehlen welche)"
+      }
+    },
+    {
+      "id": "population",
+      "label": {
+        "en": "Population, homeless or free homes (on = someone homeless)",
+        "de": "Einwohner, Obdachlose bzw. freie Wohnplätze (an = jemand obdachlos)"
+      }
+    },
+    {
+      "id": "food",
+      "label": {
+        "en": "Food in months (bar up to 12; on = under 3 months or starving)",
+        "de": "Nahrung in Monaten (Balken bis 12; an = unter 3 Monaten oder Hunger)"
+      }
+    },
+    {
+      "id": "health",
+      "label": {
+        "en": "Disease (on = one is going around)",
+        "de": "Krankheit (an = es geht eine um)"
+      }
+    },
+    {
+      "id": "research",
+      "label": {
+        "en": "Research with progress (on = running; also on when the lab has nothing to do)",
+        "de": "Forschung mit Fortschritt (an = läuft; auch an, wenn das Labor nichts zu tun hat)"
+      }
+    },
+    {
+      "id": "alerts",
+      "label": {
+        "en": "Active alerts: count and most important (on = there are some)",
+        "de": "Aktive Meldungen: Anzahl und wichtigste (an = es gibt welche)"
+      }
+    },
+    {
+      "id": "good1",
+      "label": {
+        "en": "Product 1: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 1: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "good2",
+      "label": {
+        "en": "Product 2: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 2: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "good3",
+      "label": {
+        "en": "Product 3: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 3: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "good4",
+      "label": {
+        "en": "Product 4: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 4: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "good5",
+      "label": {
+        "en": "Product 5: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 5: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "good6",
+      "label": {
+        "en": "Product 6: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 6: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "good7",
+      "label": {
+        "en": "Product 7: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 7: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "good8",
+      "label": {
+        "en": "Product 8: pinned products first, then largest stock (bar = storage; on = full or running low)",
+        "de": "Ware 8: angeheftete Waren zuerst, dann größter Bestand (Balken = Lager; an = voll oder wird knapp)"
+      }
+    },
+    {
+      "id": "note1",
+      "label": {
+        "en": "History 1: new alerts and messages (on = from this month)",
+        "de": "Verlauf 1: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "note2",
+      "label": {
+        "en": "History 2: new alerts and messages (on = from this month)",
+        "de": "Verlauf 2: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "note3",
+      "label": {
+        "en": "History 3: new alerts and messages (on = from this month)",
+        "de": "Verlauf 3: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "note4",
+      "label": {
+        "en": "History 4: new alerts and messages (on = from this month)",
+        "de": "Verlauf 4: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "note5",
+      "label": {
+        "en": "History 5: new alerts and messages (on = from this month)",
+        "de": "Verlauf 5: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "note6",
+      "label": {
+        "en": "History 6: new alerts and messages (on = from this month)",
+        "de": "Verlauf 6: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "note7",
+      "label": {
+        "en": "History 7: new alerts and messages (on = from this month)",
+        "de": "Verlauf 7: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "note8",
+      "label": {
+        "en": "History 8: new alerts and messages (on = from this month)",
+        "de": "Verlauf 8: neue Meldungen und Nachrichten (an = aus diesem Monat)"
+      }
+    },
+    {
+      "id": "alert1",
+      "label": {
+        "en": "Alert 1 with number affected (on = warning or critical)",
+        "de": "Meldung 1 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    },
+    {
+      "id": "alert2",
+      "label": {
+        "en": "Alert 2 with number affected (on = warning or critical)",
+        "de": "Meldung 2 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    },
+    {
+      "id": "alert3",
+      "label": {
+        "en": "Alert 3 with number affected (on = warning or critical)",
+        "de": "Meldung 3 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    },
+    {
+      "id": "alert4",
+      "label": {
+        "en": "Alert 4 with number affected (on = warning or critical)",
+        "de": "Meldung 4 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    },
+    {
+      "id": "alert5",
+      "label": {
+        "en": "Alert 5 with number affected (on = warning or critical)",
+        "de": "Meldung 5 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    },
+    {
+      "id": "alert6",
+      "label": {
+        "en": "Alert 6 with number affected (on = warning or critical)",
+        "de": "Meldung 6 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    },
+    {
+      "id": "alert7",
+      "label": {
+        "en": "Alert 7 with number affected (on = warning or critical)",
+        "de": "Meldung 7 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    },
+    {
+      "id": "alert8",
+      "label": {
+        "en": "Alert 8 with number affected (on = warning or critical)",
+        "de": "Meldung 8 mit Anzahl der Betroffenen (an = Warnung oder kritisch)"
+      }
+    }
+  ]
+}

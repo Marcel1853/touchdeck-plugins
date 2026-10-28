@@ -59,6 +59,21 @@
       "author": "Marcel1853",
       "license": "MIT",
       "platforms": ["linux", "windows"]
+    },
+    {
+      "repo": "Marcel1853/touchdeck-plugins",
+      "path": "plugins/captain-of-industry",
+      "name": {
+        "en": "Captain of Industry",
+        "de": "Captain of Industry"
+      },
+      "description": {
+        "en": "Captain of Industry on your buttons: power, computing, unity, missing workers, food, research, pinned products, alerts and history live, red when something is wrong; pause, speed, save, camera to alerts. Needs the included mod “TouchDeck Bridge”. Advanced plugin (Python), with ready-made pages.",
+        "de": "Captain of Industry auf deinen Buttons: Strom, Rechnen, Einheit, fehlende Arbeiter, Nahrung, Forschung, Waren, Meldungen und Verlauf live, rot bei Problemen; Pause, Tempo, Speichern, Kamera zu Meldungen. Braucht den Mod „TouchDeck Bridge“. Erweitertes Plugin (Python), mit fertigen Seiten."
+      },
+      "author": "Marcel1853",
+      "license": "MIT",
+      "platforms": ["linux", "windows"]
     }
   ]
 }

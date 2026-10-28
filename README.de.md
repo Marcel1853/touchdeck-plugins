@@ -19,6 +19,7 @@ für Linux – um neue **Aktionen** und **Auslöser**. Dieses Repo enthält:
 | [`plugins/factorio`](plugins/factorio) | erweitert (Python) | Factorio live auf den Buttons (Forschung, Strom mit Graphen, Evolution …) und Spielsteuerung; braucht den mitgelieferten Mod „TouchDeck Bridge“, fertige Seiten (MIT) |
 | [`plugins/rimworld`](plugins/rimworld) | erweitert (Python) | RimWorld live auf den Buttons (Datum, Tempo, Stimmung, Forschung, Bedrohung …) und Spielsteuerung; braucht den mitgelieferten Mod „TouchDeck Bridge“, fertige Seiten (MIT) |
 | [`plugins/timberborn`](plugins/timberborn) | erweitert (Python) | Timberborn live auf den Buttons (Wetter-Countdown, Biber, Obdachlose, Vorräte, Nachrichtenverlauf, Warnungen …) und Spielsteuerung; braucht den mitgelieferten Mod „TouchDeck Bridge“, auch von einem zweiten PC aus, fertige Seiten (MIT) |
+| [`plugins/captain-of-industry`](plugins/captain-of-industry) | erweitert (Python) | Captain of Industry live auf den Buttons (Strom, Rechenleistung, Einheit, fehlende Arbeiter, Nahrung, Forschung, angeheftete Waren, Meldungen, Verlauf …) und Spielsteuerung; braucht den mitgelieferten Mod „TouchDeck Bridge“, auch von einem zweiten PC aus, fertige Seiten (MIT) |
 
 Installiert werden sie über den Marktplatz in TouchDeck. Jedes Plugin hat seine eigene Lizenz (siehe sein Ordner).
 

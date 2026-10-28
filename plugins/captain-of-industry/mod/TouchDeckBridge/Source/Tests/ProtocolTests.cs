@@ -287,19 +287,22 @@ static class ProtocolTests
         {
             server.PublishState(Proto.State(new Dictionary<string, object>
             {
-                ["inGame"] = true, ["speed"] = paused ? 0f : 3f, ["speedLevel"] = 2, ["paused"] = paused, ["cycle"] = 2,
-                ["day"] = 7, ["hour"] = 6.25, ["daytime"] = true, ["weatherName"] = "Dürre", ["weather"] = "drought",
-                ["hazardIn"] = -1f, ["hazardLeft"] = 1.5f, ["hazardDays"] = 3, ["hazardNextName"] = "Dürre", ["cycleLength"] = 12,
-                ["beavers"] = 12, ["adults"] = 9, ["children"] = 3, ["homeless"] = 1, ["water"] = 40, ["waterDays"] = 0.8,
+                ["inGame"] = true, ["paused"] = paused, ["speed"] = 2, ["speeds"] = new List<object> { 1, 2, 3 }, ["speedLevel"] = 2,
+                ["year"] = 5, ["month"] = 3, ["monthName"] = "März", ["powerCapacity"] = 2500, ["powerDemand"] = 3000, ["powerUsed"] = 2500,
+                ["population"] = 480, ["homeless"] = 3, ["housingFree"] = 0, ["workersFree"] = -2, ["foodMonths"] = 1, ["starving"] = false,
                 ["goods"] = new List<object>
                 {
-                    new Dictionary<string, object> { ["id"] = "Log", ["name"] = "Rohholz", ["stock"] = 50, ["capacity"] = 100, ["perDay"] = 2.5 },
+                    new Dictionary<string, object> { ["id"] = "Coal", ["name"] = "Kohle", ["stock"] = 50, ["capacity"] = 100, ["perMonth"] = 25 },
                 },
-                ["notifications"] = new List<object>
+                ["goodSlots"] = new List<object>
                 {
-                    new Dictionary<string, object> { ["text"] = "Zoë „Ärni“ ist da", ["cycle"] = 2, ["day"] = 7, ["today"] = true },
+                    new Dictionary<string, object> { ["id"] = "Coal", ["name"] = "Kohle", ["stock"] = 50, ["capacity"] = 100, ["perMonth"] = 25, ["pinned"] = true },
                 },
-                ["alerts"] = new List<object> { new Dictionary<string, object> { ["text"] = "Durstig", ["count"] = 4 } },
+                ["history"] = new List<object>
+                {
+                    new Dictionary<string, object> { ["text"] = "Zoë „Ärni“ hat keinen Strom", ["kind"] = "critical", ["count"] = 1, ["year"] = 5, ["month"] = 3, ["today"] = true },
+                },
+                ["alerts"] = new List<object> { new Dictionary<string, object> { ["text"] = "Kein Strom", ["style"] = "critical", ["count"] = 4 } },
             }));
             while (queue.TryTake(out var cmd))
             {
@@ -308,13 +311,13 @@ static class ProtocolTests
                     paused = !paused;
                     cmd.Reply(true, paused ? "paused" : "resumed");
                 }
-                else if (cmd.Name == "notification")
+                else if (cmd.Name == "history")
                 {
                     server.Broadcast(Proto.Event("notification", new Dictionary<string, object>
                     {
-                        ["text"] = "Biber „Kalle“ ist gestorben\nZeile 2", ["cycle"] = 3, ["day"] = 5, ["warning"] = true,
+                        ["text"] = "Lkw „Kalle“ hat keinen Treibstoff\nZeile 2", ["style"] = "critical",
                     }));
-                    cmd.Reply(true, "jumped", new Dictionary<string, object> { ["name"] = "Zoë „Ärni“ ist da" });
+                    cmd.Reply(true, "jumped", new Dictionary<string, object> { ["name"] = "Zoë „Ärni“ hat keinen Strom" });
                 }
                 else cmd.Reply(false, "unknown_command", new Dictionary<string, object> { ["value"] = cmd.Name });
             }
