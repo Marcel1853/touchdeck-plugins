@@ -18,7 +18,7 @@ Spiels aus.
 
 Am einfachsten aus TouchDeck: Plugin-Karte „Captain of Industry“ › „🧩 Mod installieren“.
 
-Von Hand: den Ordner `TouchDeckBridge` (aus `TouchDeckBridge_0.1.0.zip`) in den Mod-Ordner legen:
+Von Hand: den Ordner `TouchDeckBridge` (aus `TouchDeckBridge_0.1.1.zip`) in den Mod-Ordner legen:
 
 - Windows: `%APPDATA%\Captain of Industry\Mods\TouchDeckBridge`
 - Linux (Steam mit Proton):

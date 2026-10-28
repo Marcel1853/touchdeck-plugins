@@ -1,5 +1,10 @@
 # Changelog / Änderungsprotokoll
 
+## 0.1.1 – 2026-10-28
+
+- Preview image (TouchDeck icon) in the game's mod manager; verified for game version 0.8.7d.
+- Vorschaubild (TouchDeck-Icon) in der Mod-Verwaltung des Spiels; für Spielversion 0.8.7d verifiziert.
+
 ## 0.1.0 – 2026-10-28
 
 - First version for Captain of Industry 0.8: TCP server (default 127.0.0.1:34202, settings in
