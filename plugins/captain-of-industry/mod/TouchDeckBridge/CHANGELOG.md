@@ -1,5 +1,21 @@
 # Changelog / Änderungsprotokoll
 
+## 0.1.2 – 2026-10-28
+
+- Fix: the mod found the game's input service only under its interface and then stopped completely –
+  no values, no commands. Now it also searches the game's objects, looks again for missing services on
+  the first game tick, and keeps running if one is missing (only the affected command reports it).
+- Fehler behoben: Der Mod fand den Eingabedienst des Spiels nur unter seiner Schnittstelle und brach
+  dann ganz ab – keine Werte, keine Befehle. Jetzt sucht er auch unter den Objekten des Spiels, sucht
+  fehlende Dienste beim ersten Spieltakt noch einmal und läuft weiter, wenn einer fehlt (nur der
+  betroffene Befehl meldet das).
+- Fix: saving failed with the mod („Failed to create generic serializer for 'GameLink'“). The mod
+  subscribed to the calendar in a way the game writes into the save. Now it checks the date on every
+  game tick instead; nothing of the mod ends up in the save.
+- Fehler behoben: Mit dem Mod schlug das Speichern fehl („Failed to create generic serializer for
+  'GameLink'“). Der Mod hatte sich beim Kalender so angemeldet, dass das Spiel es in den Spielstand
+  schreibt. Jetzt prüft er das Datum in jedem Spieltakt; vom Mod landet nichts im Spielstand.
+
 ## 0.1.1 – 2026-10-28
 
 - Preview image (TouchDeck icon) in the game's mod manager; verified for game version 0.8.7d.

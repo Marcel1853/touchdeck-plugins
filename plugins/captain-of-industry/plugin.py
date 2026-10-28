@@ -24,7 +24,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 PROTO = 1
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 DEFAULT_PORT = 34202
 MAX_LINE = 64 * 1024          # wie Proto.MaxLine im Mod
 VALUE_LIMIT = 1000            # TouchDeck kürzt Werte auf 1000 Zeichen (store.rs, set_variable)
@@ -115,6 +115,7 @@ TEXTS = {
     "no_place": ("„{name}“ hat keinen Ort (mehr)", "“{name}” has no place (any more)"),
     "no_camera": ("Kamera des Spiels nicht gefunden", "Game camera not found"),
     "no_game": ("Kein Spiel geladen (Hauptmenü oder Ladebildschirm)", "No game loaded (main menu or loading screen)"),
+    "unsupported": ("Geht in dieser Spielversion nicht", "Not possible in this game version"),
     "busy": ("Das Spiel speichert gerade, bitte gleich nochmal", "The game is saving, please try again"),
     "bad_value": ("Ungültiger Wert: {value}", "Invalid value: {value}"),
     "unknown_command": ("Der Mod kennt den Befehl „{value}“ nicht (Mod zu alt?)",

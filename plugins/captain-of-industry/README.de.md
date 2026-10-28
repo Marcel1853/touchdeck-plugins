@@ -35,7 +35,7 @@ TouchDeck-Button ──▶ Plugin-Aktion ──▶ Befehl an den Mod ──▶ A
    Plugins › Marktplatz › **Captain of Industry** installieren (oder Plugins › Entwickeln › diesen
    Ordner laden). Zweimal bestätigen, weil es ein erweitertes Plugin ist.
 2. **Mod installieren:** In der Plugin-Karte auf **„🧩 Mod installieren“** klicken – TouchDeck findet
-   den Mod-Ordner selbst (Windows und Linux mit Proton). Von Hand: `TouchDeckBridge_0.1.1.zip` in den
+   den Mod-Ordner selbst (Windows und Linux mit Proton). Von Hand: `TouchDeckBridge_0.1.2.zip` in den
    Ordner `Mods` von Captain of Industry entpacken:
    - Windows: `%APPDATA%\Captain of Industry\Mods\`
    - Linux (Steam mit Proton):

@@ -21,6 +21,13 @@ if pgrep -x factorio >/dev/null 2>&1; then
   exit 1
 fi
 
+# Spiel-Events nur mit AddNonSaveable abonnieren: Add(owner, …) landet im Spielstand, und das Spiel kann
+# den Mod dort nicht speichern – Speichern schlägt dann fehl („Failed to create generic serializer“).
+if grep -rnE '\.Add\(this|\.Add<' Source/TouchDeckBridge/Game; then
+  echo "Spiel-Event mit Add(…) abonniert – AddNonSaveable nehmen, sonst geht Speichern kaputt." >&2
+  exit 1
+fi
+
 dotnet build -nologo -v q -c Release Source/TouchDeckBridge/TouchDeckBridge.csproj -p:CoiRoot="$COI_ROOT"
 rm -rf Source/TouchDeckBridge/obj
 Source/Tests/run.sh

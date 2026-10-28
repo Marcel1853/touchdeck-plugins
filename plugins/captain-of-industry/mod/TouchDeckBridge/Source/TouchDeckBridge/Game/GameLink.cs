@@ -38,24 +38,26 @@ namespace TouchDeckBridge
         public const int LowFoodMonths = 3;
         static readonly Regex Tags = new Regex("<[^>]+>");
 
-        readonly IInputScheduler input;
+        IInputScheduler input;
         readonly IGameLoopEvents loop;
         readonly ISimLoopEvents sim;
         readonly ICalendar calendar;
-        readonly IElectricityManager electricity;
-        readonly IComputingManager computing;
-        readonly UpointsManager unity;
-        readonly IWorkersManager workers;
-        readonly SettlementsManager settlements;
-        readonly PopsHealthManager health;
-        readonly ResearchManager research;
-        readonly IProductsManager products;
-        readonly PinnedProductsManager pinned;
-        readonly INotificationsManager notifications;
-        readonly IMessageNotificationsManager messages;
-        readonly ISaveManager saves;
-        readonly CameraController camera;
-        readonly GameSpeedController speed;
+        IElectricityManager electricity;
+        IComputingManager computing;
+        UpointsManager unity;
+        IWorkersManager workers;
+        SettlementsManager settlements;
+        PopsHealthManager health;
+        ResearchManager research;
+        IProductsManager products;
+        PinnedProductsManager pinned;
+        INotificationsManager notifications;
+        IMessageNotificationsManager messages;
+        ISaveManager saves;
+        CameraController camera;
+        GameSpeedController speed;
+        /** Für das Nachsuchen fehlender Dienste beim ersten Spieltakt. */
+        DependencyResolver resolver;
 
         /** Aus der Simulation (anderer Thread) → im Sync-Schritt abarbeiten. */
         readonly ConcurrentQueue<Action> pending = new ConcurrentQueue<Action>();
@@ -65,6 +67,8 @@ namespace TouchDeckBridge
         readonly Dictionary<string, int> alertCursor = new Dictionary<string, int>();
         bool powerShort, foodLow, starving;
         string lastDisease = "";
+        /** Zuletzt gesehenes Datum, −1 = noch keins. */
+        int lastYear = -1, lastMonth = -1;
 
         public bool Terminated { get; private set; }
 
@@ -86,27 +90,33 @@ namespace TouchDeckBridge
 
         GameLink(DependencyResolver r)
         {
-            input = Need<IInputScheduler>(r);
+            resolver = r;
             loop = Need<IGameLoopEvents>(r);
             sim = Need<ISimLoopEvents>(r);
             calendar = Need<ICalendar>(r);
-            electricity = Get<IElectricityManager>(r);
-            computing = Get<IComputingManager>(r);
-            unity = Get<UpointsManager>(r);
-            workers = Get<IWorkersManager>(r);
-            settlements = Get<SettlementsManager>(r);
-            health = Get<PopsHealthManager>(r);
-            research = Get<ResearchManager>(r);
-            products = Get<IProductsManager>(r);
-            pinned = Get<PinnedProductsManager>(r);
-            notifications = Get<INotificationsManager>(r);
-            messages = Get<IMessageNotificationsManager>(r);
-            saves = Get<ISaveManager>(r);
-            camera = Get<CameraController>(r);
-            speed = Get<GameSpeedController>(r);
+            Resolve(false);
         }
 
-        static T Get<T>(DependencyResolver r) where T : class
+        /** Optionale Dienste holen; was fehlt, bleibt null. Warnung erst beim letzten Versuch. */
+        void Resolve(bool warn)
+        {
+            var r = resolver;
+            input = input ?? Get<IInputScheduler>(r, warn);
+            electricity = electricity ?? Get<IElectricityManager>(r, warn);
+            computing = computing ?? Get<IComputingManager>(r, warn);
+            unity = unity ?? Get<UpointsManager>(r, warn);
+            workers = workers ?? Get<IWorkersManager>(r, warn);
+            settlements = settlements ?? Get<SettlementsManager>(r, warn);
+            health = health ?? Get<PopsHealthManager>(r, warn);
+            research = research ?? Get<ResearchManager>(r, warn);
+            products = products ?? Get<IProductsManager>(r, warn);
+            pinned = pinned ?? Get<PinnedProductsManager>(r, warn);
+            saves = saves ?? Get<ISaveManager>(r, warn);
+            camera = camera ?? Get<CameraController>(r, warn);
+            speed = speed ?? Get<GameSpeedController>(r, warn);
+        }
+
+        static T Get<T>(DependencyResolver r, bool warn = true) where T : class
         {
             try
             {
@@ -114,7 +124,14 @@ namespace TouchDeckBridge
                 if (o.HasValue) return o.ValueOrNull;
             }
             catch (Exception) { /* gibt es in dieser Spielversion nicht */ }
-            Bridge.Warn("service not found: " + typeof(T).Name);
+            try
+            {
+                // Manche Dienste sind nur unter ihrer Klasse eingetragen, nicht unter der Schnittstelle.
+                foreach (var o in r.AllResolvedInstances)
+                    if (o is T t) return t;
+            }
+            catch (Exception) { }
+            if (warn) Bridge.Warn("service not found: " + typeof(T).Name);
             return null;
         }
 
@@ -133,10 +150,10 @@ namespace TouchDeckBridge
 
         void Subscribe()
         {
+            notifications = Get<INotificationsManager>(resolver);
+            messages = Get<IMessageNotificationsManager>(resolver);
             loop.SyncUpdate.AddNonSaveable(this, OnSync);
             loop.Terminate.AddNonSaveable(this, OnTerminate);
-            calendar.NewMonth.Add(this, OnNewMonth);
-            calendar.NewYear.Add(this, OnNewYear);
             if (notifications != null) notifications.NotificationAdded += OnNotificationAdded;
             if (messages != null) messages.OnNotificationAdded += OnMessageAdded;
         }
@@ -159,6 +176,11 @@ namespace TouchDeckBridge
         void OnSync(GameTime time)
         {
             if (Terminated) return;
+            if (resolver != null)
+            {
+                Resolve(true);
+                resolver = null;
+            }
             for (var i = 0; i < 64 && pending.TryDequeue(out var a); i++)
             {
                 try
@@ -170,13 +192,22 @@ namespace TouchDeckBridge
                     Bridge.Warn("event failed: " + e.Message);
                 }
             }
+            CheckDate();
             if (Bridge.StateDue()) Bridge.Publish(Collect);
         }
 
-        void OnNewMonth() => pending.Enqueue(() => Bridge.RequestState());
-
-        void OnNewYear() => pending.Enqueue(() =>
-            Bridge.Emit("new_year", new Dictionary<string, object> { ["year"] = calendar.CurrentDate.Year }));
+        /** Neuer Monat oder neues Jahr. Nicht über calendar.NewMonth/NewYear: Diese Anmeldungen landen im
+         *  Spielstand, und das Spiel kann den Mod dort nicht speichern (Speichern schlägt dann fehl). */
+        void CheckDate()
+        {
+            var d = calendar.CurrentDate;
+            if (d.Year == lastYear && d.Month == lastMonth) return;
+            var newYear = lastYear >= 0 && d.Year > lastYear;
+            lastYear = d.Year;
+            lastMonth = d.Month;
+            Bridge.RequestState();
+            if (newYear) Bridge.Emit("new_year", new Dictionary<string, object> { ["year"] = d.Year });
+        }
 
         void OnNotificationAdded(INotification n) => pending.Enqueue(() =>
         {
@@ -510,7 +541,12 @@ namespace TouchDeckBridge
                     if (want) speed.RequestPause();
                     else speed.RequestResume();
                 }
-                else input.ScheduleInputCmd(new SetSimPauseStateCmd(want));
+                else if (input != null) input.ScheduleInputCmd(new SetSimPauseStateCmd(want));
+                else
+                {
+                    cmd.Reply(false, "unsupported");
+                    return;
+                }
             }
             Bridge.RequestState();
             cmd.Reply(true, want ? "paused" : "resumed");
@@ -534,6 +570,11 @@ namespace TouchDeckBridge
             {
                 speed.SetSpeed(factor);
                 if (speed.IsPaused) speed.RequestResume();
+            }
+            else if (input == null)
+            {
+                cmd.Reply(false, "unsupported");
+                return;
             }
             else
             {
