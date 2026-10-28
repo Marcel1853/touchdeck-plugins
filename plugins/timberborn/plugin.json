@@ -1,7 +1,7 @@
 {
   "id": "timberborn",
   "name": "Timberborn",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Marcel1853",
   "license": "MIT",
   "platforms": [
@@ -18,6 +18,28 @@
       "plugin.py"
     ]
   },
+  "mods": [
+    {
+      "name": "TouchDeck Bridge",
+      "file": "TouchDeckBridge_*.zip",
+      "unpack": true,
+      "keep": [
+        "TouchDeckBridge/settings.json"
+      ],
+      "targets": {
+        "windows": [
+          "{documents}/Timberborn/Mods"
+        ],
+        "proton": [
+          "{proton:1062090}/Documents/Timberborn/Mods"
+        ]
+      },
+      "hint": {
+        "en": "In Timberborn, switch on “TouchDeck Bridge” in the mod manager when starting the game.",
+        "de": "In Timberborn beim Spielstart im Mod-Manager „TouchDeck Bridge“ einschalten."
+      }
+    }
+  ],
   "settings": [
     {
       "key": "host",

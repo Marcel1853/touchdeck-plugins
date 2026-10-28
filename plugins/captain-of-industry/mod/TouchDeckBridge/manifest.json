@@ -1,0 +1,14 @@
+{
+	"id": "TouchDeckBridge",
+	"version": "0.1.0",
+	"display_name": "TouchDeck Bridge",
+	"description_short": "Connects Captain of Industry to TouchDeck: live values, alerts and messages on your buttons; pause, speed, save, camera to alerts. Local TCP connection only.",
+	"authors": "Marcel1853",
+	"min_game_version": "0.8",
+	"max_verified_game_version": "0.8.7",
+	"links": ["https://github.com/Marcel1853/touchdeck-plugins/tree/main/plugins/captain-of-industry"],
+	"primary_dlls": ["TouchDeckBridge.dll"],
+	"non_locking_dll_load": true,
+	"can_add_to_saved_game": true,
+	"can_remove_from_saved_game": true
+}

@@ -1,7 +1,7 @@
 {
   "id": "rimworld",
   "name": "RimWorld",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Marcel1853",
   "license": "MIT",
   "platforms": [
@@ -18,6 +18,25 @@
       "plugin.py"
     ]
   },
+  "mods": [
+    {
+      "name": "TouchDeck Bridge",
+      "file": "TouchDeckBridge_*.zip",
+      "unpack": true,
+      "targets": {
+        "linux": [
+          "{steamGame:294100}/Mods"
+        ],
+        "windows": [
+          "{steamGame:294100}/Mods"
+        ]
+      },
+      "hint": {
+        "en": "In RimWorld, switch on “TouchDeck Bridge” under Mods (after Harmony) and restart.",
+        "de": "In RimWorld unter „Mods“ „TouchDeck Bridge“ einschalten (nach Harmony) und neu starten."
+      }
+    }
+  ],
   "settings": [
     {
       "key": "host",

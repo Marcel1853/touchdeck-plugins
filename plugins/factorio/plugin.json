@@ -1,7 +1,7 @@
 {
   "id": "factorio",
   "name": "Factorio",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "author": "Marcel1853",
   "license": "MIT",
   "platforms": [
@@ -18,6 +18,31 @@
       "plugin.py"
     ]
   },
+  "mods": [
+    {
+      "name": "TouchDeck Bridge",
+      "file": "touchdeck-bridge_*.zip",
+      "conflicts": [
+        "touchdeck-bridge"
+      ],
+      "targets": {
+        "linux": [
+          "{home}/.factorio/mods",
+          "{home}/.var/app/com.valvesoftware.Steam/.factorio/mods"
+        ],
+        "windows": [
+          "{appdata}/Factorio/mods"
+        ],
+        "proton": [
+          "{proton:427520}/AppData/Roaming/Factorio/mods"
+        ]
+      },
+      "hint": {
+        "en": "Restart Factorio – new mods are switched on automatically.",
+        "de": "Factorio neu starten – neue Mods sind automatisch an."
+      }
+    }
+  ],
   "settings": [
     {
       "key": "folder",

@@ -22,7 +22,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 PROTO = 1
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 MAX_LINE = 64 * 1024          # wie Proto.MaxLine im Mod
 VALUE_LIMIT = 1000            # TouchDeck kürzt Werte auf 1000 Zeichen (store.rs, set_variable)
 DEAD_AFTER = float(os.environ.get("RIMWORLD_DEAD_AFTER") or 12.0)   # Herzschlag alle 5 s; so lange ohne Daten = tot

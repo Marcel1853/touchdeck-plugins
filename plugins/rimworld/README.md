@@ -29,6 +29,8 @@ TouchDeck button ──▶ plugin action ──▶ command to the mod ──▶ 
    `mod/TouchDeckBridge` (or the unpacked `TouchDeckBridge_0.2.0.zip`) into
    `…/steamapps/common/RimWorld/Mods/`. In RimWorld, enable "TouchDeck Bridge" under **Mods**
    after Harmony and restart.
+   **Easier:** do step 2 first, then click “🧩 Install mod” in the plugin card – TouchDeck finds
+   the mod folder itself (Linux, Windows and Proton).
 2. **Load the plugin:** turn on advanced mode in TouchDeck (Plugins › Advanced), then install
    **RimWorld** under Plugins › Marketplace (or load this folder under Plugins › Develop).
    Confirm twice, because it is an advanced plugin.

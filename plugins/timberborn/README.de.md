@@ -37,6 +37,8 @@ TouchDeck-Button ──▶ Plugin-Aktion ──▶ Befehl an den Mod ──▶ A
    (Steam) ist das
    `~/.local/share/Steam/steamapps/compatdata/1062090/pfx/drive_c/users/steamuser/Documents/Timberborn/Mods/`.
    Timberborn starten und im Mod-Manager „TouchDeck Bridge“ einschalten.
+   **Einfacher:** erst Schritt 2, dann in der Plugin-Karte auf „🧩 Mod installieren“ klicken –
+   TouchDeck findet den Mod-Ordner selbst (Linux, Windows und Proton).
 2. **Plugin laden:** In TouchDeck den erweiterten Modus einschalten (Plugins › Erweitert), dann
    Plugins › Marktplatz › **Timberborn** installieren (oder Plugins › Entwickeln › diesen Ordner
    laden). Zweimal bestätigen, weil es ein erweitertes Plugin ist.

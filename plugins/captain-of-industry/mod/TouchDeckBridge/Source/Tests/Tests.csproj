@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Tests der spielunabhängigen Teile. Übersetzt gegen die net472-Referenzen von Mono (kein Download),
+       ausgeführt mit mono. Aufruf: ./run.sh -->
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+    <FrameworkPathOverride Condition="'$(FrameworkPathOverride)' == ''">/usr/lib/mono/4.7.2-api</FrameworkPathOverride>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ProtocolTests.cs" />
+    <Compile Include="../TouchDeckBridge/Protocol/*.cs" />
+  </ItemGroup>
+</Project>
