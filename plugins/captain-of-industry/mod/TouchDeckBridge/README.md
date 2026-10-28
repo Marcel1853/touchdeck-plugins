@@ -17,7 +17,7 @@ alerts) run on the game's main thread.
 
 Easiest from TouchDeck: plugin card "Captain of Industry" › "🧩 Install mod".
 
-By hand: put the folder `TouchDeckBridge` (from `TouchDeckBridge_0.1.2.zip`) into the mods folder:
+By hand: put the folder `TouchDeckBridge` (from `TouchDeckBridge_0.1.3.zip`) into the mods folder:
 
 - Windows: `%APPDATA%\Captain of Industry\Mods\TouchDeckBridge`
 - Linux (Steam with Proton):

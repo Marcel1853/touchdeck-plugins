@@ -1,6 +1,6 @@
 {
 	"id": "TouchDeckBridge",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"display_name": "TouchDeck Bridge",
 	"description_short": "Connects Captain of Industry to TouchDeck: live values, alerts and messages on your buttons; pause, speed, save, camera to alerts. Local TCP connection only.",
 	"authors": "Marcel1853",

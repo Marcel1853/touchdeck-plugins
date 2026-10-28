@@ -110,8 +110,21 @@ def button(row, col, title, actions=None, *, icon="", color=COLOR, span=1, rows=
     return b
 
 
-def plugin_live(lid, bar=False):
-    return {"source": f"{PLUGIN}:{lid}", "command": "", "variable": "", "bar": bar}
+def plugin_live(lid, bar=False, graph=None):
+    live = {"source": f"{PLUGIN}:{lid}", "command": "", "variable": "", "bar": bar}
+    if graph:
+        live.update(graph)
+    return live
+
+
+# Graphen (store.rs, Live: graph, graphPoints, graphInterval, graphMin/Max, graphColor, graphAlign).
+# Strom und Rechenleistung: Bedarf und Kapazität als zwei Linien, letzte 10 Minuten
+GRAPH_POWER = {"graph": "line", "graphPoints": 120, "graphInterval": 5, "graphMin": 0, "graphAlign": "left"}
+# Einheit: Fläche, letzte Stunde
+GRAPH_UNITY = {"graph": "area", "graphPoints": 120, "graphInterval": 30, "graphMin": 0, "graphColor": "#f1c40f",
+               "graphAlign": "left"}
+# Waren: Bestand, letzte halbe Stunde
+GRAPH_GOOD = {"graph": "line", "graphPoints": 60, "graphInterval": 30, "graphMin": 0, "graphAlign": "left"}
 
 
 def value_live(name):
@@ -188,22 +201,24 @@ def save_button(row, col):
                   hold=[coi("save", name=save_name())])
 
 
-def live_button(row, col, lid, icon, *, span=2, color=COLOR_LIVE, bar=False, actions=None, font=12, icon_on=None):
-    """Live-Anzeige, die rot wird, sobald etwas nicht stimmt („an“ im Plugin)."""
-    return button(row, col, "", actions or [], icon=icon, icon_on=icon_on, span=span, live=plugin_live(lid, bar=bar),
+def live_button(row, col, lid, icon, *, span=2, color=COLOR_LIVE, bar=False, actions=None, font=12, icon_on=None,
+                graph=None):
+    """Live-Anzeige, die rot wird, sobald etwas nicht stimmt („an“ im Plugin). graph: Verlauf statt Balken."""
+    live = plugin_live(lid, bar=bar and not graph, graph=graph)
+    return button(row, col, "", actions or [], icon=icon, icon_on=icon_on, span=span, live=live,
                   color=color, color_on=COLOR_DANGER, font=font)
 
 
-def power_button(row, col, span=2):
-    return live_button(row, col, "power", "⚡", span=span, color=COLOR_POWER, bar=True, font=11)
+def power_button(row, col, span=2, graph=None):
+    return live_button(row, col, "power", "⚡", span=span, color=COLOR_POWER, bar=True, font=11, graph=graph)
 
 
-def computing_button(row, col, span=2):
-    return live_button(row, col, "computing", "🖥️", span=span, color=COLOR_POWER, bar=True, font=11)
+def computing_button(row, col, span=2, graph=None):
+    return live_button(row, col, "computing", "🖥️", span=span, color=COLOR_POWER, bar=True, font=11, graph=graph)
 
 
-def unity_button(row, col, span=2):
-    return live_button(row, col, "unity", "🤝", span=span, color=COLOR_POWER, bar=True, font=11)
+def unity_button(row, col, span=2, graph=None):
+    return live_button(row, col, "unity", "🤝", span=span, color=COLOR_POWER, bar=True, font=11, graph=graph)
 
 
 def workers_button(row, col, span=1):
@@ -238,8 +253,8 @@ def alert_button(row, col, n, span=2):
                   color=COLOR, color_on=COLOR_DANGER, font=11)
 
 
-def good_button(row, col, n):
-    return button(row, col, "", [], icon="📦", live=plugin_live(f"good{n}", bar=True), color=COLOR_LIVE,
+def good_button(row, col, n, graph=None):
+    return button(row, col, "", [], icon="📦", live=plugin_live(f"good{n}", bar=not graph, graph=graph), color=COLOR_LIVE,
                   color_on=COLOR_NEW, font=10)
 
 
@@ -307,10 +322,10 @@ def history_page():
 def power_page():
     return page(PAGES["strom"], sub("Strom", "Power"), [
         back(),
-        power_button(0, 1, span=3),
+        power_button(0, 1, span=3, graph=GRAPH_POWER),
         button(0, 4, L("Bedarf\n{COIStromBedarf} kW", "Demand\n{COIStromBedarf} kW"), [], icon="🔌", span=2, font=12),
-        computing_button(1, 0, span=3),
-        unity_button(1, 3, span=3),
+        computing_button(1, 0, span=3, graph=GRAPH_POWER),
+        unity_button(1, 3, span=3, graph=GRAPH_UNITY),
         research_button(2, 0, span=3),
         button(2, 3, L("Einheit pro Monat\n{COIEinheitMonat}", "Unity per month\n{COIEinheitMonat}"), [], icon="📈",
                span=3, font=12),
@@ -345,9 +360,9 @@ def goods_page():
         hint(0, 3, L("📌 = im Spiel angeheftet; danach die Waren mit dem größten Bestand",
                      "📌 = pinned in the game; then the products with the largest stock"), span=3),
     ]
-    # Acht Waren mit Balken (Bestand/Lagerplatz) und Trend pro Monat; „an“ = Lager voll oder wird knapp
+    # Acht Waren mit Verlauf des Bestands und Trend pro Monat; „an“ = Lager voll oder wird knapp
     for i in range(GOODS):
-        buttons.append(good_button(1 + i // 6, i % 6, i + 1))
+        buttons.append(good_button(1 + i // 6, i % 6, i + 1, graph=GRAPH_GOOD))
     buttons += [
         hint(2, 2, L("Alle Waren als Wert:\nCOIWare_<Id>, z. B. COIWare_IronOre",
                      "All products as value:\nCOIWare_<Id>, e.g. COIWare_IronOre"), span=4),

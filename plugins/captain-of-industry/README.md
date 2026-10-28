@@ -34,7 +34,7 @@ TouchDeck button ──▶ plugin action ──▶ command to the mod ──▶ 
    Plugins › Marketplace › **Captain of Industry** (or Plugins › Develop › load this folder).
    Confirm twice because it is an advanced plugin.
 2. **Install the mod:** Click **"🧩 Install mod"** in the plugin card – TouchDeck finds the mod
-   folder itself (Windows and Linux with Proton). By hand: unpack `TouchDeckBridge_0.1.2.zip` into
+   folder itself (Windows and Linux with Proton). By hand: unpack `TouchDeckBridge_0.1.3.zip` into
    the `Mods` folder of Captain of Industry:
    - Windows: `%APPDATA%\Captain of Industry\Mods\`
    - Linux (Steam with Proton):
@@ -93,9 +93,9 @@ show in **red**.
 | Main page | status, year and month, speed, pause, save, power with load bar, workers, food, alerts, unity, research, newest history entry |
 | Alerts | up to 8 active alerts, critical first, with the number affected |
 | History | the last 8 new alerts and messages (research done, refugees …), newest first |
-| Power | power, demand, computing, unity with change per month, research |
+| Power | power and computing as graphs (demand and capacity as two lines, last 10 minutes), unity as graph (last hour) with change per month, demand, research |
 | Population | population, homeless, free homes, workers, food, starving, disease, the two most important alerts |
-| Products | 8 products with fill bar and trend per month: first the ones pinned in the game (📌), then the largest stock |
+| Products | 8 products with a graph of the stock (last 30 minutes) and trend per month: first the ones pinned in the game (📌), then the largest stock |
 | Game | connection, speed 1–3, slower/faster, pause on/resume, "hold = short pause", quick save, save with year and month |
 
 ### What turns red

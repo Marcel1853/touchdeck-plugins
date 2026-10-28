@@ -143,9 +143,11 @@ class PluginTests(unittest.TestCase):
         L = self.pl.lives
         self.assertEqual(L["date"], {"text": "Jahr 3 · Juli", "value": None, "on": False})
         self.assertEqual(L["speed"], {"text": "Tempo 1 (×1)", "value": 25, "on": True})
-        self.assertEqual(L["power"], {"text": "Strom 9,4 MW / 12 MW\n2,6 MW frei", "value": 78, "on": False})
-        self.assertEqual(L["computing"], {"text": "Rechnen 52 TF / 48 TF", "value": 100, "on": True}, "Rechenleistung reicht nicht → rot")
-        self.assertEqual(L["unity"], {"text": "Einheit 152\n−2,5/Monat", "value": 38, "on": True}, "Einheit nimmt ab → rot")
+        self.assertEqual(L["power"], {"text": "Strom 9,4 MW / 12 MW\n2,6 MW frei", "value": 78, "on": False,
+                                       "number": 9400, "series": {"Bedarf": 9400, "Kapazität": 12000}})
+        self.assertEqual(L["computing"], {"text": "Rechnen 52 TF / 48 TF", "value": 100, "on": True,
+                                           "number": 52, "series": {"Bedarf": 52, "Kapazität": 48}}, "Rechenleistung reicht nicht → rot")
+        self.assertEqual(L["unity"], {"text": "Einheit 152\n−2,5/Monat", "value": 38, "on": True, "number": 152}, "Einheit nimmt ab → rot")
         self.assertEqual(L["workers"], {"text": "6 Arbeiter fehlen", "value": None, "on": True})
         self.assertEqual(L["population"], {"text": "1.240 Einwohner (+12)\n35 Wohnplätze frei", "value": None, "on": False})
         self.assertEqual(L["food"], {"text": "Nahrung für 2 Monate", "value": 17, "on": True}, "Nahrung knapp → rot")
@@ -183,9 +185,12 @@ class PluginTests(unittest.TestCase):
         v, L = self.pl.values, self.pl.lives
         self.assertEqual(v["COIWare_IronOre"], "1800")
         self.assertNotIn("COIWare_Food-Bread", v, "ungültige Kennung wird übergangen")
-        self.assertEqual(L["good1"], {"text": "📌 Diesel\n90/600 · −120/Monat", "value": 15, "on": True}, "wird knapp → an")
-        self.assertEqual(L["good2"], {"text": "📌 Bauteile\n400/400", "value": 100, "on": True}, "Lager voll → an")
-        self.assertEqual(L["good3"], {"text": "Eisenerz\n1.800/2.400 · +340/Monat", "value": 75, "on": False})
+        self.assertEqual(L["good1"], {"text": "📌 Diesel\n90/600 · −120/Monat", "value": 15, "on": True,
+                                       "number": 90, "series": {"Diesel": 90}}, "wird knapp → an")
+        self.assertEqual(L["good2"], {"text": "📌 Bauteile\n400/400", "value": 100, "on": True,
+                                       "number": 400, "series": {"Bauteile": 400}}, "Lager voll → an")
+        self.assertEqual(L["good3"], {"text": "Eisenerz\n1.800/2.400 · +340/Monat", "value": 75, "on": False,
+                                       "number": 1800, "series": {"Eisenerz": 1800}})
         self.assertEqual(L["good4"]["text"], "–")
         self.mod.state["goods"] = [g for g in self.mod.state["goods"] if g["id"] != "IronOre"]
         self.mod.push_state()

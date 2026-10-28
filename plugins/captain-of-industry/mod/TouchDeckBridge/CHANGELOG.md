@@ -1,5 +1,12 @@
 # Changelog / Änderungsprotokoll
 
+## 0.1.3 – 2026-10-28
+
+- Unity is shown correctly (80 instead of the raw value 81920); unity and other virtual products no
+  longer appear in the product list.
+- Einheit wird richtig angezeigt (80 statt des Rohwerts 81920); Einheit und andere virtuelle Waren
+  stehen nicht mehr in der Warenliste.
+
 ## 0.1.2 – 2026-10-28
 
 - Fix: the mod found the game's input service only under its interface and then stopped completely –

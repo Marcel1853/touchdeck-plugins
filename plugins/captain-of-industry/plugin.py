@@ -24,7 +24,7 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 
 PROTO = 1
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 DEFAULT_PORT = 34202
 MAX_LINE = 64 * 1024          # wie Proto.MaxLine im Mod
 VALUE_LIMIT = 1000            # TouchDeck kürzt Werte auf 1000 Zeichen (store.rs, set_variable)
@@ -74,6 +74,8 @@ TEXTS = {
     "power_short": ("Strom fehlt: {missing}", "Power missing: {missing}"),
     "power_free": ("{free} frei", "{free} spare"),
     "computing": ("Rechnen {used} / {cap}", "Computing {used} / {cap}"),
+    "series_demand": ("Bedarf", "Demand"),
+    "series_capacity": ("Kapazität", "Capacity"),
     "unity": ("Einheit {n}", "Unity {n}"),
     "per_month": ("{n}/Monat", "{n}/month"),
     "workers_free": ("{n} Arbeiter frei", "{n} workers free"),
@@ -328,9 +330,14 @@ class Plugin:
             self.values[name] = value
             send({"type": "setValue", "name": name, "value": value})
 
-    def set_live(self, lid, text, value=None, on=False):
-        """value: 0–100 für den Balken (None = kein Balken)."""
+    def set_live(self, lid, text, value=None, on=False, number=None, series=None):
+        """value: 0–100 für den Balken (None = kein Balken). number: Zahl für den Graphen (ungedeckelt).
+        series: Name → Zahl für mehrere Linien in einem Graphen."""
         live = {"text": str(text), "value": value, "on": bool(on)}
+        if number is not None:
+            live["number"] = number
+        if series is not None:
+            live["series"] = series
         if self.lives.get(lid) != live:
             self.lives[lid] = live
             send({"type": "call", "requestId": f"live_{lid}_{time.monotonic_ns()}", "op": "live.set",
@@ -514,13 +521,15 @@ class Plugin:
             short = demand > cap
             second = t("power_short", missing=fmt_power(demand - cap)) if short else t("power_free", free=fmt_power(cap - demand))
             bar = int(round(100 * min(1.0, demand / cap))) if cap > 0 else (100 if demand > 0 else 0)
-            self.set_live("power", f"{t('power', used=fmt_power(used), cap=fmt_power(cap))}\n{second}", bar, short)
+            self.set_live("power", f"{t('power', used=fmt_power(used), cap=fmt_power(cap))}\n{second}", bar, short,
+                          used, {t("series_demand"): demand, t("series_capacity"): cap})
         cap, demand = num(st.get("computingCapacity")), num(st.get("computingDemand"))
         if cap is not None and demand is not None:
             self.set_value("COIRechnen", str(int(demand)))
             self.set_value("COIRechnenKapazitaet", str(int(cap)))
             bar = int(round(100 * min(1.0, demand / cap))) if cap > 0 else None
-            self.set_live("computing", t("computing", used=fmt_compute(demand), cap=fmt_compute(cap)), bar, demand > cap)
+            self.set_live("computing", t("computing", used=fmt_compute(demand), cap=fmt_compute(cap)), bar, demand > cap,
+                          demand, {t("series_demand"): demand, t("series_capacity"): cap})
         unity, per_month = num(st.get("unity")), num(st.get("unityMonth"))
         if unity is not None:
             self.set_value("COIEinheit", str(int(unity)))
@@ -528,7 +537,7 @@ class Plugin:
             cap = num(st.get("unityCap"))
             bar = int(round(100 * min(1.0, unity / cap))) if cap else None
             trend = t("per_month", n=fmt_signed(per_month or 0))
-            self.set_live("unity", f"{t('unity', n=fmt_int(unity))}\n{trend}", bar, (per_month or 0) < 0)
+            self.set_live("unity", f"{t('unity', n=fmt_int(unity))}\n{trend}", bar, (per_month or 0) < 0, unity)
 
     def apply_people(self, st):
         free = num(st.get("workersFree"))
@@ -604,9 +613,11 @@ class Plugin:
             cap_text = f"/{fmt_int(cap)}" if cap else ""
             bar = max(0, min(100, int(round(100 * stock / cap)))) if cap else None
             name = ("📌 " if g.get("pinned") else "") + str(g.get("name") or g.get("id") or "")
+            # Graph-Reihe mit Warennamen: wechselt die Ware auf dem Platz, beginnt eine neue Linie
             # „an“ = Lager voll oder wird leer (Verbrauch größer als Herstellung und kaum noch etwas da)
             on = (cap > 0 and stock >= cap) or (per_month < 0 and stock < -per_month * 2)
-            self.set_live(f"good{i}", t("good_line", name=name, stock=fmt_int(stock), cap=cap_text, trend=trend), bar, on)
+            self.set_live(f"good{i}", t("good_line", name=name, stock=fmt_int(stock), cap=cap_text, trend=trend), bar, on,
+                          stock, {str(g.get("name") or g.get("id") or "")[:40]: stock})
 
     def apply_alerts(self, st):
         alerts = [a for a in (st.get("alerts") if isinstance(st.get("alerts"), list) else []) if isinstance(a, dict)]

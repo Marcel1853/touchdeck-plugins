@@ -336,7 +336,8 @@ namespace TouchDeckBridge
             }
             if (unity != null)
             {
-                st["unity"] = unity.Quantity.Value;
+                // Einheit liegt als Warenmenge im Rohformat vor (80 Einheit = 81920); umrechnen wie das Spiel.
+                st["unity"] = Math.Round(unity.Quantity.Upoints().Value.ToFloat(), 1);
                 st["unityCap"] = unity.TotalUnityCap.Value.ToFloat();
                 st["unityMonth"] = Math.Round(unity.DiffForLastMonth.Value.ToFloat(), 1);
             }
@@ -396,7 +397,7 @@ namespace TouchDeckBridge
             var stats = new List<ProductStats>();
             foreach (var s in products.ProductStats)
             {
-                if (s?.Product == null) continue;
+                if (s?.Product == null || IsVirtual(s.Product)) continue;
                 if (s.StoredQuantityTotal.Value <= 0 && s.StorageCapacity.Value <= 0) continue;
                 stats.Add(s);
                 all.Add(Good(s, false));
@@ -409,7 +410,7 @@ namespace TouchDeckBridge
                 {
                     if (slots.Count >= GoodSlots) break;
                     var s = products.GetStatsFor(p);
-                    if (s == null) continue;
+                    if (s == null || IsVirtual(s.Product)) continue;
                     used.Add(p.Id.Value);
                     slots.Add(Good(s, true));
                 }
@@ -423,6 +424,10 @@ namespace TouchDeckBridge
             st["goods"] = all;
             st["goodSlots"] = slots;
         }
+
+        /** Keine echten Waren: Einheit, Wartung … (stehen als Waren in der Statistik, aber nicht im Lager). */
+        static bool IsVirtual(ProductProto p) =>
+            p is VirtualProductProto || p.Id.Value.StartsWith("Virtual_", StringComparison.Ordinal);
 
         static Dictionary<string, object> Good(ProductStats s, bool pin) => new Dictionary<string, object>
         {

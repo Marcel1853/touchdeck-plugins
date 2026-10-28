@@ -54,7 +54,8 @@ class RealServerTests(unittest.TestCase):
             self.assertEqual(pl.values["COITempo"], "2")
             self.assertEqual(pl.values["COIWare_Coal"], "50")
             self.assertEqual(pl.values["COIVerlauf1"], "Zoë „Ärni“ hat keinen Strom (Jahr 5)")
-            self.assertEqual(pl.lives["power"], {"text": "Strom 2,5 MW / 2,5 MW\nStrom fehlt: 500 kW", "value": 100, "on": True})
+            self.assertEqual(pl.lives["power"], {"text": "Strom 2,5 MW / 2,5 MW\nStrom fehlt: 500 kW", "value": 100, "on": True,
+                                               "number": 2500, "series": {"Bedarf": 3000, "Kapazität": 2500}})
             self.assertEqual(pl.lives["workers"]["text"], "2 Arbeiter fehlen")
             self.assertEqual(pl.lives["alert1"], {"text": "Kein Strom\n4×", "value": None, "on": True})
             self.assertEqual(pl.lives["good1"]["text"], "📌 Kohle\n50/100 · +25/Monat")

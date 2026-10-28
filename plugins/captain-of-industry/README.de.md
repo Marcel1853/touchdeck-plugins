@@ -35,7 +35,7 @@ TouchDeck-Button ──▶ Plugin-Aktion ──▶ Befehl an den Mod ──▶ A
    Plugins › Marktplatz › **Captain of Industry** installieren (oder Plugins › Entwickeln › diesen
    Ordner laden). Zweimal bestätigen, weil es ein erweitertes Plugin ist.
 2. **Mod installieren:** In der Plugin-Karte auf **„🧩 Mod installieren“** klicken – TouchDeck findet
-   den Mod-Ordner selbst (Windows und Linux mit Proton). Von Hand: `TouchDeckBridge_0.1.2.zip` in den
+   den Mod-Ordner selbst (Windows und Linux mit Proton). Von Hand: `TouchDeckBridge_0.1.3.zip` in den
    Ordner `Mods` von Captain of Industry entpacken:
    - Windows: `%APPDATA%\Captain of Industry\Mods\`
    - Linux (Steam mit Proton):
@@ -95,9 +95,9 @@ zeigen die Buttons **rot** an.
 | Hauptseite | Status, Jahr und Monat, Tempo, Pause, Speichern, Strom mit Auslastungsbalken, Arbeiter, Nahrung, Meldungen, Einheit, Forschung, neuester Verlaufseintrag |
 | Meldungen | bis zu 8 aktive Meldungen, kritische zuerst, mit Anzahl der Betroffenen |
 | Verlauf | die letzten 8 neuen Meldungen und Nachrichten (Forschung fertig, Flüchtlinge …), neueste zuerst |
-| Strom | Strom, Bedarf, Rechenleistung, Einheit mit Änderung pro Monat, Forschung |
+| Strom | Strom und Rechenleistung als Graph (Bedarf und Kapazität als zwei Linien, letzte 10 Minuten), Einheit als Graph (letzte Stunde) mit Änderung pro Monat, Bedarf, Forschung |
 | Bevölkerung | Einwohner, Obdachlose, freie Wohnplätze, Arbeiter, Nahrung, Hunger, Krankheit, die zwei wichtigsten Meldungen |
-| Waren | 8 Waren mit Füllbalken und Trend pro Monat: zuerst die im Spiel angehefteten (📌), dann die mit dem größten Bestand |
+| Waren | 8 Waren mit Verlauf des Bestands als Graph (letzte halbe Stunde) und Trend pro Monat: zuerst die im Spiel angehefteten (📌), dann die mit dem größten Bestand |
 | Spiel | Verbindung, Tempo 1–3, langsamer/schneller, Pause an/weiter, „Halten = kurz Pause“, Schnellspeichern, Speichern mit Jahr und Monat |
 
 ### Was rot wird
