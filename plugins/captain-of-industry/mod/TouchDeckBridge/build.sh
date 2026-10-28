@@ -27,7 +27,7 @@ Source/Tests/run.sh
 rm -rf Source/Tests/obj Source/Tests/bin
 
 # ZIP mit dem Mod-Ordner als Wurzel (so wie im Mods-Ordner nötig); nur, was das Spiel braucht, plus Anleitung.
-FILES=(TouchDeckBridge.dll manifest.json README.md README.de.md CHANGELOG.md LICENSE)
+FILES=(TouchDeckBridge.dll manifest.json thumbnail.png README.md README.de.md CHANGELOG.md LICENSE)
 tmp=$(mktemp -d)
 mkdir "$tmp/TouchDeckBridge"
 cp "${FILES[@]}" "$tmp/TouchDeckBridge/"
