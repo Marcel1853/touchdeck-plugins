@@ -178,6 +178,13 @@ is running. It opens no network connection and writes nothing to disk.
 - Multiplayer: every player gets the data only on their own computer. Pause, speed and save need
   admin rights.
 
+## How it is made
+
+I'm Marcel. This plugin and the mod are written with AI (Claude by Anthropic) – the code and most of
+the texts. I decide what they should do and test every version myself with my own TouchDeck and
+Factorio saves before it goes online. Automated tests are in `tests/`. Bug reports and ideas are
+welcome – in the [mod discussion](https://mods.factorio.com/mod/touchdeck-bridge/discussion) or on GitHub.
+
 ## Build your own plugin or mod
 
 The source is on GitHub:

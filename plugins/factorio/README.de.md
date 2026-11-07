@@ -179,6 +179,14 @@ Factorio läuft. Es öffnet keine Netzwerkverbindung und schreibt nichts auf die
 - Mehrspieler: Jeder Spieler bekommt die Daten nur auf seinem eigenen Rechner. Pause, Tempo und
   Speichern nur für Admins.
 
+## Wie es entsteht
+
+Ich bin Marcel. Dieses Plugin und den Mod schreibe ich mit KI (Claude von Anthropic) – den Code und
+die meisten Texte. Ich lege fest, was sie können sollen, und teste jede Version selbst mit meinem
+TouchDeck und meinen Factorio-Spielständen, bevor sie online geht. Automatische Tests liegen in
+`tests/`. Fehlerberichte und Ideen sind willkommen – in der
+[Mod-Diskussion](https://mods.factorio.com/mod/touchdeck-bridge/discussion) oder auf GitHub.
+
 ## Für eigene Plugins und Mods
 
 Den Quelltext findest du auf GitHub:
