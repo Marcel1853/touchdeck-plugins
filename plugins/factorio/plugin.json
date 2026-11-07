@@ -1,7 +1,7 @@
 {
   "id": "factorio",
   "name": "Factorio",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "author": "Marcel1853",
   "license": "MIT",
   "platforms": [
@@ -9,8 +9,14 @@
     "windows"
   ],
   "description": {
-    "en": "Factorio on your buttons: live research, speed, evolution, power (with graphs), planet; pause, speed, save, screenshot, quick chat and research queue. Needs the Factorio mod “TouchDeck Bridge”. No launch options, no network: the mod writes a JSON file, the plugin watches it.",
-    "de": "Factorio auf deinen Buttons: Forschung live, Geschwindigkeit, Evolution, Strom (mit Graphen), Planet; Pause, Tempo, Speichern, Screenshot, Schnell-Chat und Forschungs-Warteschlange. Braucht den Factorio-Mod „TouchDeck Bridge“. Keine Startoptionen, kein Netzwerk: Der Mod schreibt eine JSON-Datei, das Plugin achtet auf Änderungen."
+    "en": "Factorio on your buttons: live research, speed, evolution, power and production (with graphs), planet, UTLogistics trains; pause, speed, save, screenshot and research queue. Needs the Factorio mod “TouchDeck Bridge” (mod portal). No launch options, no network: the mod writes JSON files, the plugin watches them.",
+    "de": "Factorio auf deinen Buttons: Forschung, Geschwindigkeit, Evolution, Strom und Produktion live (mit Graphen), Planet, UTLogistics-Züge; Pause, Tempo, Speichern, Screenshot und Forschungs-Warteschlange. Braucht den Factorio-Mod „TouchDeck Bridge“ (Mod-Portal). Keine Startoptionen, kein Netzwerk: Der Mod schreibt JSON-Dateien, das Plugin achtet auf Änderungen.",
+    "fr": "Factorio sur vos boutons : recherche, vitesse, évolution, électricité et production en direct (avec graphiques), planète, trains UTLogistics ; pause, vitesse, sauvegarde, capture d'écran et file de recherche. Nécessite le mod Factorio « TouchDeck Bridge » (portail des mods). Sans option de lancement, sans réseau : le mod écrit des fichiers JSON, le plugin les surveille.",
+    "es": "Factorio en tus botones: investigación, velocidad, evolución, electricidad y producción en directo (con gráficos), planeta, trenes de UTLogistics; pausa, velocidad, guardar, captura y cola de investigación. Necesita el mod de Factorio «TouchDeck Bridge» (portal de mods). Sin opciones de inicio, sin red: el mod escribe archivos JSON y el plugin los vigila.",
+    "pl": "Factorio na twoich przyciskach: badania, prędkość, ewolucja, prąd i produkcja na żywo (z wykresami), planeta, pociągi UTLogistics; pauza, prędkość, zapis, zrzut ekranu i kolejka badań. Wymaga moda do Factorio „TouchDeck Bridge” (portal modów). Bez opcji uruchamiania, bez sieci: mod zapisuje pliki JSON, plugin je obserwuje.",
+    "pt-br": "Factorio nos seus botões: pesquisa, velocidade, evolução, energia e produção ao vivo (com gráficos), planeta, trens do UTLogistics; pausa, velocidade, salvar, captura de tela e fila de pesquisa. Precisa do mod de Factorio “TouchDeck Bridge” (portal de mods). Sem opções de inicialização, sem rede: o mod grava arquivos JSON e o plugin os observa.",
+    "ru": "Factorio на ваших кнопках: исследования, скорость, эволюция, энергия и производство в реальном времени (с графиками), планета, поезда UTLogistics; пауза, скорость, сохранение, снимок экрана и очередь исследований. Нужен мод Factorio «TouchDeck Bridge» (портал модов). Без параметров запуска, без сети: мод пишет JSON-файлы, плагин следит за ними.",
+    "zh-cn": "在按钮上显示 Factorio：实时显示研究、速度、进化度、电力和生产（含图表）、星球、UTLogistics 列车；暂停、调速、保存、截图和研究队列。需要 Factorio 模组“TouchDeck Bridge”（模组门户）。无需启动参数，无需网络：模组写入 JSON 文件，插件监视这些文件。"
   },
   "native": {
     "command": [
@@ -39,7 +45,13 @@
       },
       "hint": {
         "en": "Restart Factorio – new mods are switched on automatically.",
-        "de": "Factorio neu starten – neue Mods sind automatisch an."
+        "de": "Factorio neu starten – neue Mods sind automatisch an.",
+        "fr": "Redémarrez Factorio – les nouveaux mods sont activés automatiquement.",
+        "es": "Reinicia Factorio: los mods nuevos se activan automáticamente.",
+        "pl": "Uruchom ponownie Factorio – nowe mody włączają się automatycznie.",
+        "pt-br": "Reinicie o Factorio – mods novos são ativados automaticamente.",
+        "ru": "Перезапустите Factorio – новые моды включаются автоматически.",
+        "zh-cn": "重启 Factorio——新模组会自动启用。"
       }
     }
   ],
@@ -48,7 +60,13 @@
       "key": "folder",
       "label": {
         "en": "Folder of the mod files (empty = find automatically)",
-        "de": "Ordner der Mod-Dateien (leer = automatisch suchen)"
+        "de": "Ordner der Mod-Dateien (leer = automatisch suchen)",
+        "fr": "Dossier des fichiers du mod (vide = recherche automatique)",
+        "es": "Carpeta de los archivos del mod (vacío = buscar automáticamente)",
+        "pl": "Folder plików moda (puste = szukaj automatycznie)",
+        "pt-br": "Pasta dos arquivos do mod (vazio = procurar automaticamente)",
+        "ru": "Папка файлов мода (пусто = искать автоматически)",
+        "zh-cn": "模组文件所在文件夹（留空 = 自动查找）"
       },
       "type": "text",
       "default": ""
@@ -57,7 +75,13 @@
       "key": "interval",
       "label": {
         "en": "Check files every … ms (100–5000)",
-        "de": "Dateien prüfen alle … ms (100–5000)"
+        "de": "Dateien prüfen alle … ms (100–5000)",
+        "fr": "Vérifier les fichiers toutes les … ms (100–5000)",
+        "es": "Comprobar archivos cada … ms (100–5000)",
+        "pl": "Sprawdzaj pliki co … ms (100–5000)",
+        "pt-br": "Verificar arquivos a cada … ms (100–5000)",
+        "ru": "Проверять файлы каждые … мс (100–5000)",
+        "zh-cn": "每隔 … 毫秒检查文件（100–5000）"
       },
       "type": "number",
       "default": 250
@@ -66,7 +90,13 @@
       "key": "timeout",
       "label": {
         "en": "No data for … seconds = not connected (2–60)",
-        "de": "Keine Daten seit … Sekunden = nicht verbunden (2–60)"
+        "de": "Keine Daten seit … Sekunden = nicht verbunden (2–60)",
+        "fr": "Pas de données depuis … secondes = déconnecté (2–60)",
+        "es": "Sin datos durante … segundos = desconectado (2–60)",
+        "pl": "Brak danych przez … sekund = rozłączono (2–60)",
+        "pt-br": "Sem dados por … segundos = desconectado (2–60)",
+        "ru": "Нет данных … секунд = нет связи (2–60)",
+        "zh-cn": "… 秒无数据 = 未连接（2–60）"
       },
       "type": "number",
       "default": 5
@@ -75,7 +105,13 @@
       "key": "idleInterval",
       "label": {
         "en": "Without Factorio, check only every … ms (500–30000)",
-        "de": "Ohne Factorio nur alle … ms prüfen (500–30000)"
+        "de": "Ohne Factorio nur alle … ms prüfen (500–30000)",
+        "fr": "Sans Factorio, vérifier seulement toutes les … ms (500–30000)",
+        "es": "Sin Factorio, comprobar solo cada … ms (500–30000)",
+        "pl": "Bez Factorio sprawdzaj tylko co … ms (500–30000)",
+        "pt-br": "Sem o Factorio, verificar só a cada … ms (500–30000)",
+        "ru": "Без Factorio проверять только каждые … мс (500–30000)",
+        "zh-cn": "未运行 Factorio 时，仅每隔 … 毫秒检查（500–30000）"
       },
       "type": "number",
       "default": 3000
@@ -86,7 +122,13 @@
       "id": "await",
       "label": {
         "en": "Wait for the game's answer",
-        "de": "Auf Antwort des Spiels warten"
+        "de": "Auf Antwort des Spiels warten",
+        "fr": "Attendre la réponse du jeu",
+        "es": "Esperar la respuesta del juego",
+        "pl": "Czekaj na odpowiedź gry",
+        "pt-br": "Aguardar a resposta do jogo",
+        "ru": "Ждать ответа игры",
+        "zh-cn": "等待游戏的回应"
       },
       "icon": "⏳",
       "fields": [
@@ -94,7 +136,13 @@
           "key": "cmd",
           "label": {
             "en": "Command (empty = any)",
-            "de": "Befehl (leer = jeder)"
+            "de": "Befehl (leer = jeder)",
+            "fr": "Commande (vide = toutes)",
+            "es": "Orden (vacío = cualquiera)",
+            "pl": "Polecenie (puste = dowolne)",
+            "pt-br": "Comando (vazio = qualquer)",
+            "ru": "Команда (пусто = любая)",
+            "zh-cn": "命令（留空 = 任意）"
           },
           "type": "select",
           "default": "",
@@ -103,84 +151,130 @@
               "value": "",
               "label": {
                 "en": "Any",
-                "de": "Jeder"
+                "de": "Jeder",
+                "fr": "Toutes",
+                "es": "Cualquiera",
+                "pl": "Dowolne",
+                "pt-br": "Qualquer",
+                "ru": "Любая",
+                "zh-cn": "任意"
               }
             },
             {
               "value": "pause",
               "label": {
                 "en": "Pause (toggle)",
-                "de": "Pause (umschalten)"
+                "de": "Pause (umschalten)",
+                "fr": "Pause (bascule)",
+                "es": "Pausa (alternar)",
+                "pl": "Pauza (przełącz)",
+                "pt-br": "Pausa (alternar)",
+                "ru": "Пауза (переключить)",
+                "zh-cn": "暂停（切换）"
               }
             },
             {
               "value": "speed",
               "label": {
                 "en": "Speed",
-                "de": "Geschwindigkeit"
+                "de": "Geschwindigkeit",
+                "fr": "Vitesse",
+                "es": "Velocidad",
+                "pl": "Prędkość",
+                "pt-br": "Velocidade",
+                "ru": "Скорость",
+                "zh-cn": "速度"
               }
             },
             {
               "value": "save",
               "label": {
                 "en": "Save game",
-                "de": "Spiel speichern"
+                "de": "Spiel speichern",
+                "fr": "Sauvegarder",
+                "es": "Guardar partida",
+                "pl": "Zapisz grę",
+                "pt-br": "Salvar jogo",
+                "ru": "Сохранить игру",
+                "zh-cn": "保存游戏"
               }
             },
             {
               "value": "screenshot",
               "label": {
                 "en": "Screenshot",
-                "de": "Screenshot"
-              }
-            },
-            {
-              "value": "chat",
-              "label": {
-                "en": "Chat message",
-                "de": "Chat-Nachricht"
-              }
-            },
-            {
-              "value": "quickchat",
-              "label": {
-                "en": "Quick chat",
-                "de": "Schnell-Chat"
+                "de": "Screenshot",
+                "fr": "Capture d'écran",
+                "es": "Captura de pantalla",
+                "pl": "Zrzut ekranu",
+                "pt-br": "Captura de tela",
+                "ru": "Снимок экрана",
+                "zh-cn": "截图"
               }
             },
             {
               "value": "research",
               "label": {
                 "en": "Queue research",
-                "de": "Forschung einreihen"
+                "de": "Forschung einreihen",
+                "fr": "Ajouter une recherche",
+                "es": "Poner investigación en cola",
+                "pl": "Dodaj badanie do kolejki",
+                "pt-br": "Enfileirar pesquisa",
+                "ru": "Поставить исследование в очередь",
+                "zh-cn": "加入研究队列"
               }
             },
             {
               "value": "cancel",
               "label": {
                 "en": "Cancel research",
-                "de": "Forschung abbrechen"
+                "de": "Forschung abbrechen",
+                "fr": "Annuler la recherche",
+                "es": "Cancelar investigación",
+                "pl": "Anuluj badanie",
+                "pt-br": "Cancelar pesquisa",
+                "ru": "Отменить исследование",
+                "zh-cn": "取消研究"
               }
             },
             {
               "value": "center",
               "label": {
                 "en": "Back to the player",
-                "de": "Zurück zum Spieler"
+                "de": "Zurück zum Spieler",
+                "fr": "Retour au joueur",
+                "es": "Volver al jugador",
+                "pl": "Wróć do gracza",
+                "pt-br": "Voltar ao jogador",
+                "ru": "Вернуться к игроку",
+                "zh-cn": "回到玩家"
               }
             },
             {
               "value": "refresh",
               "label": {
                 "en": "Write data again",
-                "de": "Daten neu schreiben"
+                "de": "Daten neu schreiben",
+                "fr": "Réécrire les données",
+                "es": "Volver a escribir datos",
+                "pl": "Zapisz dane ponownie",
+                "pt-br": "Gravar dados novamente",
+                "ru": "Записать данные заново",
+                "zh-cn": "重新写入数据"
               }
             },
             {
               "value": "utl",
               "label": {
                 "en": "UTL manager",
-                "de": "UTL-Manager"
+                "de": "UTL-Manager",
+                "fr": "Gestionnaire UTL",
+                "es": "Gestor de UTL",
+                "pl": "Menedżer UTL",
+                "pt-br": "Gerenciador UTL",
+                "ru": "Менеджер UTL",
+                "zh-cn": "UTL 管理器"
               }
             }
           ]
@@ -189,7 +283,13 @@
           "key": "seconds",
           "label": {
             "en": "Wait at most … seconds",
-            "de": "Höchstens … Sekunden warten"
+            "de": "Höchstens … Sekunden warten",
+            "fr": "Attendre au plus … secondes",
+            "es": "Esperar como máximo … segundos",
+            "pl": "Czekaj najwyżej … sekund",
+            "pt-br": "Aguardar no máximo … segundos",
+            "ru": "Ждать не более … секунд",
+            "zh-cn": "最多等待 … 秒"
           },
           "type": "number",
           "default": 3
@@ -200,7 +300,13 @@
       "id": "item",
       "label": {
         "en": "Production slot: choose item",
-        "de": "Produktions-Platz: Item wählen"
+        "de": "Produktions-Platz: Item wählen",
+        "fr": "Emplacement de production : choisir l'objet",
+        "es": "Posición de producción: elegir objeto",
+        "pl": "Miejsce produkcji: wybierz przedmiot",
+        "pt-br": "Posição de produção: escolher item",
+        "ru": "Ячейка производства: выбрать предмет",
+        "zh-cn": "生产位置：选择物品"
       },
       "icon": "📦",
       "fields": [
@@ -208,7 +314,13 @@
           "key": "slot",
           "label": {
             "en": "Slot (1–8)",
-            "de": "Platz (1–8)"
+            "de": "Platz (1–8)",
+            "fr": "Emplacement (1–8)",
+            "es": "Posición (1–8)",
+            "pl": "Miejsce (1–8)",
+            "pt-br": "Posição (1–8)",
+            "ru": "Ячейка (1–8)",
+            "zh-cn": "位置（1–8）"
           },
           "type": "number",
           "default": 1
@@ -217,7 +329,13 @@
           "key": "op",
           "label": {
             "en": "What",
-            "de": "Was"
+            "de": "Was",
+            "fr": "Quoi",
+            "es": "Qué",
+            "pl": "Co",
+            "pt-br": "O quê",
+            "ru": "Что",
+            "zh-cn": "操作"
           },
           "type": "select",
           "default": "next",
@@ -226,35 +344,65 @@
               "value": "next",
               "label": {
                 "en": "Next item",
-                "de": "Nächstes Item"
+                "de": "Nächstes Item",
+                "fr": "Objet suivant",
+                "es": "Objeto siguiente",
+                "pl": "Następny przedmiot",
+                "pt-br": "Próximo item",
+                "ru": "Следующий предмет",
+                "zh-cn": "下一个物品"
               }
             },
             {
               "value": "prev",
               "label": {
                 "en": "Previous item",
-                "de": "Voriges Item"
+                "de": "Voriges Item",
+                "fr": "Objet précédent",
+                "es": "Objeto anterior",
+                "pl": "Poprzedni przedmiot",
+                "pt-br": "Item anterior",
+                "ru": "Предыдущий предмет",
+                "zh-cn": "上一个物品"
               }
             },
             {
               "value": "auto",
               "label": {
                 "en": "Automatic (most produced)",
-                "de": "Automatisch (meistproduziert)"
+                "de": "Automatisch (meistproduziert)",
+                "fr": "Automatique (le plus produit)",
+                "es": "Automático (el más producido)",
+                "pl": "Automatycznie (najwięcej produkowany)",
+                "pt-br": "Automático (mais produzido)",
+                "ru": "Автоматически (больше всего производится)",
+                "zh-cn": "自动（产量最高）"
               }
             },
             {
               "value": "set",
               "label": {
                 "en": "Choose by name",
-                "de": "Nach Name wählen"
+                "de": "Nach Name wählen",
+                "fr": "Choisir par nom",
+                "es": "Elegir por nombre",
+                "pl": "Wybierz po nazwie",
+                "pt-br": "Escolher pelo nome",
+                "ru": "Выбрать по названию",
+                "zh-cn": "按名称选择"
               }
             },
             {
               "value": "all_auto",
               "label": {
                 "en": "All slots automatic",
-                "de": "Alle Plätze automatisch"
+                "de": "Alle Plätze automatisch",
+                "fr": "Tous les emplacements automatiques",
+                "es": "Todas las posiciones automáticas",
+                "pl": "Wszystkie miejsca automatycznie",
+                "pt-br": "Todas as posições automáticas",
+                "ru": "Все ячейки автоматически",
+                "zh-cn": "全部位置自动"
               }
             }
           ]
@@ -263,13 +411,25 @@
           "key": "value",
           "label": {
             "en": "Name (in game language or internal)",
-            "de": "Name (Spielsprache oder intern)"
+            "de": "Name (Spielsprache oder intern)",
+            "fr": "Nom (langue du jeu ou interne)",
+            "es": "Nombre (idioma del juego o interno)",
+            "pl": "Nazwa (w języku gry lub wewnętrzna)",
+            "pt-br": "Nome (idioma do jogo ou interno)",
+            "ru": "Название (на языке игры или внутреннее)",
+            "zh-cn": "名称（游戏语言或内部名称）"
           },
           "type": "text",
           "default": "",
           "placeholder": {
             "en": "e.g. Iron plate or iron-plate",
-            "de": "z. B. Eisenplatte oder iron-plate"
+            "de": "z. B. Eisenplatte oder iron-plate",
+            "fr": "p. ex. Plaque de fer ou iron-plate",
+            "es": "p. ej. Placa de hierro o iron-plate",
+            "pl": "np. Płyta żelaza lub iron-plate",
+            "pt-br": "ex.: Placa de ferro ou iron-plate",
+            "ru": "напр. Железная плита или iron-plate",
+            "zh-cn": "例如 铁板 或 iron-plate"
           },
           "showIf": {
             "op": [
@@ -283,7 +443,13 @@
       "id": "utl_surface",
       "label": {
         "en": "UTLogistics: choose planet",
-        "de": "UTLogistics: Planet wählen"
+        "de": "UTLogistics: Planet wählen",
+        "fr": "UTLogistics : choisir la planète",
+        "es": "UTLogistics: elegir planeta",
+        "pl": "UTLogistics: wybierz planetę",
+        "pt-br": "UTLogistics: escolher planeta",
+        "ru": "UTLogistics: выбрать планету",
+        "zh-cn": "UTLogistics：选择星球"
       },
       "icon": "🪐",
       "fields": [
@@ -291,7 +457,13 @@
           "key": "op",
           "label": {
             "en": "What",
-            "de": "Was"
+            "de": "Was",
+            "fr": "Quoi",
+            "es": "Qué",
+            "pl": "Co",
+            "pt-br": "O quê",
+            "ru": "Что",
+            "zh-cn": "操作"
           },
           "type": "select",
           "default": "next",
@@ -300,28 +472,52 @@
               "value": "next",
               "label": {
                 "en": "Next planet",
-                "de": "Nächster Planet"
+                "de": "Nächster Planet",
+                "fr": "Planète suivante",
+                "es": "Planeta siguiente",
+                "pl": "Następna planeta",
+                "pt-br": "Próximo planeta",
+                "ru": "Следующая планета",
+                "zh-cn": "下一个星球"
               }
             },
             {
               "value": "prev",
               "label": {
                 "en": "Previous planet",
-                "de": "Voriger Planet"
+                "de": "Voriger Planet",
+                "fr": "Planète précédente",
+                "es": "Planeta anterior",
+                "pl": "Poprzednia planeta",
+                "pt-br": "Planeta anterior",
+                "ru": "Предыдущая планета",
+                "zh-cn": "上一个星球"
               }
             },
             {
               "value": "auto",
               "label": {
                 "en": "Automatic (where I am)",
-                "de": "Automatisch (wo ich bin)"
+                "de": "Automatisch (wo ich bin)",
+                "fr": "Automatique (là où je suis)",
+                "es": "Automático (donde estoy)",
+                "pl": "Automatycznie (tam, gdzie jestem)",
+                "pt-br": "Automático (onde estou)",
+                "ru": "Автоматически (где я нахожусь)",
+                "zh-cn": "自动（我所在的星球）"
               }
             },
             {
               "value": "all",
               "label": {
                 "en": "All planets",
-                "de": "Alle Planeten"
+                "de": "Alle Planeten",
+                "fr": "Toutes les planètes",
+                "es": "Todos los planetas",
+                "pl": "Wszystkie planety",
+                "pt-br": "Todos os planetas",
+                "ru": "Все планеты",
+                "zh-cn": "所有星球"
               }
             }
           ]
@@ -332,7 +528,13 @@
       "id": "utl_open",
       "label": {
         "en": "UTLogistics: open its page",
-        "de": "UTLogistics: Seite öffnen"
+        "de": "UTLogistics: Seite öffnen",
+        "fr": "UTLogistics : ouvrir sa page",
+        "es": "UTLogistics: abrir su página",
+        "pl": "UTLogistics: otwórz jego stronę",
+        "pt-br": "UTLogistics: abrir a página",
+        "ru": "UTLogistics: открыть его страницу",
+        "zh-cn": "UTLogistics：打开其页面"
       },
       "icon": "🚂",
       "fields": []
@@ -341,7 +543,13 @@
       "id": "utl_net",
       "label": {
         "en": "UTLogistics: choose network slot",
-        "de": "UTLogistics: Netz-Platz wählen"
+        "de": "UTLogistics: Netz-Platz wählen",
+        "fr": "UTLogistics : choisir l'emplacement de réseau",
+        "es": "UTLogistics: elegir posición de red",
+        "pl": "UTLogistics: wybierz miejsce sieci",
+        "pt-br": "UTLogistics: escolher posição de rede",
+        "ru": "UTLogistics: выбрать ячейку сети",
+        "zh-cn": "UTLogistics：选择网络位置"
       },
       "icon": "🕸️",
       "fields": [
@@ -349,7 +557,13 @@
           "key": "slot",
           "label": {
             "en": "Slot (1–8)",
-            "de": "Platz (1–8)"
+            "de": "Platz (1–8)",
+            "fr": "Emplacement (1–8)",
+            "es": "Posición (1–8)",
+            "pl": "Miejsce (1–8)",
+            "pt-br": "Posição (1–8)",
+            "ru": "Ячейка (1–8)",
+            "zh-cn": "位置（1–8）"
           },
           "type": "number",
           "default": 1
@@ -358,7 +572,13 @@
           "key": "op",
           "label": {
             "en": "What",
-            "de": "Was"
+            "de": "Was",
+            "fr": "Quoi",
+            "es": "Qué",
+            "pl": "Co",
+            "pt-br": "O quê",
+            "ru": "Что",
+            "zh-cn": "操作"
           },
           "type": "select",
           "default": "next",
@@ -367,28 +587,52 @@
               "value": "next",
               "label": {
                 "en": "Next network",
-                "de": "Nächstes Netz"
+                "de": "Nächstes Netz",
+                "fr": "Réseau suivant",
+                "es": "Red siguiente",
+                "pl": "Następna sieć",
+                "pt-br": "Próxima rede",
+                "ru": "Следующая сеть",
+                "zh-cn": "下一个网络"
               }
             },
             {
               "value": "prev",
               "label": {
                 "en": "Previous network",
-                "de": "Voriges Netz"
+                "de": "Voriges Netz",
+                "fr": "Réseau précédent",
+                "es": "Red anterior",
+                "pl": "Poprzednia sieć",
+                "pt-br": "Rede anterior",
+                "ru": "Предыдущая сеть",
+                "zh-cn": "上一个网络"
               }
             },
             {
               "value": "auto",
               "label": {
                 "en": "Automatic (most stations)",
-                "de": "Automatisch (meiste Stationen)"
+                "de": "Automatisch (meiste Stationen)",
+                "fr": "Automatique (le plus de gares)",
+                "es": "Automático (más estaciones)",
+                "pl": "Automatycznie (najwięcej stacji)",
+                "pt-br": "Automático (mais estações)",
+                "ru": "Автоматически (больше всего станций)",
+                "zh-cn": "自动（车站最多）"
               }
             },
             {
               "value": "all_auto",
               "label": {
                 "en": "All slots automatic",
-                "de": "Alle Plätze automatisch"
+                "de": "Alle Plätze automatisch",
+                "fr": "Tous les emplacements automatiques",
+                "es": "Todas las posiciones automáticas",
+                "pl": "Wszystkie miejsca automatycznie",
+                "pt-br": "Todas as posições automáticas",
+                "ru": "Все ячейки автоматически",
+                "zh-cn": "全部位置自动"
               }
             }
           ]
@@ -401,7 +645,13 @@
       "id": "research_finished",
       "label": {
         "en": "Research finished",
-        "de": "Forschung abgeschlossen"
+        "de": "Forschung abgeschlossen",
+        "fr": "Recherche terminée",
+        "es": "Investigación terminada",
+        "pl": "Badanie ukończone",
+        "pt-br": "Pesquisa concluída",
+        "ru": "Исследование завершено",
+        "zh-cn": "研究完成"
       },
       "icon": "🔬",
       "fields": [
@@ -409,7 +659,13 @@
           "key": "Intern",
           "label": {
             "en": "Internal name (empty = any)",
-            "de": "Interner Name (leer = jede)"
+            "de": "Interner Name (leer = jede)",
+            "fr": "Nom interne (vide = toutes)",
+            "es": "Nombre interno (vacío = cualquiera)",
+            "pl": "Nazwa wewnętrzna (puste = dowolne)",
+            "pt-br": "Nome interno (vazio = qualquer)",
+            "ru": "Внутреннее имя (пусто = любое)",
+            "zh-cn": "内部名称（留空 = 任意）"
           },
           "type": "text"
         }
@@ -419,7 +675,13 @@
       "id": "research_started",
       "label": {
         "en": "Research started",
-        "de": "Forschung gestartet"
+        "de": "Forschung gestartet",
+        "fr": "Recherche commencée",
+        "es": "Investigación iniciada",
+        "pl": "Badanie rozpoczęte",
+        "pt-br": "Pesquisa iniciada",
+        "ru": "Исследование начато",
+        "zh-cn": "研究开始"
       },
       "icon": "🧪",
       "fields": []
@@ -428,7 +690,13 @@
       "id": "rocket_launched",
       "label": {
         "en": "Rocket launched",
-        "de": "Rakete gestartet"
+        "de": "Rakete gestartet",
+        "fr": "Fusée lancée",
+        "es": "Cohete lanzado",
+        "pl": "Rakieta wystrzelona",
+        "pt-br": "Foguete lançado",
+        "ru": "Ракета запущена",
+        "zh-cn": "火箭已发射"
       },
       "icon": "🚀",
       "fields": []
@@ -437,7 +705,13 @@
       "id": "player_died",
       "label": {
         "en": "Player died",
-        "de": "Spieler gestorben"
+        "de": "Spieler gestorben",
+        "fr": "Joueur mort",
+        "es": "Jugador muerto",
+        "pl": "Gracz zginął",
+        "pt-br": "Jogador morreu",
+        "ru": "Игрок погиб",
+        "zh-cn": "玩家死亡"
       },
       "icon": "💀",
       "fields": [
@@ -445,7 +719,13 @@
           "key": "Ich",
           "label": {
             "en": "Only me (ja) or others (nein), empty = all",
-            "de": "Nur ich (ja) oder andere (nein), leer = alle"
+            "de": "Nur ich (ja) oder andere (nein), leer = alle",
+            "fr": "Seulement moi (ja) ou les autres (nein), vide = tous",
+            "es": "Solo yo (ja) u otros (nein), vacío = todos",
+            "pl": "Tylko ja (ja) lub inni (nein), puste = wszyscy",
+            "pt-br": "Só eu (ja) ou outros (nein), vazio = todos",
+            "ru": "Только я (ja) или другие (nein), пусто = все",
+            "zh-cn": "仅自己（ja）或他人（nein），留空 = 全部"
           },
           "type": "select",
           "options": [
@@ -453,21 +733,39 @@
               "value": "",
               "label": {
                 "en": "All",
-                "de": "Alle"
+                "de": "Alle",
+                "fr": "Tous",
+                "es": "Todos",
+                "pl": "Wszyscy",
+                "pt-br": "Todos",
+                "ru": "Все",
+                "zh-cn": "全部"
               }
             },
             {
               "value": "ja",
               "label": {
                 "en": "Me",
-                "de": "Ich"
+                "de": "Ich",
+                "fr": "Moi",
+                "es": "Yo",
+                "pl": "Ja",
+                "pt-br": "Eu",
+                "ru": "Я",
+                "zh-cn": "自己"
               }
             },
             {
               "value": "nein",
               "label": {
                 "en": "Others",
-                "de": "Andere"
+                "de": "Andere",
+                "fr": "Autres",
+                "es": "Otros",
+                "pl": "Inni",
+                "pt-br": "Outros",
+                "ru": "Другие",
+                "zh-cn": "他人"
               }
             }
           ]
@@ -478,7 +776,13 @@
       "id": "evolution_step",
       "label": {
         "en": "Evolution passed a 10 % step",
-        "de": "Evolution hat 10-%-Stufe überschritten"
+        "de": "Evolution hat 10-%-Stufe überschritten",
+        "fr": "L'évolution a franchi un palier de 10 %",
+        "es": "La evolución superó un escalón del 10 %",
+        "pl": "Ewolucja przekroczyła próg 10 %",
+        "pt-br": "A evolução passou de um degrau de 10 %",
+        "ru": "Эволюция прошла порог 10 %",
+        "zh-cn": "进化度跨过 10% 档位"
       },
       "icon": "👾",
       "fields": []
@@ -487,7 +791,13 @@
       "id": "command_done",
       "label": {
         "en": "Command answered by the game",
-        "de": "Befehl vom Spiel beantwortet"
+        "de": "Befehl vom Spiel beantwortet",
+        "fr": "Commande confirmée par le jeu",
+        "es": "Orden respondida por el juego",
+        "pl": "Gra odpowiedziała na polecenie",
+        "pt-br": "Comando respondido pelo jogo",
+        "ru": "Игра ответила на команду",
+        "zh-cn": "游戏已回应命令"
       },
       "icon": "✅",
       "fields": [
@@ -495,7 +805,13 @@
           "key": "Ok",
           "label": {
             "en": "Result (empty = any)",
-            "de": "Ergebnis (leer = jedes)"
+            "de": "Ergebnis (leer = jedes)",
+            "fr": "Résultat (vide = tous)",
+            "es": "Resultado (vacío = cualquiera)",
+            "pl": "Wynik (puste = dowolny)",
+            "pt-br": "Resultado (vazio = qualquer)",
+            "ru": "Результат (пусто = любой)",
+            "zh-cn": "结果（留空 = 任意）"
           },
           "type": "select",
           "options": [
@@ -503,21 +819,39 @@
               "value": "",
               "label": {
                 "en": "Any",
-                "de": "Jedes"
+                "de": "Jedes",
+                "fr": "Toutes",
+                "es": "Cualquiera",
+                "pl": "Dowolne",
+                "pt-br": "Qualquer",
+                "ru": "Любая",
+                "zh-cn": "任意"
               }
             },
             {
               "value": "ja",
               "label": {
                 "en": "Done",
-                "de": "Erledigt"
+                "de": "Erledigt",
+                "fr": "Fait",
+                "es": "Hecho",
+                "pl": "Wykonano",
+                "pt-br": "Feito",
+                "ru": "Выполнено",
+                "zh-cn": "已完成"
               }
             },
             {
               "value": "nein",
               "label": {
                 "en": "Failed",
-                "de": "Fehlgeschlagen"
+                "de": "Fehlgeschlagen",
+                "fr": "Échec",
+                "es": "Fallido",
+                "pl": "Nieudane",
+                "pt-br": "Falhou",
+                "ru": "Ошибка",
+                "zh-cn": "失败"
               }
             }
           ]
@@ -528,7 +862,13 @@
       "id": "connected",
       "label": {
         "en": "Game connected",
-        "de": "Spiel verbunden"
+        "de": "Spiel verbunden",
+        "fr": "Jeu connecté",
+        "es": "Juego conectado",
+        "pl": "Gra połączona",
+        "pt-br": "Jogo conectado",
+        "ru": "Игра подключена",
+        "zh-cn": "游戏已连接"
       },
       "icon": "🟢",
       "fields": []
@@ -537,7 +877,13 @@
       "id": "disconnected",
       "label": {
         "en": "Game disconnected",
-        "de": "Spiel getrennt"
+        "de": "Spiel getrennt",
+        "fr": "Jeu déconnecté",
+        "es": "Juego desconectado",
+        "pl": "Gra rozłączona",
+        "pt-br": "Jogo desconectado",
+        "ru": "Игра отключена",
+        "zh-cn": "游戏已断开"
       },
       "icon": "🔴",
       "fields": []
@@ -546,7 +892,13 @@
       "id": "utl_alert",
       "label": {
         "en": "UTLogistics: new alert (full text)",
-        "de": "UTLogistics: neue Warnung (voller Text)"
+        "de": "UTLogistics: neue Warnung (voller Text)",
+        "fr": "UTLogistics : nouvelle alerte (texte complet)",
+        "es": "UTLogistics: nuevo aviso (texto completo)",
+        "pl": "UTLogistics: nowe ostrzeżenie (pełny tekst)",
+        "pt-br": "UTLogistics: novo alerta (texto completo)",
+        "ru": "UTLogistics: новое предупреждение (полный текст)",
+        "zh-cn": "UTLogistics：新警报（完整文本）"
       },
       "icon": "🚂",
       "fields": []
@@ -555,7 +907,13 @@
       "id": "utl_unserved",
       "label": {
         "en": "UTLogistics: request waiting without a train",
-        "de": "UTLogistics: Anfrage wartet ohne Zug"
+        "de": "UTLogistics: Anfrage wartet ohne Zug",
+        "fr": "UTLogistics : demande en attente sans train",
+        "es": "UTLogistics: solicitud esperando sin tren",
+        "pl": "UTLogistics: zapotrzebowanie czeka bez pociągu",
+        "pt-br": "UTLogistics: pedido aguardando sem trem",
+        "ru": "UTLogistics: запрос ждёт без поезда",
+        "zh-cn": "UTLogistics：请求在等待且无列车"
       },
       "icon": "⏳",
       "fields": []
@@ -566,245 +924,455 @@
       "id": "research",
       "label": {
         "en": "Research with progress",
-        "de": "Forschung mit Fortschritt"
+        "de": "Forschung mit Fortschritt",
+        "fr": "Recherche avec progression",
+        "es": "Investigación con progreso",
+        "pl": "Badanie z postępem",
+        "pt-br": "Pesquisa com progresso",
+        "ru": "Исследование с прогрессом",
+        "zh-cn": "研究及进度"
       }
     },
     {
       "id": "status",
       "label": {
         "en": "Connection and pause",
-        "de": "Verbindung und Pause"
+        "de": "Verbindung und Pause",
+        "fr": "Connexion et pause",
+        "es": "Conexión y pausa",
+        "pl": "Połączenie i pauza",
+        "pt-br": "Conexão e pausa",
+        "ru": "Связь и пауза",
+        "zh-cn": "连接与暂停"
       }
     },
     {
       "id": "speed",
       "label": {
         "en": "Game speed",
-        "de": "Spielgeschwindigkeit"
+        "de": "Spielgeschwindigkeit",
+        "fr": "Vitesse du jeu",
+        "es": "Velocidad del juego",
+        "pl": "Prędkość gry",
+        "pt-br": "Velocidade do jogo",
+        "ru": "Скорость игры",
+        "zh-cn": "游戏速度"
       }
     },
     {
       "id": "evolution",
       "label": {
         "en": "Evolution (%, graph)",
-        "de": "Evolution (%, Graph)"
+        "de": "Evolution (%, Graph)",
+        "fr": "Évolution (%, graphique)",
+        "es": "Evolución (%, gráfico)",
+        "pl": "Ewolucja (%, wykres)",
+        "pt-br": "Evolução (%, gráfico)",
+        "ru": "Эволюция (%, график)",
+        "zh-cn": "进化度（%，图表）"
       }
     },
     {
       "id": "power",
       "label": {
         "en": "Power production (MW, graph by source)",
-        "de": "Strom-Erzeugung (MW, Graph nach Quelle)"
+        "de": "Strom-Erzeugung (MW, Graph nach Quelle)",
+        "fr": "Production électrique (MW, graphique par source)",
+        "es": "Producción eléctrica (MW, gráfico por fuente)",
+        "pl": "Produkcja prądu (MW, wykres wg źródła)",
+        "pt-br": "Produção de energia (MW, gráfico por fonte)",
+        "ru": "Выработка энергии (МВт, график по источникам)",
+        "zh-cn": "发电量（MW，按来源的图表）"
       }
     },
     {
       "id": "consumption",
       "label": {
         "en": "Power consumption (MW, graph by consumer)",
-        "de": "Strom-Verbrauch (MW, Graph nach Verbraucher)"
+        "de": "Strom-Verbrauch (MW, Graph nach Verbraucher)",
+        "fr": "Consommation électrique (MW, graphique par consommateur)",
+        "es": "Consumo eléctrico (MW, gráfico por consumidor)",
+        "pl": "Zużycie prądu (MW, wykres wg odbiorcy)",
+        "pt-br": "Consumo de energia (MW, gráfico por consumidor)",
+        "ru": "Потребление энергии (МВт, график по потребителям)",
+        "zh-cn": "耗电量（MW，按耗电者的图表）"
       }
     },
     {
       "id": "item1",
       "label": {
         "en": "Production slot 1 (per minute, graph)",
-        "de": "Produktion Platz 1 (pro Minute, Graph)"
+        "de": "Produktion Platz 1 (pro Minute, Graph)",
+        "fr": "Emplacement de production 1 (par minute, graphique)",
+        "es": "Posición de producción 1 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 1 (na minutę, wykres)",
+        "pt-br": "Posição de produção 1 (por minuto, gráfico)",
+        "ru": "Ячейка производства 1 (в минуту, график)",
+        "zh-cn": "生产位置 1（每分钟，图表）"
       }
     },
     {
       "id": "item2",
       "label": {
         "en": "Production slot 2 (per minute, graph)",
-        "de": "Produktion Platz 2 (pro Minute, Graph)"
+        "de": "Produktion Platz 2 (pro Minute, Graph)",
+        "fr": "Emplacement de production 2 (par minute, graphique)",
+        "es": "Posición de producción 2 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 2 (na minutę, wykres)",
+        "pt-br": "Posição de produção 2 (por minuto, gráfico)",
+        "ru": "Ячейка производства 2 (в минуту, график)",
+        "zh-cn": "生产位置 2（每分钟，图表）"
       }
     },
     {
       "id": "item3",
       "label": {
         "en": "Production slot 3 (per minute, graph)",
-        "de": "Produktion Platz 3 (pro Minute, Graph)"
+        "de": "Produktion Platz 3 (pro Minute, Graph)",
+        "fr": "Emplacement de production 3 (par minute, graphique)",
+        "es": "Posición de producción 3 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 3 (na minutę, wykres)",
+        "pt-br": "Posição de produção 3 (por minuto, gráfico)",
+        "ru": "Ячейка производства 3 (в минуту, график)",
+        "zh-cn": "生产位置 3（每分钟，图表）"
       }
     },
     {
       "id": "item4",
       "label": {
         "en": "Production slot 4 (per minute, graph)",
-        "de": "Produktion Platz 4 (pro Minute, Graph)"
+        "de": "Produktion Platz 4 (pro Minute, Graph)",
+        "fr": "Emplacement de production 4 (par minute, graphique)",
+        "es": "Posición de producción 4 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 4 (na minutę, wykres)",
+        "pt-br": "Posição de produção 4 (por minuto, gráfico)",
+        "ru": "Ячейка производства 4 (в минуту, график)",
+        "zh-cn": "生产位置 4（每分钟，图表）"
       }
     },
     {
       "id": "item5",
       "label": {
         "en": "Production slot 5 (per minute, graph)",
-        "de": "Produktion Platz 5 (pro Minute, Graph)"
+        "de": "Produktion Platz 5 (pro Minute, Graph)",
+        "fr": "Emplacement de production 5 (par minute, graphique)",
+        "es": "Posición de producción 5 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 5 (na minutę, wykres)",
+        "pt-br": "Posição de produção 5 (por minuto, gráfico)",
+        "ru": "Ячейка производства 5 (в минуту, график)",
+        "zh-cn": "生产位置 5（每分钟，图表）"
       }
     },
     {
       "id": "item6",
       "label": {
         "en": "Production slot 6 (per minute, graph)",
-        "de": "Produktion Platz 6 (pro Minute, Graph)"
+        "de": "Produktion Platz 6 (pro Minute, Graph)",
+        "fr": "Emplacement de production 6 (par minute, graphique)",
+        "es": "Posición de producción 6 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 6 (na minutę, wykres)",
+        "pt-br": "Posição de produção 6 (por minuto, gráfico)",
+        "ru": "Ячейка производства 6 (в минуту, график)",
+        "zh-cn": "生产位置 6（每分钟，图表）"
       }
     },
     {
       "id": "item7",
       "label": {
         "en": "Production slot 7 (per minute, graph)",
-        "de": "Produktion Platz 7 (pro Minute, Graph)"
+        "de": "Produktion Platz 7 (pro Minute, Graph)",
+        "fr": "Emplacement de production 7 (par minute, graphique)",
+        "es": "Posición de producción 7 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 7 (na minutę, wykres)",
+        "pt-br": "Posição de produção 7 (por minuto, gráfico)",
+        "ru": "Ячейка производства 7 (в минуту, график)",
+        "zh-cn": "生产位置 7（每分钟，图表）"
       }
     },
     {
       "id": "item8",
       "label": {
         "en": "Production slot 8 (per minute, graph)",
-        "de": "Produktion Platz 8 (pro Minute, Graph)"
+        "de": "Produktion Platz 8 (pro Minute, Graph)",
+        "fr": "Emplacement de production 8 (par minute, graphique)",
+        "es": "Posición de producción 8 (por minuto, gráfico)",
+        "pl": "Miejsce produkcji 8 (na minutę, wykres)",
+        "pt-br": "Posição de produção 8 (por minuto, gráfico)",
+        "ru": "Ячейка производства 8 (в минуту, график)",
+        "zh-cn": "生产位置 8（每分钟，图表）"
       }
     },
     {
       "id": "utl_trains",
       "label": {
         "en": "UTLogistics: trains idle / on the way (graph)",
-        "de": "UTLogistics: Züge frei / unterwegs (Graph)"
+        "de": "UTLogistics: Züge frei / unterwegs (Graph)",
+        "fr": "UTLogistics : trains libres / en route (graphique)",
+        "es": "UTLogistics: trenes libres / en camino (gráfico)",
+        "pl": "UTLogistics: pociągi wolne / w drodze (wykres)",
+        "pt-br": "UTLogistics: trens livres / a caminho (gráfico)",
+        "ru": "UTLogistics: поезда свободны / в пути (график)",
+        "zh-cn": "UTLogistics：空闲/途中列车（图表）"
       }
     },
     {
       "id": "utl_alerts",
       "label": {
         "en": "UTLogistics: alerts (last 10 min)",
-        "de": "UTLogistics: Warnungen (letzte 10 min)"
+        "de": "UTLogistics: Warnungen (letzte 10 min)",
+        "fr": "UTLogistics : alertes (10 dernières min)",
+        "es": "UTLogistics: avisos (últimos 10 min)",
+        "pl": "UTLogistics: ostrzeżenia (ostatnie 10 min)",
+        "pt-br": "UTLogistics: alertas (últimos 10 min)",
+        "ru": "UTLogistics: предупреждения (последние 10 мин)",
+        "zh-cn": "UTLogistics：警报（最近 10 分钟）"
       }
     },
     {
       "id": "utl_goods",
       "label": {
         "en": "UTLogistics: goods delivered per hour (graph by good)",
-        "de": "UTLogistics: gelieferte Waren pro Stunde (Graph nach Ware)"
+        "de": "UTLogistics: gelieferte Waren pro Stunde (Graph nach Ware)",
+        "fr": "UTLogistics : marchandises livrées par heure (graphique par marchandise)",
+        "es": "UTLogistics: mercancías entregadas por hora (gráfico por mercancía)",
+        "pl": "UTLogistics: dostarczone towary na godzinę (wykres wg towaru)",
+        "pt-br": "UTLogistics: mercadorias entregues por hora (gráfico por mercadoria)",
+        "ru": "UTLogistics: доставлено товаров в час (график по товарам)",
+        "zh-cn": "UTLogistics：每小时送达货物（按货物的图表）"
       }
     },
     {
       "id": "utl_rate",
       "label": {
         "en": "UTLogistics: deliveries per hour (graph)",
-        "de": "UTLogistics: Lieferungen pro Stunde (Graph)"
+        "de": "UTLogistics: Lieferungen pro Stunde (Graph)",
+        "fr": "UTLogistics : livraisons par heure (graphique)",
+        "es": "UTLogistics: entregas por hora (gráfico)",
+        "pl": "UTLogistics: dostawy na godzinę (wykres)",
+        "pt-br": "UTLogistics: entregas por hora (gráfico)",
+        "ru": "UTLogistics: доставки в час (график)",
+        "zh-cn": "UTLogistics：每小时送货次数（图表）"
       }
     },
     {
       "id": "utl_unserved",
       "label": {
         "en": "UTLogistics: requests without a train",
-        "de": "UTLogistics: Anfragen ohne Zug"
+        "de": "UTLogistics: Anfragen ohne Zug",
+        "fr": "UTLogistics : demandes sans train",
+        "es": "UTLogistics: solicitudes sin tren",
+        "pl": "UTLogistics: zapotrzebowania bez pociągu",
+        "pt-br": "UTLogistics: pedidos sem trem",
+        "ru": "UTLogistics: запросы без поезда",
+        "zh-cn": "UTLogistics：无列车的请求"
       }
     },
     {
       "id": "utlst1",
       "label": {
         "en": "UTLogistics: pinned station 1 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 1 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 1 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 1 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 1 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 1 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 1 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 1 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 1（列车，图表）"
       }
     },
     {
       "id": "utlst2",
       "label": {
         "en": "UTLogistics: pinned station 2 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 2 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 2 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 2 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 2 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 2 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 2 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 2 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 2（列车，图表）"
       }
     },
     {
       "id": "utlst3",
       "label": {
         "en": "UTLogistics: pinned station 3 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 3 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 3 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 3 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 3 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 3 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 3 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 3 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 3（列车，图表）"
       }
     },
     {
       "id": "utlst4",
       "label": {
         "en": "UTLogistics: pinned station 4 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 4 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 4 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 4 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 4 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 4 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 4 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 4 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 4（列车，图表）"
       }
     },
     {
       "id": "utlst5",
       "label": {
         "en": "UTLogistics: pinned station 5 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 5 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 5 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 5 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 5 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 5 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 5 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 5 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 5（列车，图表）"
       }
     },
     {
       "id": "utlst6",
       "label": {
         "en": "UTLogistics: pinned station 6 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 6 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 6 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 6 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 6 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 6 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 6 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 6 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 6（列车，图表）"
       }
     },
     {
       "id": "utlst7",
       "label": {
         "en": "UTLogistics: pinned station 7 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 7 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 7 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 7 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 7 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 7 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 7 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 7 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 7（列车，图表）"
       }
     },
     {
       "id": "utlst8",
       "label": {
         "en": "UTLogistics: pinned station 8 (trains, graph)",
-        "de": "UTLogistics: angeheftete Station 8 (Züge, Graph)"
+        "de": "UTLogistics: angeheftete Station 8 (Züge, Graph)",
+        "fr": "UTLogistics : gare épinglée 8 (trains, graphique)",
+        "es": "UTLogistics: estación fijada 8 (trenes, gráfico)",
+        "pl": "UTLogistics: przypięta stacja 8 (pociągi, wykres)",
+        "pt-br": "UTLogistics: estação fixada 8 (trens, gráfico)",
+        "ru": "UTLogistics: закреплённая станция 8 (поезда, график)",
+        "zh-cn": "UTLogistics：固定车站 8（列车，图表）"
       }
     },
     {
       "id": "utlnet1",
       "label": {
         "en": "UTLogistics: network slot 1 (graph)",
-        "de": "UTLogistics: Netz-Platz 1 (Graph)"
+        "de": "UTLogistics: Netz-Platz 1 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 1 (graphique)",
+        "es": "UTLogistics: posición de red 1 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 1 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 1 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 1 (график)",
+        "zh-cn": "UTLogistics：网络位置 1（图表）"
       }
     },
     {
       "id": "utlnet2",
       "label": {
         "en": "UTLogistics: network slot 2 (graph)",
-        "de": "UTLogistics: Netz-Platz 2 (Graph)"
+        "de": "UTLogistics: Netz-Platz 2 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 2 (graphique)",
+        "es": "UTLogistics: posición de red 2 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 2 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 2 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 2 (график)",
+        "zh-cn": "UTLogistics：网络位置 2（图表）"
       }
     },
     {
       "id": "utlnet3",
       "label": {
         "en": "UTLogistics: network slot 3 (graph)",
-        "de": "UTLogistics: Netz-Platz 3 (Graph)"
+        "de": "UTLogistics: Netz-Platz 3 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 3 (graphique)",
+        "es": "UTLogistics: posición de red 3 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 3 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 3 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 3 (график)",
+        "zh-cn": "UTLogistics：网络位置 3（图表）"
       }
     },
     {
       "id": "utlnet4",
       "label": {
         "en": "UTLogistics: network slot 4 (graph)",
-        "de": "UTLogistics: Netz-Platz 4 (Graph)"
+        "de": "UTLogistics: Netz-Platz 4 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 4 (graphique)",
+        "es": "UTLogistics: posición de red 4 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 4 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 4 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 4 (график)",
+        "zh-cn": "UTLogistics：网络位置 4（图表）"
       }
     },
     {
       "id": "utlnet5",
       "label": {
         "en": "UTLogistics: network slot 5 (graph)",
-        "de": "UTLogistics: Netz-Platz 5 (Graph)"
+        "de": "UTLogistics: Netz-Platz 5 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 5 (graphique)",
+        "es": "UTLogistics: posición de red 5 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 5 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 5 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 5 (график)",
+        "zh-cn": "UTLogistics：网络位置 5（图表）"
       }
     },
     {
       "id": "utlnet6",
       "label": {
         "en": "UTLogistics: network slot 6 (graph)",
-        "de": "UTLogistics: Netz-Platz 6 (Graph)"
+        "de": "UTLogistics: Netz-Platz 6 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 6 (graphique)",
+        "es": "UTLogistics: posición de red 6 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 6 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 6 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 6 (график)",
+        "zh-cn": "UTLogistics：网络位置 6（图表）"
       }
     },
     {
       "id": "utlnet7",
       "label": {
         "en": "UTLogistics: network slot 7 (graph)",
-        "de": "UTLogistics: Netz-Platz 7 (Graph)"
+        "de": "UTLogistics: Netz-Platz 7 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 7 (graphique)",
+        "es": "UTLogistics: posición de red 7 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 7 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 7 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 7 (график)",
+        "zh-cn": "UTLogistics：网络位置 7（图表）"
       }
     },
     {
       "id": "utlnet8",
       "label": {
         "en": "UTLogistics: network slot 8 (graph)",
-        "de": "UTLogistics: Netz-Platz 8 (Graph)"
+        "de": "UTLogistics: Netz-Platz 8 (Graph)",
+        "fr": "UTLogistics : emplacement de réseau 8 (graphique)",
+        "es": "UTLogistics: posición de red 8 (gráfico)",
+        "pl": "UTLogistics: miejsce sieci 8 (wykres)",
+        "pt-br": "UTLogistics: posição de rede 8 (gráfico)",
+        "ru": "UTLogistics: ячейка сети 8 (график)",
+        "zh-cn": "UTLogistics：网络位置 8（图表）"
       }
     }
   ]

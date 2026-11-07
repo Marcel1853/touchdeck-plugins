@@ -5,8 +5,8 @@ Aufruf:  python3 tools/make_profile.py
 Import:  TouchDeck › Seitenliste › „⋯“ › Profil importieren (oder „Fertige Seiten“ in der Plugin-Karte).
 Format (touchdeck-profile, Version 1): touchdeck-rs/server/src/core/profiles.rs und store.rs.
 
-Aufbau: Hauptseite „Factorio“ mit Live-Anzeigen und Graphen und sechs Ordnern (Zeit, Forschung, Chat,
-Spiel, Strom, Produktion), angelegt wie „Ordner hier erstellen“ im Editor: eigene Seite „Factorio › …“ mit Zurück-Button
+Aufbau: Hauptseite „Factorio“ mit Live-Anzeigen und Graphen und sechs Ordnern (Zeit, Forschung, Strom,
+Spiel, Produktion, UTLogistics), angelegt wie „Ordner hier erstellen“ im Editor: eigene Seite „Factorio › …“ mit Zurück-Button
 oben links. Jeder Befehl drückt ein Tastenkürzel des Mods im Factorio-Fenster und wartet auf die
 Antwort des Spiels. Text wird nie getippt: Mit IBus kommt er in Factorio-Textfeldern nicht an
 (im Spiel geprüft).
@@ -28,18 +28,14 @@ KEYS = {
     "screenshot": ("k", "screenshot"),
     "cancel": ("x", "cancel"),
     "research1": ("q", "research"), "research2": ("w", "research"), "research3": ("e", "research"),
-    "chat1": ("5", "quickchat"), "chat2": ("6", "quickchat"), "chat3": ("7", "quickchat"),
-    "chat4": ("8", "quickchat"), "chat5": ("9", "quickchat"), "chat6": ("0", "quickchat"),
     "center": ("h", "center"),
     "refresh": ("u", "refresh"),
     "utl": ("g", "utl"), "utl_alerts": ("a", "utl"),
 }
-CHAT = [("Hilfe!", "🆘"), ("Bin gleich da!", "🏃"), ("Brauche Eisen!", "⛏️"),
-        ("Angriff an der Basis!", "⚔️"), ("Bin kurz weg.", "☕"), ("Danke!", "👍")]
 
 PAGE_MAIN = "p_factorio"
 PAGES = {"zeit": "p_factorio_zeit", "forschung": "p_factorio_forschung",
-         "chat": "p_factorio_chat", "spiel": "p_factorio_spiel",
+         "spiel": "p_factorio_spiel",
          "strom": "p_factorio_strom", "produktion": "p_factorio_produktion"}
 ITEM_SLOTS = 8
 
@@ -178,7 +174,7 @@ def main_page():
         button(0, 5, "Speichern", key("save"), icon="💾", color=COLOR_GAME),
         folder(1, 0, "Zeit", "⏱️", PAGES["zeit"]),
         folder(1, 1, "Forschung", "🧪", PAGES["forschung"]),
-        folder(1, 2, "Chat", "💬", PAGES["chat"]),
+        folder(1, 2, "Strom", "⚡", PAGES["strom"]),
         folder(1, 3, "Spiel", "🎮", PAGES["spiel"]),
         folder(1, 4, "Produktion", "📦", PAGES["produktion"]),
         utl_button(1, 5),
@@ -224,15 +220,6 @@ def research_page():
                               icon="➕", color=COLOR_GAME, font=11))
     buttons.append(button(1, 3, "Liste neu\nschreiben", key("refresh"), icon="🔄"))
     return page(PAGES["forschung"], "Factorio › Forschung", buttons)
-
-
-def chat_page():
-    buttons = [back()]
-    for i, (text, icon) in enumerate(CHAT):
-        row, col = divmod(i + 1, COLS)
-        buttons.append(button(row, col, text, key(f"chat{i + 1}"), icon=icon, font=11))
-    buttons.append(button(2, 4, "Letzte\nMeldung\n{FMeldung}", [], icon="💬", font=10))
-    return page(PAGES["chat"], "Factorio › Chat", buttons)
 
 
 def game_page():
@@ -340,7 +327,7 @@ KEEP = {f"FItemWahl{_i}": f"Gewähltes Item für Platz {_i} (leer = automatisch)
 
 
 def build():
-    pages = [main_page(), time_page(), research_page(), chat_page(), game_page(), power_page(), production_page()]
+    pages = [main_page(), time_page(), research_page(), game_page(), power_page(), production_page()]
     values = {name: {"default": "–", "description": f"{desc} (Plugin Factorio)", "folder": "Factorio",
                      "resetOnStart": True}
               for name, desc in VALUES.items()}

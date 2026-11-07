@@ -4,10 +4,17 @@
 
 **Erweitertes TouchDeck-Plugin** für Factorio 2.1 (mit und ohne Space Age). Zeigt Forschung,
 Geschwindigkeit, Evolution, Strom, Planet und mehr live auf deinen Buttons, Strom und Evolution
-auch als Graph. Steuert das Spiel: Pause, Tempo, Speichern, Screenshot, Schnell-Chat,
-Forschungs-Warteschlange.
+auch als Graph. Steuert das Spiel: Pause, Tempo, Speichern, Screenshot, Forschungs-Warteschlange.
 
-Dazu gehört der Factorio-Mod **TouchDeck Bridge** (`touchdeck-bridge`, ab Version 0.6.0).
+Dazu gehört der Factorio-Mod **TouchDeck Bridge** (`touchdeck-bridge`, ab Version 0.0.1 – im
+[Mod-Portal](https://mods.factorio.com/mod/touchdeck-bridge) und hier im Ordner als Zip).
+
+- **Linux: getestet. Windows: noch nicht getestet** – Rückmeldungen sind willkommen.
+- Sprachen: Deutsch und Englisch; Französisch, Spanisch, Polnisch, brasilianisches Portugiesisch,
+  Russisch und Chinesisch sind KI-Übersetzungen (Korrekturen willkommen). Die fertigen Seiten
+  (`.tdprofile`) sind auf Deutsch beschriftet.
+- Die Funktionen sind **Beispiele** dafür, was ein Spiel und TouchDeck zusammen können. Lizenz MIT:
+  Baue gern dein eigenes Plugin oder deinen eigenen Mod daraus. Vorschläge sind willkommen.
 
 ## So funktioniert es
 
@@ -23,12 +30,12 @@ TouchDeck-Button ──Tastenkürzel Strg+Alt+Umschalt+…──▶ Factorio-Fen
 - Danach wartet das Plugin auf die Antwort des Spiels und zeigt sie als Meldung des Buttons
   (z. B. „Geschwindigkeit 2×“ oder „Nur für Admins“).
 - TouchDeck tippt keinen Text ins Spiel: Mit der Eingabemethode IBus kommen erzeugte Tasten in
-  Factorio-Textfeldern nicht an (im Spiel geprüft). Deshalb liegen die Schnell-Chat-Texte im Mod.
+  Factorio-Textfeldern nicht an (im Spiel geprüft).
 
 ## Einrichtung in vier Schritten
 
-1. **Mod installieren:** `touchdeck-bridge_0.6.0.zip` nach `~/.factorio/mods/` legen (oder den
-   Ordner `touchdeck-bridge`); unter Windows (ganz frühe Alpha, ungetestet) nach
+1. **Mod installieren:** im Spiel über *Mods* aus dem Mod-Portal („TouchDeck Bridge“) – oder
+   `touchdeck-bridge_0.0.1.zip` nach `~/.factorio/mods/` legen; unter Windows (ungetestet) nach
    `%APPDATA%\Factorio\mods\`. Factorio starten, der Mod ist automatisch an.
    **Einfacher:** erst Schritt 2, dann in der Plugin-Karte auf „🧩 Mod installieren“ klicken –
    TouchDeck findet den Mod-Ordner selbst. Liegt dort schon ein Ordner `touchdeck-bridge`
@@ -49,8 +56,8 @@ Keine Pflicht-Einstellungen.
 
 Hauptseite **Factorio** (4 × 6) mit Live-Anzeigen, großen Strom- und Evolutions-Graphen, einem
 Button **UTLogistics** und sechs Ordnern (je eine
-eigene Seite mit Zurück-Button oben links): **Zeit**, **Forschung**, **Chat**, **Spiel**,
-**Produktion** und **Strom** (über den Strom-Graphen der Hauptseite). Kommt
+eigene Seite mit Zurück-Button oben links): **Zeit**, **Forschung**, **Strom**, **Spiel**,
+**Produktion** und **UTLogistics** (eigenes Profil). Kommt
 Factorio in den Vordergrund, wechselt TouchDeck auf allen Geräten zur Seite „Factorio“.
 
 | Button | Tippen | Doppeltippen | Halten | Loslassen |
@@ -61,8 +68,7 @@ Factorio in den Vordergrund, wechselt TouchDeck auf allen Geräten zur Seite „
 | Langsamer / Schneller (Zeit) | halbe / doppelte Geschwindigkeit | – | – | – |
 | Abbrechen (Forschung) | Forschung abbrechen – erst beim **zweiten** Druck (Sicherheitsabfrage) | – | – | – |
 | #1 / #2 / #3 (Forschung) | günstigste verfügbare Forschung einreihen, Name steht auf dem Button | – | – | – |
-| Chat-Buttons | Schnell-Chat 1–6 | – | – | – |
-| Strom (Hauptseite) | öffnet den Ordner Spiel; Erzeugung nach Quelle gestapelt (Dampf, Solar, Akkus …), letzte 2 Minuten | – | – | – |
+| Strom (Hauptseite) | öffnet den Ordner Strom; Erzeugung nach Quelle gestapelt (Dampf, Solar, Akkus …), letzte 2 Minuten | – | – | – |
 | Evolution (Hauptseite) | Anzeige; Flächen-Graph der letzten Stunde (0–100 %) | – | – | – |
 
 Buttons, die nur etwas anzeigen (Status, Planet, Spielzeit, Tempo-Anzeige, Erzeugung, Verbrauch …),
@@ -95,11 +101,6 @@ Automatische Plätze zeigen die meistproduzierten Items, die kein anderer Platz 
 gewählte Plätze leuchten. „Alle automatisch“ setzt alles zurück. Die Auswahl merkt sich TouchDeck in
 den Werten `FItemWahl1`–`FItemWahl8`, sie bleibt nach einem Neustart erhalten. Zur Wahl stehen alle
 Items und Flüssigkeiten, die auf deiner Fläche gerade hergestellt oder verbraucht werden.
-
-**Schnell-Chat:** Hilfe!, Bin gleich da!, Brauche Eisen!, Angriff an der Basis!, Bin kurz weg.,
-Danke!. Die Texte sind übersetzt, jeder Mitspieler liest sie in seiner Sprache. Eigene Texte
-setzt du in Factorio unter Einstellungen › Mod-Einstellungen › Spieler › Schnell-Chat 1–6 (dann
-auch die Beschriftung des Buttons ändern).
 
 **Bildschirmschoner (TouchDeck 0.12):** Unter der Uhr erscheint eine Karte „Factorio“ mit Status,
 Forschung, Strom, Planet, Tempo und Evolution. Sie verschwindet, wenn Factorio beendet ist.
@@ -184,7 +185,6 @@ Zwei Aktionen hintereinander:
 | K | Screenshot nach `script-output/touchdeck-bridge/screenshots/` |
 | Q / W / E | Forschungsvorschlag 1 / 2 / 3 einreihen |
 | X | Forschung abbrechen |
-| 5 6 7 8 9 0 | Schnell-Chat 1–6 |
 | H | Zurück zum Spieler (Fernansicht verlassen) |
 | U | Daten neu schreiben |
 | G / A | UTL-Manager / UTL-Manager Warnungen (nur mit UTLogistics) |
@@ -252,20 +252,21 @@ nichts auf die Platte; die Auswahl der Plätze liegt in TouchDeck-Werten.
 
 ## Grenzen (ehrlich)
 
-- **Esc-Menü im Einzelspieler:** Das Spiel steht dann komplett, nimmt keine Tasten an und schreibt
-  nichts. TouchDeck zeigt „keine Daten“, Befehle melden „Ist das Esc-Menü offen?“.
+- **Einzelspieler – Pause, Esc-Menü und Forschung (Technologiebaum):** Das Spiel steht dann komplett,
+  nimmt keine Tasten an und schreibt nichts. TouchDeck behält die letzten Werte und zeigt
+  „angehalten“, Befehle melden „Ist das Esc-Menü offen?“. Eine Lösung dafür kenne ich noch nicht –
+  Ideen sind willkommen. Im Mehrspieler läuft das Spiel in diesen Fenstern weiter.
 - **Pause per Button** (`game.tick_paused`): In diesem Zustand laufen keine Takt-Handler (im Spiel
   geprüft). Der Mod schreibt den Zustand beim Pausieren sofort, TouchDeck zeigt „pausiert“. Weiter
   geht es über dasselbe Tastenkürzel. Gehst du pausiert ins Hauptmenü, steht „pausiert“, bis
   Factorio beendet ist.
 - **Strom** gilt für das Netz, in dem du stehst (ein Mast im Umkreis von 32 Feldern). Mehrere
   getrennte Netze werden nicht zusammengezählt.
-- **Kein freier Text:** Chat nur mit den sechs Schnell-Chat-Texten, Forschung nur über die drei
-  Vorschläge. Mehr gibt es im Spiel mit `/touchdeck …` oder dem Befehlsfeld (Strg+Alt+Umschalt+B,
-  von Hand tippen).
+- **Kein freier Text:** Forschung nur über die drei Vorschläge. Mehr gibt es im Spiel mit
+  `/touchdeck …` oder dem Befehlsfeld (Strg+Alt+Umschalt+B, von Hand tippen).
 - **Produktion** gilt für die Fläche, auf der du stehst (Planet oder Plattform). Neue Zahlen kommen
   alle 5 Sekunden. Ob Items höherer Qualität (Space Age) mitgezählt werden, ist noch nicht geprüft.
-- Tastenkürzel brauchen ein erreichbares Factorio-Fenster unter X11.
+- Tastenkürzel brauchen ein erreichbares Factorio-Fenster (Linux: X11). Windows ist noch nicht getestet.
 - Am Spielanfang gibt es nur „Auslöser-Forschungen“ (herstellen, abbauen …). Die kann man nicht
   einreihen, deshalb sind die Vorschläge dann leer.
 - Mehrspieler: Jeder Spieler bekommt seine Dateien nur auf dem eigenen Rechner. Pause, Tempo und
@@ -290,8 +291,15 @@ Lizenz: MIT.
 
 **Advanced TouchDeck plugin** for Factorio 2.1 (with or without Space Age). Shows research,
 speed, evolution, power, planet and more live on your buttons, power and evolution also as graphs,
-and controls the game: pause, speed, save, screenshot, quick chat, research queue. Needs the
-Factorio mod **TouchDeck Bridge** (`touchdeck-bridge`, 0.6.0 or newer).
+and controls the game: pause, speed, save, screenshot, research queue. Needs the Factorio mod
+**TouchDeck Bridge** (`touchdeck-bridge`, 0.0.1 or newer) from the
+[mod portal](https://mods.factorio.com/mod/touchdeck-bridge) (also included here as a zip).
+
+- **Linux: tested. Windows: not tested yet** – feedback is welcome.
+- Languages: English and German; French, Spanish, Polish, Brazilian Portuguese, Russian and Chinese
+  are AI translations (corrections welcome). The ready-made pages (`.tdprofile`) are labelled in German.
+- The features are **examples** of what a game and TouchDeck can do together. MIT license: feel free
+  to build your own plugin or mod from it. Suggestions are welcome.
 
 - No launch option, no RCON, no network: the mod writes
   `~/.factorio/script-output/touchdeck-bridge/state.json`, the plugin watches it.
@@ -300,7 +308,7 @@ Factorio mod **TouchDeck Bridge** (`touchdeck-bridge`, 0.6.0 or newer).
   button. TouchDeck never types text into the game (with IBus, generated keys do not reach Factorio
   text fields).
 
-**Setup:** 1. put the mod into `~/.factorio/mods/` (Windows, very early alpha: `%APPDATA%\Factorio\mods\`) – or, after step 2, click “🧩 Install mod” in the plugin card · 2. enable advanced mode in TouchDeck and install
+**Setup:** 1. install the mod from the mod portal in the game (*Mods*), or put the zip into `~/.factorio/mods/` (Windows, untested: `%APPDATA%\Factorio\mods\`) – or, after step 2, click “🧩 Install mod” in the plugin card · 2. enable advanced mode in TouchDeck and install
 **Factorio** from Plugins › Marketplace (or load this folder under Plugins › Develop) · 3. import `Factorio.tdprofile` (remove pages of an older version first) · 4. load a game.
 
 **Action:** *Wait for the game's answer* (after a Hotkey action). **Triggers:** research
@@ -312,11 +320,12 @@ On the production page you pick each slot's item right on the button: tap = next
 double tap = automatic (most produced); the choice is kept in TouchDeck values. **Values:** see the German table (`FStatus`, `FForschung`,
 `FStromErzeugung`, `FGeschwindigkeit`, `FPause`, `FEvolution`, `FPlanet` …).
 
-**Privacy:** everything stays on your computer. The plugin reads two files of the mod and
+**Privacy:** everything stays on your computer. The plugin reads the mod's files and
 `/proc/*/comm`; it opens no network connection and writes nothing to disk.
 
-**Limits:** nothing works while the Esc menu of a single player game is open; tick-paused games
-run no timed handlers (the mod writes the state when pausing); power is the grid you stand in;
-no free text (six quick chat texts, three research suggestions); key bindings need an X11 window.
+**Limits:** in single player the game stops while it is paused, in the Esc menu and while the
+research screen is open – nothing new comes then (TouchDeck keeps the last values; no fix known yet,
+ideas welcome); power is the grid you stand in; no free text (three research suggestions); key
+bindings need a reachable Factorio window (Linux: X11).
 
 License: MIT.

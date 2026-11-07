@@ -445,7 +445,7 @@ def main():
         check("Auslöser disconnected", any(f[0] == "disconnected" for f in plug.fired))
         check("Werte zurückgesetzt", plug.values.get("FForschungProzent") == "–", plug.values.get("FForschungProzent"))
         check("Bildschirmschoner geleert, wenn Factorio aus", plug.wait(lambda: plug.saver is None, 3), plug.saver)
-        res = plug.action("r10", "await", {"cmd": "chat", "seconds": 1})
+        res = plug.action("r10", "await", {"cmd": "pause", "seconds": 1})
         check("await ohne Verbindung → verständlicher Fehler",
               res and not res["ok"] and ("läuft nicht" in res.get("error", "") or "Menü" in res.get("error", "")), res)
 

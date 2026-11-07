@@ -28,15 +28,26 @@ from item_slots import ItemSlots  # noqa: E402  (liegt neben plugin.py)
 # Texte (Sprache aus der Systemumgebung, TouchDeck folgt standardmäßig ebenfalls)
 # --------------------------------------------------------------------------
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from texts_i18n import EXTRA  # noqa: E402  (weitere Sprachen, liegt neben plugin.py)
+
 _LOCALE = (os.environ.get("LC_ALL") or os.environ.get("LC_MESSAGES")
-           or os.environ.get("LANG") or "").lower()
-DE = _LOCALE.startswith("de")
+           or os.environ.get("LANG") or "").lower().replace("_", "-")
+# Windows: Sprache der Oberfläche (Primärsprache der LANGID), wenn keine Umgebungsvariable gesetzt ist
+_WIN_LANGS = {0x07: "de", 0x09: "en", 0x0C: "fr", 0x0A: "es", 0x15: "pl", 0x16: "pt-br", 0x19: "ru", 0x04: "zh-cn"}
 if not _LOCALE and os.name == "nt":
     try:
         import ctypes
-        DE = (ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3FF) == 0x07
+        _LOCALE = _WIN_LANGS.get(ctypes.windll.kernel32.GetUserDefaultUILanguage() & 0x3FF, "en")
     except (AttributeError, OSError):
         pass
+LANG = next((code for code in ("pt-br", "zh-cn", "de", "fr", "es", "pl", "ru") if _LOCALE.startswith(code)), "en")
+if LANG == "en" and _LOCALE.startswith("pt"):
+    LANG = "pt-br"
+elif LANG == "en" and _LOCALE.startswith("zh"):
+    LANG = "zh-cn"
+DE = LANG == "de"
+COMMA = LANG in ("de", "fr", "es", "pl", "pt-br", "ru")   # Dezimalkomma statt Punkt
 
 TEXTS = {
     # Zustand
@@ -119,7 +130,6 @@ TEXTS = {
     "speed": ("Geschwindigkeit {value}×", "Speed {value}×"),
     "saved": ("Gespeichert als {name}", "Saved as {name}"),
     "screenshot": ("Screenshot: {path}", "Screenshot: {path}"),
-    "chat": ("Nachricht gesendet", "Message sent"),
     "research-queued": ("In Warteschlange: {name}", "Queued: {name}"),
     "research-cancelled": ("Forschung abgebrochen: {name}", "Research cancelled: {name}"),
     "centered": ("Zurück beim Spieler", "Back at the player"),
@@ -127,12 +137,14 @@ TEXTS = {
     "bad-value": ("Ungültiger Wert: {value}", "Invalid value: {value}"),
     "bad-speed": ("Geschwindigkeit muss zwischen 0,01 und 100 liegen: {value}",
                   "Speed must be between 0.01 and 100: {value}"),
-    "empty-chat": ("Kein Text für den Chat", "No text for the chat"),
     "research-unknown": ("Forschung nicht gefunden: {value}", "Research not found: {value}"),
     "research-done": ("Schon erforscht: {name}", "Already researched: {name}"),
     "research-failed": ("Kann nicht eingereiht werden: {name}", "Cannot be queued: {name}"),
     "no-suggestion": ("Kein Forschungsvorschlag {value} (gerade nichts einreihbar)",
                       "No research suggestion {value} (nothing can be queued right now)"),
+    "utl-opened": ("UTL-Manager geöffnet", "UTL manager opened"),
+    "utl-missing": ("UTLogistics ist nicht aktiv", "UTLogistics is not active"),
+    "utl-failed": ("UTL-Manager ließ sich nicht öffnen", "The UTL manager could not be opened"),
     "no-research": ("Gerade läuft keine Forschung", "No research is running"),
     "no-player": ("Geht nur mit einem Spieler", "Only works with a player"),
     "not-admin": ("Nur für Admins (Mehrspieler)", "Admins only (multiplayer)"),
@@ -152,10 +164,11 @@ TEXTS = {
 
 def t(key, **kw):
     de, en = TEXTS[key]
+    text = de if DE else EXTRA.get(LANG, {}).get(key, en)
     try:
-        return (de if DE else en).format(**kw)
+        return text.format(**kw)
     except (KeyError, IndexError):
-        return de if DE else en
+        return text
 
 
 VALUE_LIMIT = 1000        # TouchDeck kürzt Werte auf 1000 Zeichen (store.rs, set_variable)
@@ -231,13 +244,13 @@ def fmt_mw(watts):
     """300000 → „0,3 MW“ (Komma auf Deutsch), unter 1 MW mit zwei Stellen."""
     mw = watts / 1e6
     text = f"{mw:.2f}" if mw < 1 else f"{mw:.1f}" if mw < 1000 else f"{mw:.0f}"
-    return (text.replace(".", ",") if DE else text) + " MW"
+    return (text.replace(".", ",") if COMMA else text) + " MW"
 
 
 def fmt_rate(n):
     """Menge pro Minute: unter 10 mit einer Nachkommastelle (Komma auf Deutsch)."""
     text = f"{n:.1f}".rstrip("0").rstrip(".") if n < 10 else f"{n:.0f}"
-    return text.replace(".", ",") if DE else text
+    return text.replace(".", ",") if COMMA else text
 
 
 def fmt_int(n):
@@ -1115,7 +1128,7 @@ class Plugin:
                 self.acks = [a for a in self.acks if now - a[0] < 30][-19:] + [(now, e, message)]
                 self.cond.notify_all()
             send({"type": "fire", "trigger": "command_done",
-                  "data": {"Befehl": str(e.get("cmd") or ""), "Ok": t("yes") if ok else t("no"),
+                  "data": {"Befehl": str(e.get("cmd") or ""), "Ok": "ja" if ok else "nein",
                            "Meldung": message, "Command": str(e.get("cmd") or ""), "Message": message}})
         elif kind in ("research_finished", "research_started"):
             internal = str(e.get("name") or "")
@@ -1130,7 +1143,7 @@ class Plugin:
             me = bool(e.get("me"))
             send({"type": "fire", "trigger": kind,
                   "data": {"Spieler": str(e.get("player") or ""), "Player": str(e.get("player") or ""),
-                           "Ich": t("yes") if me else t("no")}})
+                           "Ich": "ja" if me else "nein"}})
         elif kind == "evolution_step":
             send({"type": "fire", "trigger": kind,
                   "data": {"Prozent": e.get("percent", 0), "Percent": e.get("percent", 0),
