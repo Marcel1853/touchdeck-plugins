@@ -49,7 +49,7 @@ namespace TouchDeckBridge
 
     public static class Bridge
     {
-        public const string Version = "0.1.3";
+        public const string Version = "0.1.4";
         static readonly CommandQueue Queue = new CommandQueue();
         static readonly Deduper Dedup = new Deduper(4000);
         static readonly Stopwatch Clock = Stopwatch.StartNew();

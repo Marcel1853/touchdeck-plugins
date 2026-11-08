@@ -1,5 +1,10 @@
 # Changelog / Änderungsprotokoll
 
+## 0.1.4 – 2026-11-06
+
+- Built against game version 0.8.8b and marked as verified for it in the manifest.
+- Gegen Spielversion 0.8.8b gebaut und im Manifest dafür als verifiziert eingetragen.
+
 ## 0.1.3 – 2026-10-28
 
 - Unity is shown correctly (80 instead of the raw value 81920); unity and other virtual products no
